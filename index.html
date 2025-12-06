@@ -55,6 +55,10 @@
             color: #ff0 !important;
             border-color: #ff0 !important;
         }
+        .page-title.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
         .diary-container-wrapper {
             width: 100%;
             max-width: 1000px;
@@ -161,6 +165,7 @@
         let clickCount = 0;
         let isFakeMode = false;
         let clickTimer = null;
+        let disableTimer = null;
         let fakeEntriesCache = null;
         // ===== Utilities =====
         const toKanjiNumber = (num) => {
@@ -500,21 +505,32 @@
         document.querySelector('.page-title').addEventListener('click', () => {
             if (isFakeMode) {
                 toggleFakeMode();
-            } else {
-                clickCount++;
-                if (clickCount >= 7) {
-                    toggleFakeMode();
-                    clickCount = 0;
-                    if (clickTimer) clearTimeout(clickTimer);
-                    return;
-                }
-                if (clickTimer) clearTimeout(clickTimer);
-                clickTimer = setTimeout(() => {
-                    clickCount = 0;
-                }, 1000);
-                applyRandomTheme();
-                flashTitle();
+                return;
             }
+
+            if (document.querySelector('.page-title').classList.contains('disabled')) {
+                return;
+            }
+
+            clickCount++;
+            if (clickCount >= 7) {
+                toggleFakeMode();
+                clickCount = 0;
+                const title = document.querySelector('.page-title');
+                title.classList.add('disabled');
+                if (disableTimer) clearTimeout(disableTimer);
+                disableTimer = setTimeout(() => {
+                    title.classList.remove('disabled');
+                }, 5000);
+                if (clickTimer) clearTimeout(clickTimer);
+                return;
+            }
+            if (clickTimer) clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => {
+                clickCount = 0;
+            }, 1000);
+            applyRandomTheme();
+            flashTitle();
         });
         window.addEventListener('load', () => {
             document.body.style.opacity = 1;
