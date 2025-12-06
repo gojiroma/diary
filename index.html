@@ -27,6 +27,13 @@
             box-sizing: border-box;
         }
 
+        body.disable-select * {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
         .page-title {
             position: fixed;
             top: 10px;
@@ -111,7 +118,6 @@
             font-weight: bold;
             font-size: 1.4em;
             margin-right: 20px;
-            user-select: none;
         }
 
         .content {
@@ -348,10 +354,12 @@
         // ===== Mode Switch =====
         const toggleFakeMode = () => {
             const title = document.querySelector('.page-title');
+            const body = document.body;
             if (isFakeMode) {
                 title.textContent = '誤字ロマの日記';
                 title.classList.remove('fake-mode');
                 loadDiaryEntries('entry.md');
+                body.classList.remove('disable-select');
             } else {
                 title.textContent = '誤字ロマの嘘日記';
                 title.classList.add('fake-mode');
@@ -360,6 +368,11 @@
                 } else {
                     loadDiaryEntries('fake.md');
                 }
+                body.classList.add('disable-select');
+                // 5秒後に解除
+                setTimeout(() => {
+                    body.classList.remove('disable-select');
+                }, 5000);
             }
             isFakeMode = !isFakeMode;
             clickCount = 0;
@@ -374,6 +387,7 @@
                 content.style.color = isFakeMode ? '#ff6600' : currentTheme.text;
             });
         };
+
         // ===== Event Handlers =====
         const setupHoverAnimation = () => {
             document.querySelectorAll('.content').forEach(content => {
