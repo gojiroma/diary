@@ -3,7 +3,6 @@ from datetime import datetime
 from xml.etree import ElementTree as ET
 from xml.dom import minidom
 
-# 日記エントリのMarkdownから日付と内容を抽出
 def parse_entries(markdown_text):
     entries = markdown_text.strip().split('---')
     parsed_entries = []
@@ -11,10 +10,8 @@ def parse_entries(markdown_text):
         entry = entry.strip()
         if not entry:
             continue
-
         date_match = re.search(r'^date:\s*(\d{8})', entry, re.MULTILINE)
-        content_match = re.search(r'content:\s*\|\n([\s\S]*?)(?=\n---|\n$)', entry, re.MULTILINE)
-
+        content_match = re.search(r'content:\s*\|\n([\s\S]*?)(?=\n---|\n$|\Z)', entry, re.MULTILINE)
         if date_match and content_match:
             yyyymmdd = date_match.group(1)
             content = content_match.group(1).strip()
@@ -23,10 +20,8 @@ def parse_entries(markdown_text):
                 'date': yyyymmdd,
                 'content': content
             })
-
     return parsed_entries
 
-# 漢数字に変換（RSS内のタイトル用）
 def to_kanji_number(num):
     kanji_numbers = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九']
     return ''.join([kanji_numbers[int(digit)] for digit in str(num)])
@@ -40,58 +35,51 @@ def to_kanji_month(month):
 
 def to_kanji_day(day):
     if day == 10:
-        return '十'
+        return '十日'
     if day == 20:
-        return '二十'
+        return '二十日'
     if day == 30:
-        return '三十'
+        return '三十日'
     if day == 31:
-        return '三十一'
+        return '三十一日'
     if day < 10:
-        return to_kanji_number(day)
+        return to_kanji_number(day) + '日'
     if day < 20:
-        return '十' + to_kanji_number(day - 10)
+        return '十' + to_kanji_number(day - 10) + '日'
     if day < 30:
-        return '二十' + to_kanji_number(day - 20)
-    return to_kanji_number(day)
+        return '二十' + to_kanji_number(day - 20) + '日'
+    return to_kanji_number(day) + '日'
 
-def format_japanese_date(yyyymmdd):
+def format_japanese_date_with_day_of_week(yyyymmdd):
     year = int(yyyymmdd[:4])
     month = int(yyyymmdd[4:6])
     day = int(yyyymmdd[6:8])
-    return f"{to_kanji_month(month)}{to_kanji_day(day)}"
+    dt = datetime.strptime(yyyymmdd, '%Y%m%d')
+    day_of_week = ['月', '火', '水', '木', '金', '土', '日'][dt.weekday()]
+    return f"{to_kanji_month(month)}{to_kanji_day(day)}（{day_of_week}）"
 
-# RSSフィードを生成
 def generate_rss(entries, output_file):
     rss = ET.Element('rss', version='2.0')
     channel = ET.SubElement(rss, 'channel')
-
-    # チャンネル情報
     ET.SubElement(channel, 'title').text = '誤字ロマの日記'
-    ET.SubElement(channel, 'link').text = 'https://example.com/diary'  # 適宜変更
+    ET.SubElement(channel, 'link').text = 'https://example.com/diary'
     ET.SubElement(channel, 'description').text = '誤字ロマの日記です。'
     ET.SubElement(channel, 'language').text = 'ja'
     ET.SubElement(channel, 'lastBuildDate').text = datetime.now().strftime('%a, %d %b %Y %H:%M:%S %z')
-
-    # エントリを追加
     for entry in sorted(entries, key=lambda x: x['date'], reverse=True):
         item = ET.SubElement(channel, 'item')
-        ET.SubElement(item, 'title').text = f"日記: {format_japanese_date(entry['date'])}"
-        ET.SubElement(item, 'link').text = f"https://example.com/diary#{entry['date']}"  # 適宜変更
+        ET.SubElement(item, 'title').text = format_japanese_date_with_day_of_week(entry['date'])
+        ET.SubElement(item, 'link').text = f"https://example.com/diary#{entry['date']}"
         ET.SubElement(item, 'pubDate').text = datetime.strptime(entry['date'], '%Y%m%d').strftime('%a, %d %b %Y 00:00:00 +0900')
         ET.SubElement(item, 'description').text = entry['content'].replace('\n', '<br />')
-
-    # XMLを整形して出力
     xml_str = ET.tostring(rss, encoding='utf-8')
     xml_pretty = minidom.parseString(xml_str).toprettyxml(indent='  ')
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(xml_pretty)
 
-# メイン処理
 if __name__ == '__main__':
     with open('entry.md', 'r', encoding='utf-8') as f:
         markdown_text = f.read()
-
     entries = parse_entries(markdown_text)
     generate_rss(entries, 'rss.xml')
     print('rss.xml を生成しました。')
