@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="rss.xml">
     <title>誤字ロマの日記</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📜%3C/text%3E%3C/svg%3E" type="image/svg+xml">
     <style>
@@ -32,6 +33,8 @@
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.1s, color 0.1s, border-color 0.1s;
+            text-decoration: none;
+            opacity: .9;
         }
         .page-title.flash {
             background-color: #000 !important;
@@ -78,32 +81,40 @@
         .char.hovered {
             font-size: 1.8em;
         }
+        .rss-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
+            font-size: 18px;
+            font-weight: bold;
+            border: 1px solid #ff9966;
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.1s, color 0.1s, border-color 0.1s;
+            color: #ff6600;
+            text-decoration: none;
+            opacity: .2;
+        }
+        .rss-button:hover {
+            opacity: 1;
+            background-color: rgba(255, 153, 102, 0.4);
+        }
+        .highlight {
+            background-color: yellow;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <div class="page-title">誤字ロマの日記</div>
-    <div class="diary-container" id="diaryContainer">
-        <div class="diary-entry">
-            <div class="date">十二月六日（土）</div>
-            <div class="content" id="content1">
-                今日も朝から晴れ渡った空が広がっていた。散歩に出ると、公園の木々が紅葉し、風に揺れる様子が美しかった。秋の深まりを感じる一日だった。午後はカフェで読書をし、温かい紅茶を楽しんだ。心が落ち着く時間だった。
-            </div>
-        </div>
-        <div class="diary-entry">
-            <div class="date">十二月五日（金）</div>
-            <div class="content" id="content2">
-                仕事が忙しく、一日中パソコンと向き合っていた。夕方、窓から見える夕焼けがとても綺麗で、少し疲れが和らいだ。夜は温かい鍋料理を食べ、ゆっくりと過ごした。明日も頑張ろうと思う。
-            </div>
-        </div>
-        <div class="diary-entry">
-            <div class="date">十二月四日（木）</div>
-            <div class="content" id="content3">
-                久しぶりに友人と会い、近況を話し合った。時間が経つのを忘れるほど楽しかった。帰り道、街のイルミネーションがキラキラと輝いていて、クリスマスの気分が高まった。寒さも心地よく感じられた。
-            </div>
-        </div>
+    <div class="page-title">
+        誤字ロマの日記
     </div>
+    <div class="diary-container" id="diaryContainer">
+    </div>
+    <a href="rss.xml" class="rss-button">RSS</a>
     <script>
-        // テーマカラーの候補
         const themes = [
             { bg: "#e6f3ff", text: "#003366", border: "#003366" },
             { bg: "#fff8e6", text: "#8b4513", border: "#8b4513" },
@@ -116,10 +127,7 @@
             { bg: "#fff0e6", text: "#cd5c5c", border: "#cd5c5c" },
             { bg: "#f0ffe6", text: "#228b22", border: "#228b22" }
         ];
-
         let currentTheme = null;
-
-        // ランダムにテーマを選択して適用
         function applyRandomTheme() {
             const randomTheme = themes[Math.floor(Math.random() * themes.length)];
             currentTheme = randomTheme;
@@ -128,13 +136,10 @@
             document.querySelector('.page-title').style.backgroundColor = randomTheme.bg;
             document.querySelector('.page-title').style.borderColor = randomTheme.border;
             document.querySelector('.page-title').style.color = randomTheme.text;
-
             document.querySelectorAll('.date, .content').forEach(el => {
                 el.style.color = randomTheme.text;
             });
         }
-
-        // 右上タイトルだけをフラッシュ
         function flashTitle() {
             const title = document.querySelector('.page-title');
             title.classList.add('flash');
@@ -144,7 +149,6 @@
                     title.classList.add('flash');
                     setTimeout(() => {
                         title.classList.remove('flash');
-                        // フラッシュ後、現在のテーマの色を再適用
                         if (currentTheme) {
                             title.style.backgroundColor = currentTheme.bg;
                             title.style.color = currentTheme.text;
@@ -154,27 +158,16 @@
                 }, 100);
             }, 100);
         }
-
-        // 初回テーマ適用
         applyRandomTheme();
-
-        // コンテンツを表示
         document.body.style.opacity = 1;
-
-        // スクロールを右端に設定
-        window.addEventListener('load', function() {
+        function scrollToEnd() {
             const container = document.getElementById('diaryContainer');
             container.scrollLeft = container.scrollWidth;
-        });
-
-        // タイトルクリックでフラッシュ→テーマ変更
+        }
         document.querySelector('.page-title').addEventListener('click', () => {
             applyRandomTheme();
-                      flashTitle();
-
+            flashTitle();
         });
-
-        // 本文の文字を1文字ずつspanでラップ
         function wrapChars() {
             document.querySelectorAll('.content').forEach(content => {
                 const text = content.textContent;
@@ -185,36 +178,184 @@
                 content.innerHTML = wrapped;
             });
         }
-
-        // 文字をラップ
-        wrapChars();
-
-        // ホバー時のアニメーション
-        document.querySelectorAll('.content').forEach(content => {
-            content.addEventListener('mousemove', (e) => {
-                const chars = content.querySelectorAll('.char');
-                const targetChar = document.elementFromPoint(e.clientX, e.clientY);
-                if (!targetChar || !targetChar.classList.contains('char')) return;
-
-                const index = Array.from(chars).indexOf(targetChar);
-                const start = Math.max(0, index - 5);
-                const end = Math.min(chars.length - 1, index + 5);
-
-                chars.forEach((char, i) => {
-                    if (i >= start && i <= end) {
-                        char.classList.add('hovered');
-                    } else {
+        function setupHoverAnimation() {
+            document.querySelectorAll('.content').forEach(content => {
+                content.addEventListener('mousemove', (e) => {
+                    const chars = content.querySelectorAll('.char');
+                    const targetChar = document.elementFromPoint(e.clientX, e.clientY);
+                    if (!targetChar || !targetChar.classList.contains('char')) return;
+                    const index = Array.from(chars).indexOf(targetChar);
+                    const start = Math.max(0, index - 5);
+                    const end = Math.min(chars.length - 1, index + 5);
+                    chars.forEach((char, i) => {
+                        if (i >= start && i <= end) {
+                            char.classList.add('hovered');
+                        } else {
+                            char.classList.remove('hovered');
+                        }
+                    });
+                });
+                content.addEventListener('mouseleave', () => {
+                    content.querySelectorAll('.char').forEach(char => {
                         char.classList.remove('hovered');
-                    }
+                    });
                 });
             });
+        }
+        // 数字を漢数字に変換（0は「〇」）
+        function toKanjiNumber(num) {
+            const kanjiNumbers = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+            return num.toString().split('').map(digit => kanjiNumbers[digit]).join('');
+        }
+        // 月を漢数字に変換
+        function toKanjiMonth(month) {
+            const kanjiMonths = [
+                '一月', '二月', '三月', '四月', '五月', '六月',
+                '七月', '八月', '九月', '十月', '十一月', '十二月'
+            ];
+            return kanjiMonths[month - 1];
+        }
+        // 日を漢数字に変換
+        function toKanjiDay(day) {
+            if (day === 10) return '十';
+            if (day === 20) return '二十';
+            if (day === 30) return '三十';
+            if (day === 31) return '三十一';
+            if (day < 10) return toKanjiNumber(day);
+            if (day < 20) return '十' + toKanjiNumber(day - 10);
+            if (day < 30) return '二十' + toKanjiNumber(day - 20);
+            return toKanjiNumber(day);
+        }
+        function formatJapaneseDate(yyyymmdd) {
+            const year = parseInt(yyyymmdd.substring(0, 4), 10);
+            const month = parseInt(yyyymmdd.substring(4, 6), 10);
+            const day = parseInt(yyyymmdd.substring(6, 8), 10);
+            const date = new Date(year, month - 1, day);
+            const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+            return {
+                short: `${toKanjiMonth(month)}${toKanjiDay(day)}日（${dayOfWeek}）`,
+                long: `${toKanjiNumber(year)}年${toKanjiMonth(month)}${toKanjiDay(day)}日（${dayOfWeek}）`
+            };
+        }
+        // ハイライトを保存
+        function saveHighlights() {
+            const highlights = [];
+            document.querySelectorAll('.highlight').forEach(el => {
+                const content = el.closest('.content');
+                const date = content.previousElementSibling.getAttribute('data-yyyymmdd');
+                const text = content.textContent;
+                const start = Array.from(content.childNodes).indexOf(el);
+                const length = el.textContent.length;
+                highlights.push({ date, start, length, text: el.textContent });
+            });
+            localStorage.setItem('diaryHighlights', JSON.stringify(highlights));
+        }
+        // ハイライトを復元
+        function restoreHighlights() {
+            const highlights = JSON.parse(localStorage.getItem('diaryHighlights') || '[]');
+            highlights.forEach(h => {
+                const dateElement = document.querySelector(`.date[data-yyyymmdd="${h.date}"]`);
+                if (!dateElement) return;
+                const content = dateElement.nextElementSibling;
+                const chars = content.querySelectorAll('.char');
+                if (chars.length <= h.start) return;
+                let span = document.createElement('span');
+                span.className = 'highlight';
+                for (let i = h.start; i < h.start + h.length && i < chars.length; i++) {
+                    span.appendChild(chars[i].cloneNode(true));
+                }
+                // 元のノードを置き換え
+                for (let i = h.start; i < h.start + h.length && i < chars.length; i++) {
+                    chars[i].remove();
+                }
+                if (chars[h.start - 1]) {
+                    chars[h.start - 1].after(span);
+                } else if (chars[h.start]) {
+                    chars[h.start].before(span);
+                }
+            });
+        }
+        // ハイライトをクリックで消す
+        function setupHighlightRemoval() {
+            document.querySelectorAll('.highlight').forEach(el => {
+                el.addEventListener('click', () => {
+                    const range = document.createRange();
+                    range.selectNodeContents(el);
+                    el.replaceWith(...Array.from(el.childNodes));
+                    saveHighlights();
+                });
+            });
+        }
+        // テキスト選択時にハイライトを追加
+function setupTextSelection() {
+    document.addEventListener('mouseup', () => {
+        const selection = window.getSelection();
+        if (selection.toString().trim() === '') return;
 
-            content.addEventListener('mouseleave', () => {
-                content.querySelectorAll('.char').forEach(char => {
-                    char.classList.remove('hovered');
+        const range = selection.getRangeAt(0);
+        // 選択範囲が .content 内かどうかを確認
+        let content = range.startContainer;
+        while (content && !content.classList) {
+            content = content.parentNode;
+        }
+        if (!content || !content.classList.contains('content')) return;
+
+        const span = document.createElement('span');
+        span.className = 'highlight';
+        span.appendChild(range.extractContents());
+        range.insertNode(span);
+
+        // ハイライトを保存
+        saveHighlights();
+        // ハイライト削除イベントを再設定
+        setupHighlightRemoval();
+    });
+}
+        async function loadDiaryEntries() {
+            try {
+                const response = await fetch('entry.md');
+                if (!response.ok) throw new Error('Failed to load entries');
+                const text = await response.text();
+                const entries = text.split('---').filter(entry => entry.trim());
+                const container = document.getElementById('diaryContainer');
+                entries.forEach(entry => {
+                    const dateMatch = entry.match(/date:\s*(.*)/);
+                    const contentMatch = entry.match(/content:\s*\|\n([\s\S]*?)(?=\n---|\n$)/m);
+                    if (!dateMatch || !contentMatch) return;
+                    const yyyymmdd = dateMatch[1].trim();
+                    const dateObj = formatJapaneseDate(yyyymmdd);
+                    const contentLines = contentMatch[1].split('\n').map(line => line.replace(/^\s*\|?\s*/, '')).join('\n').trim();
+                    const entryElement = document.createElement('div');
+                    entryElement.className = 'diary-entry';
+                    entryElement.innerHTML = `
+                        <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
+                        <div class="content">${contentLines}</div>
+                    `;
+                    container.appendChild(entryElement);
                 });
-            });
-        });
+                // 日付のホバーイベントを設定
+                document.querySelectorAll('.date').forEach(dateElement => {
+                    const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
+                    const dateObj = formatJapaneseDate(yyyymmdd);
+                    const originalText = dateObj.short;
+                    const hoverText = dateObj.long;
+                    dateElement.addEventListener('mouseenter', () => {
+                        dateElement.textContent = hoverText;
+                    });
+                    dateElement.addEventListener('mouseleave', () => {
+                        dateElement.textContent = originalText;
+                    });
+                });
+                wrapChars();
+                setupHoverAnimation();
+                setupTextSelection();
+                restoreHighlights();
+                scrollToEnd();
+            } catch (error) {
+                console.error('Error loading diary entries:', error);
+            }
+        }
+        window.addEventListener('load', loadDiaryEntries);
     </script>
 </body>
 </html>
