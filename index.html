@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>縦書き日記（横並び・スクロールバー非表示）</title>
+    <style>
+        body {
+            font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #fff;
+            padding: 20px;
+            overflow: hidden;
+        }
+        .diary-container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: 100%;
+            max-height: 70vh;
+            padding: 20px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .diary-container::-webkit-scrollbar {
+            display: none;
+        }
+        .diary-entry {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            line-height: 2;
+            letter-spacing: 0.1em;
+            width: auto;
+            white-space: normal;
+            overflow: visible;
+        }
+        .date {
+            font-weight: bold;
+            font-size: 1.4em;
+            margin-right: 20px;
+            color: #333;
+        }
+        .content {
+            font-size: 1.3em;
+            color: #333;
+            white-space: pre-line;
+        }
+    </style>
+</head>
+<body>
+    <div class="diary-container" id="diaryContainer">
+        <div class="diary-entry">
+            <div class="date">十二月六日（土）</div>
+            <div class="content">
+                今日も朝から晴れ渡った空が広がっていた。散歩に出ると、公園の木々が紅葉し、風に揺れる様子が美しかった。秋の深まりを感じる一日だった。午後はカフェで読書をし、温かい紅茶を楽しんだ。心が落ち着く時間だった。
+            </div>
+        </div>
+        <div class="diary-entry">
+            <div class="date">十二月五日（金）</div>
+            <div class="content">
+                仕事が忙しく、一日中パソコンと向き合っていた。夕方、窓から見える夕焼けがとても綺麗で、少し疲れが和らいだ。夜は温かい鍋料理を食べ、ゆっくりと過ごした。明日も頑張ろうと思う。
+            </div>
+        </div>
+        <div class="diary-entry">
+            <div class="date">十二月四日（木）</div>
+            <div class="content">
+                久しぶりに友人と会い、近況を話し合った。時間が経つのを忘れるほど楽しかった。帰り道、街のイルミネーションがキラキラと輝いていて、クリスマスの気分が高まった。寒さも心地よく感じられた。
+            </div>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('load', function() {
+            const container = document.getElementById('diaryContainer');
+            const firstDateElement = document.querySelector('.date');
+            if (firstDateElement) {
+                const firstEntry = firstDateElement.closest('.diary-entry');
+                if (firstEntry) {
+                    // 見出し（日付）の左端がコンテナの左端に来るようにスクロール
+                    container.scrollLeft = firstEntry.offsetLeft - container.offsetLeft;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
