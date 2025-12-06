@@ -3,18 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>縦書き日記（横並び・スクロールバー非表示）</title>
+    <title>誤字ロマの日記</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📜%3C/text%3E%3C/svg%3E" type="image/svg+xml">
     <style>
         body {
             font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #fff;
             padding: 20px;
             overflow: hidden;
+            position: relative;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .page-title {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
+            font-size: 18px;
+            font-weight: bold;
+            border: 1px solid #333;
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.1s, color 0.1s, border-color 0.1s;
+        }
+        .page-title.flash {
+            background-color: #000 !important;
+            color: #ff0 !important;
+            border-color: #ff0 !important;
         }
         .diary-container {
             display: flex;
@@ -27,6 +49,7 @@
             scroll-behavior: smooth;
             scrollbar-width: none;
             -ms-overflow-style: none;
+            justify-content: flex-end;
         }
         .diary-container::-webkit-scrollbar {
             display: none;
@@ -44,47 +67,153 @@
             font-weight: bold;
             font-size: 1.4em;
             margin-right: 20px;
-            color: #333;
         }
         .content {
             font-size: 1.3em;
-            color: #333;
             white-space: pre-line;
+        }
+        .char {
+            transition: font-size 0.2s ease;
+        }
+        .char.hovered {
+            font-size: 1.8em;
         }
     </style>
 </head>
 <body>
+    <div class="page-title">誤字ロマの日記</div>
     <div class="diary-container" id="diaryContainer">
         <div class="diary-entry">
             <div class="date">十二月六日（土）</div>
-            <div class="content">
+            <div class="content" id="content1">
                 今日も朝から晴れ渡った空が広がっていた。散歩に出ると、公園の木々が紅葉し、風に揺れる様子が美しかった。秋の深まりを感じる一日だった。午後はカフェで読書をし、温かい紅茶を楽しんだ。心が落ち着く時間だった。
             </div>
         </div>
         <div class="diary-entry">
             <div class="date">十二月五日（金）</div>
-            <div class="content">
+            <div class="content" id="content2">
                 仕事が忙しく、一日中パソコンと向き合っていた。夕方、窓から見える夕焼けがとても綺麗で、少し疲れが和らいだ。夜は温かい鍋料理を食べ、ゆっくりと過ごした。明日も頑張ろうと思う。
             </div>
         </div>
         <div class="diary-entry">
             <div class="date">十二月四日（木）</div>
-            <div class="content">
+            <div class="content" id="content3">
                 久しぶりに友人と会い、近況を話し合った。時間が経つのを忘れるほど楽しかった。帰り道、街のイルミネーションがキラキラと輝いていて、クリスマスの気分が高まった。寒さも心地よく感じられた。
             </div>
         </div>
     </div>
     <script>
+        // テーマカラーの候補
+        const themes = [
+            { bg: "#e6f3ff", text: "#003366", border: "#003366" },
+            { bg: "#fff8e6", text: "#8b4513", border: "#8b4513" },
+            { bg: "#e6ffe6", text: "#2e8b57", border: "#2e8b57" },
+            { bg: "#ffe6f0", text: "#8b008b", border: "#8b008b" },
+            { bg: "#f0f0ff", text: "#4b0082", border: "#4b0082" },
+            { bg: "#ffffe6", text: "#b8860b", border: "#b8860b" },
+            { bg: "#e6ffff", text: "#0066cc", border: "#0066cc" },
+            { bg: "#f0e6ff", text: "#800080", border: "#800080" },
+            { bg: "#fff0e6", text: "#cd5c5c", border: "#cd5c5c" },
+            { bg: "#f0ffe6", text: "#228b22", border: "#228b22" }
+        ];
+
+        let currentTheme = null;
+
+        // ランダムにテーマを選択して適用
+        function applyRandomTheme() {
+            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+            currentTheme = randomTheme;
+            document.body.style.backgroundColor = randomTheme.bg;
+            document.querySelector('.diary-container').style.backgroundColor = randomTheme.bg;
+            document.querySelector('.page-title').style.backgroundColor = randomTheme.bg;
+            document.querySelector('.page-title').style.borderColor = randomTheme.border;
+            document.querySelector('.page-title').style.color = randomTheme.text;
+
+            document.querySelectorAll('.date, .content').forEach(el => {
+                el.style.color = randomTheme.text;
+            });
+        }
+
+        // 右上タイトルだけをフラッシュ
+        function flashTitle() {
+            const title = document.querySelector('.page-title');
+            title.classList.add('flash');
+            setTimeout(() => {
+                title.classList.remove('flash');
+                setTimeout(() => {
+                    title.classList.add('flash');
+                    setTimeout(() => {
+                        title.classList.remove('flash');
+                        // フラッシュ後、現在のテーマの色を再適用
+                        if (currentTheme) {
+                            title.style.backgroundColor = currentTheme.bg;
+                            title.style.color = currentTheme.text;
+                            title.style.borderColor = currentTheme.border;
+                        }
+                    }, 100);
+                }, 100);
+            }, 100);
+        }
+
+        // 初回テーマ適用
+        applyRandomTheme();
+
+        // コンテンツを表示
+        document.body.style.opacity = 1;
+
+        // スクロールを右端に設定
         window.addEventListener('load', function() {
             const container = document.getElementById('diaryContainer');
-            const firstDateElement = document.querySelector('.date');
-            if (firstDateElement) {
-                const firstEntry = firstDateElement.closest('.diary-entry');
-                if (firstEntry) {
-                    // 見出し（日付）の左端がコンテナの左端に来るようにスクロール
-                    container.scrollLeft = firstEntry.offsetLeft - container.offsetLeft;
+            container.scrollLeft = container.scrollWidth;
+        });
+
+        // タイトルクリックでフラッシュ→テーマ変更
+        document.querySelector('.page-title').addEventListener('click', () => {
+            applyRandomTheme();
+                      flashTitle();
+
+        });
+
+        // 本文の文字を1文字ずつspanでラップ
+        function wrapChars() {
+            document.querySelectorAll('.content').forEach(content => {
+                const text = content.textContent;
+                let wrapped = '';
+                for (let i = 0; i < text.length; i++) {
+                    wrapped += `<span class="char">${text[i]}</span>`;
                 }
-            }
+                content.innerHTML = wrapped;
+            });
+        }
+
+        // 文字をラップ
+        wrapChars();
+
+        // ホバー時のアニメーション
+        document.querySelectorAll('.content').forEach(content => {
+            content.addEventListener('mousemove', (e) => {
+                const chars = content.querySelectorAll('.char');
+                const targetChar = document.elementFromPoint(e.clientX, e.clientY);
+                if (!targetChar || !targetChar.classList.contains('char')) return;
+
+                const index = Array.from(chars).indexOf(targetChar);
+                const start = Math.max(0, index - 5);
+                const end = Math.min(chars.length - 1, index + 5);
+
+                chars.forEach((char, i) => {
+                    if (i >= start && i <= end) {
+                        char.classList.add('hovered');
+                    } else {
+                        char.classList.remove('hovered');
+                    }
+                });
+            });
+
+            content.addEventListener('mouseleave', () => {
+                content.querySelectorAll('.char').forEach(char => {
+                    char.classList.remove('hovered');
+                });
+            });
         });
     </script>
 </body>
