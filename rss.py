@@ -62,20 +62,30 @@ def generate_rss(entries, output_file):
     rss = ET.Element('rss', version='2.0')
     channel = ET.SubElement(rss, 'channel')
     ET.SubElement(channel, 'title').text = '誤字ロマの日記'
-    ET.SubElement(channel, 'link').text = 'https://example.com/diary'
+    ET.SubElement(channel, 'link').text = 'https://nikki.poet.blue'
     ET.SubElement(channel, 'description').text = '誤字ロマの日記です。'
     ET.SubElement(channel, 'language').text = 'ja'
     ET.SubElement(channel, 'lastBuildDate').text = datetime.now().strftime('%a, %d %b %Y %H:%M:%S %z')
+
+    image = ET.SubElement(channel, 'image')
+    ET.SubElement(image, 'url').text = 'https://nikki.poet.blue/cover.png'  # 画像のURLを指定
+    ET.SubElement(image, 'title').text = '誤字ロマの日記'
+    ET.SubElement(image, 'link').text = 'https://nikki.poet.blue'
+    ET.SubElement(image, 'width').text = '288'
+    ET.SubElement(image, 'height').text = '288'
+
     for entry in sorted(entries, key=lambda x: x['date'], reverse=True):
         item = ET.SubElement(channel, 'item')
         ET.SubElement(item, 'title').text = format_japanese_date_with_day_of_week(entry['date'])
-        ET.SubElement(item, 'link').text = f"https://example.com/diary#{entry['date']}"
+        ET.SubElement(item, 'link').text = f"https://nikki.poet.blue#{entry['date']}"
         ET.SubElement(item, 'pubDate').text = datetime.strptime(entry['date'], '%Y%m%d').strftime('%a, %d %b %Y 00:00:00 +0900')
         ET.SubElement(item, 'description').text = entry['content'].replace('\n', '<br />')
+
     xml_str = ET.tostring(rss, encoding='utf-8')
     xml_pretty = minidom.parseString(xml_str).toprettyxml(indent='  ')
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(xml_pretty)
+
 
 if __name__ == '__main__':
     with open('entry.md', 'r', encoding='utf-8') as f:

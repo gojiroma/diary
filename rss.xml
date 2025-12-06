@@ -2,13 +2,20 @@
 <rss version="2.0">
   <channel>
     <title>誤字ロマの日記</title>
-    <link>https://example.com/diary</link>
+    <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 06 Dec 2025 17:30:33 </lastBuildDate>
+    <lastBuildDate>Sat, 06 Dec 2025 21:30:24 </lastBuildDate>
+    <image>
+      <url>https://nikki.poet.blue/cover.png</url>
+      <title>誤字ロマの日記</title>
+      <link>https://nikki.poet.blue</link>
+      <width>288</width>
+      <height>288</height>
+    </image>
     <item>
       <title>十二月六日（土）</title>
-      <link>https://example.com/diary#20251206</link>
+      <link>https://nikki.poet.blue#20251206</link>
       <pubDate>Sat, 06 Dec 2025 00:00:00 +0900</pubDate>
       <description>文学フリマで買った本を読んでいると、私も縦書きの日記を作ってみたくなったので、作った。一見シンプルだけど、ちょっとおかしい見た目を目指している。</description>
     </item>
