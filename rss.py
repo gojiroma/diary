@@ -50,25 +50,19 @@ def generate_rss(entries, output_file):
         'xmlns:itunes': 'http://www.itunes.com/dtds/podcast-1.0.dtd',
         'xmlns:media': 'http://search.yahoo.com/mrss/'
     })
-
     channel = ET.SubElement(rss, 'channel')
-
     ET.SubElement(channel, 'title').text = '誤字ロマの日記'
     ET.SubElement(channel, 'link').text = 'https://nikki.poet.blue'
     ET.SubElement(channel, 'description').text = '誤字ロマの日記です。'
     ET.SubElement(channel, 'language').text = 'ja'
-
     now_jst = datetime.now(JST)
     ET.SubElement(channel, 'lastBuildDate').text = now_jst.strftime('%a, %d %b %Y %H:%M:%S +0900')
-
     ET.SubElement(channel, 'itunes:image', href='https://nikki.poet.blue/cover.png')
     ET.SubElement(channel, 'media:thumbnail', url='https://nikki.poet.blue/cover.png')
-
     image = ET.SubElement(channel, 'image')
     ET.SubElement(image, 'url').text = 'https://nikki.poet.blue/cover.png'
     ET.SubElement(image, 'title').text = '誤字ロマの日記'
     ET.SubElement(image, 'link').text = 'https://nikki.poet.blue'
-
     ET.SubElement(channel, 'atom:link', {
         'href': 'https://nikki.poet.blue/rss.xml',
         'rel': 'self',
@@ -83,17 +77,18 @@ def generate_rss(entries, output_file):
         ET.SubElement(item, 'pubDate').text = pub_dt.strftime('%a, %d %b %Y 00:00:00 +0900')
         ET.SubElement(item, 'description').text = entry['content'].replace('\n', '<br />')
         ET.SubElement(item, 'guid', isPermaLink='false').text = f"urn:nikki.poet.blue:{entry['date']}"
+        # 画像URLを追加
+        ET.SubElement(item, 'media:content', {
+            'url': f"https://nc.poet.blue/{entry['date']}",
+            'type': 'image/svg+xml',
+            'medium': 'image'
+        })
 
-    # ここがポイント！toprettyxmlの罠を完全に回避
     rough = ET.tostring(rss, encoding='utf-8', method='xml')
     reparsed = minidom.parseString(rough)
     pretty = reparsed.toprettyxml(indent='  ')
-
-    # 1行目（<?xml...>）を除去し、余計な空行も削除
     lines = [line for line in pretty.splitlines() if line.strip()][1:]
-
     final_xml = '<?xml version="1.0" encoding="UTF-8"?>\n' + '\n'.join(lines) + '\n'
-
     with open(output_file, 'w', encoding='utf-8', newline='\n') as f:
         f.write(final_xml)
 
@@ -102,4 +97,4 @@ if __name__ == '__main__':
         markdown_text = f.read()
     entries = parse_entries(markdown_text)
     generate_rss(entries, 'rss.xml')
-    print('rss.xml を生成しました！（XML宣言二重エラー完全対策済み）')
+    print('rss.xml を生成しました！（サムネイル画像も出るよ）')

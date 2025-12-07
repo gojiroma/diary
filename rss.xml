@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 06 Dec 2025 21:44:08 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 07 Dec 2025 17:19:44 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -15,11 +15,20 @@
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
     <item>
+      <title>十二月七日（日）</title>
+      <link>https://nikki.poet.blue#20251207</link>
+      <pubDate>Sun, 07 Dec 2025 00:00:00 +0900</pubDate>
+      <description>ポッドキャストをルンルン気分で聴きながら遊歩道を歩いていたら、白い軽トラが飛び込んできた。危険運転か？と思ったけど、普通に隣接している畑に入っていくだけだった。聞きながら歩いている自分のほうが危険かもしれない。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20251207</guid>
+      <media:content url="https://nc.poet.blue/20251207" type="image/svg+xml" medium="image"/>
+    </item>
+    <item>
       <title>十二月六日（土）</title>
       <link>https://nikki.poet.blue#20251206</link>
       <pubDate>Sat, 06 Dec 2025 00:00:00 +0900</pubDate>
       <description>文学フリマで買った本を読んでいると、私も縦書きの日記を作ってみたくなったので、作った。一見シンプルだけど、ちょっとおかしい見た目を目指している。</description>
       <guid isPermaLink="false">urn:nikki.poet.blue:20251206</guid>
+      <media:content url="https://nc.poet.blue/20251206" type="image/svg+xml" medium="image"/>
     </item>
   </channel>
 </rss>
