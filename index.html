@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -26,14 +25,12 @@
             transition: opacity 0.3s ease;
             box-sizing: border-box;
         }
-
         body.disable-select * {
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
         }
-
         .page-title {
             position: fixed;
             top: 10px;
@@ -54,24 +51,20 @@
             -moz-user-select: none;
             -ms-user-select: none;
         }
-
         .page-title.fake-mode {
             background-color: #000 !important;
             color: #fff !important;
             border-color: #000 !important;
         }
-
         .page-title.flash {
             background-color: #000 !important;
             color: #ff0 !important;
             border-color: #ff0 !important;
         }
-
         .page-title.disabled {
             pointer-events: none;
             opacity: 0.5;
         }
-
         .diary-container-wrapper {
             width: 100%;
             max-width: 1000px;
@@ -82,7 +75,6 @@
             padding: 20px;
             box-sizing: border-box;
         }
-
         .diary-container {
             display: flex;
             flex-direction: row;
@@ -95,11 +87,9 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-
         .diary-container::-webkit-scrollbar {
             display: none;
         }
-
         .diary-entry {
             writing-mode: vertical-rl;
             text-orientation: mixed;
@@ -113,26 +103,22 @@
             transition: background-color 0.3s ease;
             flex-shrink: 0;
         }
-
         .date {
             font-weight: bold;
             font-size: 1.4em;
             margin-right: 20px;
+            cursor: pointer;
         }
-
         .content {
             font-size: 1.3em;
             white-space: pre-line;
         }
-
         .char {
             transition: font-size 0.2s ease;
         }
-
         .char.hovered {
             font-size: 1.8em;
         }
-
         .rss-button {
             position: fixed;
             bottom: 20px;
@@ -150,19 +136,16 @@
             opacity: .2;
             z-index: 10;
         }
-
         .rss-button:hover {
             opacity: 1;
             background-color: rgba(255, 153, 102, 0.4);
         }
-
         .highlight {
             background-color: yellow;
             cursor: pointer;
         }
     </style>
 </head>
-
 <body>
     <div class="page-title">誤字ロマの日記</div>
     <div class="diary-container-wrapper">
@@ -387,7 +370,6 @@
                 content.style.color = isFakeMode ? '#ff6600' : currentTheme.text;
             });
         };
-
         // ===== Event Handlers =====
         const setupHoverAnimation = () => {
             document.querySelectorAll('.content').forEach(content => {
@@ -425,6 +407,18 @@
                 });
             });
         };
+        const setupDateClick = () => {
+            document.querySelectorAll('.date').forEach(dateElement => {
+                dateElement.addEventListener('click', () => {
+                    const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
+                    window.location.hash = yyyymmdd;
+                    const entry = document.getElementById(yyyymmdd);
+                    if (entry) {
+                        flashEntry(entry);
+                    }
+                });
+            });
+        };
         // ===== Scroll Event Handling =====
         const onScrollEnd = (container, callback) => {
             let isScrolling;
@@ -442,6 +436,7 @@
                     const container = document.getElementById('diaryContainer');
                     const entryLeft = entry.offsetLeft;
                     container.scrollLeft = entryLeft - (container.clientWidth / 2) + (entry.clientWidth / 2);
+                    flashEntry(entry);
                 }
             }
         };
@@ -477,6 +472,7 @@
                     }
                 });
                 setupDateHover();
+                setupDateClick();
                 wrapChars();
                 setupHoverAnimation();
                 setupTextSelection();
@@ -526,6 +522,7 @@
                 }
             });
             setupDateHover();
+            setupDateClick();
             wrapChars();
             setupHoverAnimation();
             setupTextSelection();
@@ -539,11 +536,9 @@
                 toggleFakeMode();
                 return;
             }
-
             if (document.querySelector('.page-title').classList.contains('disabled')) {
                 return;
             }
-
             clickCount++;
             if (clickCount >= 7) {
                 toggleFakeMode();
@@ -569,9 +564,9 @@
             applyRandomTheme();
             loadDiaryEntries();
             preloadFakeEntries();
+            scrollToEntryFromHash();
         });
         window.addEventListener('hashchange', scrollToEntryFromHash);
     </script>
 </body>
-
 </html>
