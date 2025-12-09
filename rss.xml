@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Mon, 08 Dec 2025 20:15:58 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 09 Dec 2025 16:57:47 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -15,10 +15,18 @@
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
     <item>
+      <title>十二月九日（火）</title>
+      <link>https://nikki.poet.blue#20251209</link>
+      <pubDate>Tue, 09 Dec 2025 00:00:00 +0900</pubDate>
+      <description>職安の認定日だった。初回説明では一刻も早い再就職を推奨していて、人生について考えてなくていいから、早く働けって言われている気がする。まぁ、職員自体は咎めてきたりはしないが。&lt;br /&gt;  中古で買ったiPhoneのバッテリ交換を自力でやろうとしたが、画面を割ってしまいそうだったので業者に持ち込んだ。作業を待ちながら、近年の修理トレンドや収益性の話を聞いていた。古物商は知っていたけど、道具商という言葉は初めて知った。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20251209</guid>
+      <media:content url="https://nc.poet.blue/20251209" type="image/svg+xml" medium="image"/>
+    </item>
+    <item>
       <title>十二月八日（月）</title>
       <link>https://nikki.poet.blue#20251208</link>
       <pubDate>Mon, 08 Dec 2025 00:00:00 +0900</pubDate>
-      <description>三十一歳になった。お昼はビックボーイでドカ食い。2500Kcalを超えてしまいマズイ！と思ってサイクリング。90分程度で帰ってこようと思ったが、スマホを持たずに冒険してしまい、3時間になってしまった。メインディッシュのカロリーは帳消しになったが、さっそく脚が筋肉痛である。</description>
+      <description>三十一歳になった。お昼はビックボーイでドカ食い。二五〇〇㌔㌍を超えてしまいマズイ！と思ってサイクリング。九十分程度で帰ってこようと思ったが、スマホを持たずに冒険してしまい、三時間になってしまった。メインディッシュの㌍は帳消しになったが、さっそく脚が筋肉痛である。</description>
       <guid isPermaLink="false">urn:nikki.poet.blue:20251208</guid>
       <media:content url="https://nc.poet.blue/20251208" type="image/svg+xml" medium="image"/>
     </item>
