@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -25,12 +26,14 @@
             transition: opacity 0.3s ease;
             box-sizing: border-box;
         }
+
         body.disable-select * {
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
         }
+
         .page-title {
             position: fixed;
             top: 10px;
@@ -51,20 +54,24 @@
             -moz-user-select: none;
             -ms-user-select: none;
         }
+
         .page-title.fake-mode {
             background-color: #000 !important;
             color: #fff !important;
             border-color: #000 !important;
         }
+
         .page-title.flash {
             background-color: #000 !important;
             color: #ff0 !important;
             border-color: #ff0 !important;
         }
+
         .page-title.disabled {
             pointer-events: none;
             opacity: 0.5;
         }
+
         .diary-container-wrapper {
             width: 100%;
             max-width: 1000px;
@@ -75,6 +82,7 @@
             padding: 20px;
             box-sizing: border-box;
         }
+
         .diary-container {
             display: flex;
             flex-direction: row;
@@ -87,9 +95,11 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
+
         .diary-container::-webkit-scrollbar {
             display: none;
         }
+
         .diary-entry {
             writing-mode: vertical-rl;
             text-orientation: mixed;
@@ -103,22 +113,27 @@
             transition: background-color 0.3s ease;
             flex-shrink: 0;
         }
+
         .date {
             font-weight: bold;
             font-size: 1.4em;
             margin-right: 20px;
             cursor: pointer;
         }
+
         .content {
             font-size: 1.3em;
             white-space: pre-line;
         }
+
         .char {
             transition: font-size 0.2s ease;
         }
+
         .char.hovered {
             font-size: 1.8em;
         }
+
         .rss-button {
             position: fixed;
             bottom: 20px;
@@ -136,22 +151,48 @@
             opacity: .2;
             z-index: 10;
         }
+
         .rss-button:hover {
             opacity: 1;
             background-color: rgba(255, 153, 102, 0.4);
         }
+
         .highlight {
             background-color: yellow;
             cursor: pointer;
         }
+
+        .thin-blue-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            border: 1px solid #1E90FF;
+            background-color: transparent;
+            color: #1E90FF;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            opacity: .2;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .thin-blue-button:hover {
+            opacity: 1;
+            color: #1E90FF;
+            background-color: 1E90FF22;
+        }
     </style>
 </head>
+
 <body>
     <div class="page-title">誤字ロマの日記</div>
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
     </div>
     <a href="rss.xml" class="rss-button">RSS</a>
+        <a href="https://kakuka.poet.blue" target="_blank" rel="noopener noreferrer" class="thin-blue-button">書くか</a>
     <script>
         // ===== Constants =====
         const THEMES = [
@@ -569,4 +610,5 @@
         window.addEventListener('hashchange', scrollToEntryFromHash);
     </script>
 </body>
+
 </html>
