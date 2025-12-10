@@ -506,33 +506,37 @@
                 });
             });
         };
-        // ===== Scroll Event Handling =====
-    const scrollToEntryFromHash = () => {
-        requestAnimationFrame(() => {
-            const hash = window.location.hash.substring(1);
-            const container = document.getElementById('diaryContainer');
-            if (hash && hash.match(/^\d{8}$/)) {
-                const entry = document.getElementById(hash);
-                if (entry) {
-                    targetEntry = entry;
-                    const entryLeft = entry.offsetLeft;
-                    const entryRight = entryLeft + entry.clientWidth;
-                    const containerWidth = container.clientWidth;
+        const scrollToEntryFromHash = () => {
+                requestAnimationFrame(() => {
+                    const hash = window.location.hash.substring(1);
+                    const container = document.getElementById('diaryContainer');
+                    const entries = document.querySelectorAll('.diary-entry');
 
-                    // エントリが完全に表示されるようにスクロール位置を計算
-                    if (entryRight > containerWidth) {
-                        container.scrollLeft = entryRight - containerWidth;
+                    if (hash && hash.match(/^\d{8}$/)) {
+                        const entry = document.getElementById(hash);
+                        if (entry) {
+                            targetEntry = entry;
+                            const isLatestEntry = entry === entries[0];
+
+                            if (isLatestEntry) {
+                                // 最新エントリの場合は左端にスクロール
+                                container.scrollLeft = 0;
+                            } else {
+                                // 最新エントリ以外の場合はエントリが中央に来るようにスクロール
+                                const entryLeft = entry.offsetLeft;
+                                const entryWidth = entry.clientWidth;
+                                const containerWidth = container.clientWidth;
+                                container.scrollLeft = Math.max(0, entryLeft - (containerWidth - entryWidth) / 2);
+                            }
+                            flashEntry(entry);
+                        }
                     } else {
+                        // ハッシュがない場合は最新エントリ（一番左のエントリ）にスクロール
                         container.scrollLeft = 0;
                     }
-                    flashEntry(entry);
-                } else {
-                    // ハッシュがない場合は最新エントリ（一番左のエントリ）にスクロール
-                    container.scrollLeft = 0;
-                }
-            }
-        });
-    };
+                });
+            };
+
 
 
 
