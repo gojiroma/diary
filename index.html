@@ -347,14 +347,35 @@
         };
         // ===== Flash Entry =====
         const flashEntry = (entry) => {
-            entry.style.transition = 'transform 0.5s ease';
-            entry.style.transform = 'scaleX(1.03)';
-            entry.style.fontWeight = 'bold';
+            // 他のエントリのアニメーションをリセット
+            document.querySelectorAll('.diary-entry').forEach(el => {
+                if (el !== entry) {
+                    Object.assign(el.style, {
+                        transition: 'none',
+                        transform: 'scale(1)',
+                        fontWeight: '',
+                        filter: 'brightness(1)'
+                    });
+                }
+            });
+
+            // フォーカスしているエントリのみアニメーション
+            Object.assign(entry.style, {
+                transition: 'transform 0.5s ease, filter 0.5s ease',
+                transform: 'scaleX(1.03)',
+                fontWeight: 'bold',
+                filter: 'brightness(0.9)'
+            });
             setTimeout(() => {
-                entry.style.transform = 'scale(1)';
-                entry.style.fontWeight = '';
+                Object.assign(entry.style, {
+                    transform: 'scale(1)',
+                    fontWeight: '',
+                    filter: 'brightness(1)'
+                });
             }, 3000);
         };
+
+
         // ===== Mode Switch =====
         const toggleFakeMode = () => {
             const title = document.querySelector('.page-title');
@@ -373,14 +394,12 @@
                     loadDiaryEntries('fake.md');
                 }
                 body.classList.add('disable-select');
-                // 5秒後に解除
                 setTimeout(() => {
                     body.classList.remove('disable-select');
                 }, 5000);
             }
             isFakeMode = !isFakeMode;
             clickCount = 0;
-            // 日付の表示を更新
             document.querySelectorAll('.date').forEach(dateElement => {
                 const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
                 const dateObj = formatJapaneseDate(yyyymmdd);
@@ -395,6 +414,9 @@
         const setupHoverAnimation = () => {
             document.querySelectorAll('.content').forEach(content => {
                 content.addEventListener('mousemove', (e) => {
+                    const entry = content.closest('.diary-entry');
+                    if (targetEntry && entry !== targetEntry) return;
+
                     const chars = content.querySelectorAll('.char');
                     const targetChar = document.elementFromPoint(e.clientX, e.clientY);
                     if (!targetChar || !targetChar.classList.contains('char')) return;
@@ -410,12 +432,16 @@
                     });
                 });
                 content.addEventListener('mouseleave', () => {
+                    const entry = content.closest('.diary-entry');
+                    if (targetEntry && entry !== targetEntry) return;
+
                     content.querySelectorAll('.char').forEach(char => {
                         char.classList.remove('hovered');
                     });
                 });
             });
         };
+
         const setupDateHover = () => {
             document.querySelectorAll('.date').forEach(dateElement => {
                 const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
@@ -441,13 +467,6 @@
             });
         };
         // ===== Scroll Event Handling =====
-        const onScrollEnd = (container, callback) => {
-            let isScrolling;
-            container.addEventListener('scroll', () => {
-                window.clearTimeout(isScrolling);
-                isScrolling = setTimeout(callback, 100);
-            });
-        };
         const scrollToEntryFromHash = () => {
             requestAnimationFrame(() => {
                 const hash = window.location.hash.substring(1);
@@ -457,18 +476,65 @@
                     if (entry) {
                         targetEntry = entry;
                         const entryLeft = entry.offsetLeft;
-                        container.scrollLeft = entryLeft - (container.clientWidth / 2) + (entry.clientWidth / 2);
+                        const containerWidth = container.clientWidth;
+                        const entryWidth = entry.clientWidth;
+                        container.scrollLeft = entryLeft - (containerWidth / 2) + (entryWidth / 2);
                         flashEntry(entry);
                     }
                 } else {
-                    // ハッシュがない場合は最新エントリにスクロール
-                    const entries = container.querySelectorAll('.diary-entry');
-                    if (entries.length > 0) {
-                        container.scrollLeft = 0;
-                    }
+                    container.scrollLeft = 0;
                 }
             });
         };
+        // ===== Navigation =====
+        const getCurrentEntry = () => {
+            const hash = window.location.hash.substring(1);
+            if (hash && hash.match(/^\d{8}$/)) {
+                return document.getElementById(hash);
+            }
+            const entries = document.querySelectorAll('.diary-entry');
+            if (entries.length > 0) {
+                return entries[0];
+            }
+            return null;
+        };
+        const getAdjacentEntry = (currentEntry, direction) => {
+            const entries = document.querySelectorAll('.diary-entry');
+            const currentIndex = Array.from(entries).indexOf(currentEntry);
+            if (currentIndex === -1) return null;
+
+            const nextIndex = currentIndex + direction;
+            if (nextIndex < 0 || nextIndex >= entries.length) return null;
+
+            return entries[nextIndex];
+        };
+        const handleKeyDown = (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                e.preventDefault();
+                const currentEntry = getCurrentEntry();
+                if (!currentEntry) return;
+                const direction = e.key === 'ArrowLeft' ? -1 : 1;
+                const nextEntry = getAdjacentEntry(currentEntry, direction);
+                if (nextEntry) {
+                    const nextEntryId = nextEntry.id;
+                    window.location.hash = nextEntryId;
+                    scrollToEntryFromHash();
+                    document.querySelectorAll('.diary-entry').forEach(entry => {
+                        Object.assign(entry.style, {
+                            transition: 'none',
+                            transform: 'scale(1)',
+                            fontWeight: '',
+                            filter: 'brightness(1)'
+                        });
+                    });
+                }
+            } else if (e.key === 'Escape') {
+                if (window.location.hash) {
+                    window.location.hash = '';
+                }
+            }
+        };
+
 
         // ===== Main Functions =====
         const loadDiaryEntries = async (filename = 'entry.md') => {
@@ -495,19 +561,15 @@
                     `;
                     container.appendChild(entryElement);
                 });
-                onScrollEnd(container, () => {
-                    if (targetEntry) {
-                        flashEntry(targetEntry);
-                        targetEntry = null;
-                    }
+                requestAnimationFrame(() => {
+                    setupDateHover();
+                    setupDateClick();
+                    wrapChars();
+                    setupHoverAnimation();
+                    setupTextSelection();
+                    restoreHighlights();
+                    scrollToEntryFromHash();
                 });
-                setupDateHover();
-                setupDateClick();
-                wrapChars();
-                setupHoverAnimation();
-                setupTextSelection();
-                restoreHighlights();
-                scrollToEntryFromHash();
             } catch (error) {
                 console.error('Error loading diary entries:', error);
             }
@@ -544,19 +606,15 @@
                 `;
                 container.appendChild(entryElement);
             });
-            onScrollEnd(container, () => {
-                if (targetEntry) {
-                    flashEntry(targetEntry);
-                    targetEntry = null;
-                }
+            requestAnimationFrame(() => {
+                setupDateHover();
+                setupDateClick();
+                wrapChars();
+                setupHoverAnimation();
+                setupTextSelection();
+                restoreHighlights();
+                scrollToEntryFromHash();
             });
-            setupDateHover();
-            setupDateClick();
-            wrapChars();
-            setupHoverAnimation();
-            setupTextSelection();
-            restoreHighlights();
-            scrollToEntryFromHash();
         };
         const wrapChars = () => {
             document.querySelectorAll('.content').forEach(content => {
@@ -578,7 +636,7 @@
                 return;
             }
             clickCount++;
-            if (clickCount >= 7) {
+            if (clickCount >= 4) {
                 toggleFakeMode();
                 clickCount = 0;
                 const title = document.querySelector('.page-title');
@@ -603,6 +661,7 @@
             loadDiaryEntries();
             preloadFakeEntries();
             scrollToEntryFromHash();
+            document.addEventListener('keydown', handleKeyDown);
         });
         window.addEventListener('hashchange', scrollToEntryFromHash);
     </script>
