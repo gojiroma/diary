@@ -47,13 +47,20 @@
             cursor: pointer;
             transition: background-color 0.1s, color 0.1s, border-color 0.1s;
             text-decoration: none;
-            opacity: .9;
+            opacity: .6;
             z-index: 10;
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
         }
+
+        .page-title:hover {
+            opacity: 1;
+            transform: scale(1.05);
+            transition: transform 0.2s ease;
+        }
+
 
         .page-title.fake-mode {
             background-color: #000 !important;
@@ -183,6 +190,39 @@
             color: #1E90FF;
             background-color: 1E90FF22;
         }
+
+        .github-button {
+            position: fixed;
+            top: 10px;
+            left: 20px;
+            font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
+            font-size: 18px;
+            font-weight: bold;
+            border: 1px solid #999;
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.1s, color 0.1s, border-color 0.1s;
+            text-decoration: none;
+            color: #666;
+            opacity: .2;
+            z-index: 10;
+        }
+
+        .github-button:hover {
+            opacity: 1;
+            background-color: rgba(150, 150, 150, 0.2);
+            color: #333;
+        }
+
+        .char.falling,
+        .date.falling {
+            position: fixed;
+            transition: transform 2s ease-in, opacity 2s ease-out;
+            will-change: transform, opacity;
+            z-index: 100;
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -193,6 +233,9 @@
     </div>
     <a href="rss.xml" class="rss-button">RSS</a>
     <a href="https://kakuka.poet.blue" target="_blank" rel="noopener noreferrer" class="thin-blue-button">書くか</a>
+    <a href="https://github.com/gojiroma/diary" target="_blank" rel="noopener noreferrer"
+        class="github-button">GitHub</a>
+
     <script>
         // ===== Constants =====
         const THEMES = [
@@ -364,7 +407,7 @@
                 transition: 'transform 0.5s ease, filter 0.5s ease',
                 transform: 'scaleX(1.03)',
                 fontWeight: 'bold',
-                filter: 'brightness(0.9)'
+                filter: 'brightness(0.8)'
             });
             setTimeout(() => {
                 Object.assign(entry.style, {
@@ -534,6 +577,70 @@
                 }
             }
         };
+        // ===== Falling Animation =====
+        const startFallingAnimation = () => {
+            const chars = document.querySelectorAll('.char');
+            const dates = document.querySelectorAll('.date');
+
+            // 文字をバラバラに落下させる
+            chars.forEach(char => {
+                const rect = char.getBoundingClientRect();
+                const delay = Math.random() * 2000;
+
+                setTimeout(() => {
+                    char.style.position = 'fixed';
+                    char.style.left = `${rect.left}px`;
+                    char.style.top = `${rect.top}px`;
+                    char.style.transform = `rotate(0deg)`;
+                    char.style.opacity = '1';
+                    char.classList.add('falling');
+
+                    const angle = (Math.random() * 30) - 15;
+                    const fallDistance = window.innerHeight - rect.top;
+
+                    setTimeout(() => {
+                        char.style.transition = 'transform 2s ease-in, opacity 2s ease-out';
+                        char.style.transform = `rotate(${angle}deg) translateY(${fallDistance}px)`;
+                    }, 10);
+
+                    setTimeout(() => {
+                        char.style.bottom = '0';
+                        char.style.left = `${rect.left + (Math.random() * 40 - 20)}px`;
+                        char.style.opacity = '1';
+                    }, 2000);
+                }, 180000 + delay); // 3分（180,000ミリ秒）後に開始
+            });
+
+            // 日付要素を落下させる
+            dates.forEach(date => {
+                const rect = date.getBoundingClientRect();
+                const delay = Math.random() * 2000;
+
+                setTimeout(() => {
+                    date.style.position = 'fixed';
+                    date.style.left = `${rect.left}px`;
+                    date.style.top = `${rect.top}px`;
+                    date.style.transform = `rotate(0deg)`;
+                    date.style.opacity = '1';
+                    date.classList.add('falling');
+
+                    const angle = (Math.random() * 30) - 15;
+                    const fallDistance = window.innerHeight - rect.top;
+
+                    setTimeout(() => {
+                        date.style.transition = 'transform 2s ease-in, opacity 2s ease-out';
+                        date.style.transform = `rotate(${angle}deg) translateY(${fallDistance}px)`;
+                    }, 10);
+
+                    setTimeout(() => {
+                        date.style.bottom = '0';
+                        date.style.left = `${rect.left + (Math.random() * 40 - 20)}px`;
+                        date.style.opacity = '1';
+                    }, 2000);
+                }, 180000 + delay); // 3分（180,000ミリ秒）後に開始
+            });
+        };
+
 
 
         // ===== Main Functions =====
@@ -561,6 +668,7 @@
                     `;
                     container.appendChild(entryElement);
                 });
+                // ===== Main Functions ===== 内の `wrapChars` 関数呼び出し後に追加
                 requestAnimationFrame(() => {
                     setupDateHover();
                     setupDateClick();
@@ -569,6 +677,7 @@
                     setupTextSelection();
                     restoreHighlights();
                     scrollToEntryFromHash();
+                    startFallingAnimation(); // 追加
                 });
             } catch (error) {
                 console.error('Error loading diary entries:', error);
