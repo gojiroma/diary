@@ -395,7 +395,6 @@
                 if (el !== entry) {
                     Object.assign(el.style, {
                         transition: 'none',
-                        transform: 'scale(1)',
                         fontWeight: '',
                         filter: 'brightness(1)'
                     });
@@ -405,13 +404,11 @@
             // フォーカスしているエントリのみアニメーション
             Object.assign(entry.style, {
                 transition: 'transform 0.5s ease, filter 0.5s ease',
-                transform: 'scaleX(1.03)',
                 fontWeight: 'bold',
-                filter: 'brightness(0.8)'
+                filter: 'brightness(0.7)'
             });
             setTimeout(() => {
                 Object.assign(entry.style, {
-                    transform: 'scale(1)',
                     fontWeight: '',
                     filter: 'brightness(1)'
                 });
@@ -510,27 +507,34 @@
             });
         };
         // ===== Scroll Event Handling =====
-            const scrollToEntryFromHash = () => {
-                requestAnimationFrame(() => {
-                    const hash = window.location.hash.substring(1);
-                    const container = document.getElementById('diaryContainer');
-                    if (hash && hash.match(/^\d{8}$/)) {
-                        const entry = document.getElementById(hash);
-                        if (entry) {
-                            targetEntry = entry;
-                            const entryLeft = entry.offsetLeft;
-                            const containerWidth = container.clientWidth;
-                            const entryWidth = entry.clientWidth;
-                            // エントリが画面中央に来るようにスクロール
-                            container.scrollLeft = entryLeft - (containerWidth / 2) + (entryWidth / 2);
-                            flashEntry(entry);
-                        }
+    const scrollToEntryFromHash = () => {
+        requestAnimationFrame(() => {
+            const hash = window.location.hash.substring(1);
+            const container = document.getElementById('diaryContainer');
+            if (hash && hash.match(/^\d{8}$/)) {
+                const entry = document.getElementById(hash);
+                if (entry) {
+                    targetEntry = entry;
+                    const entryLeft = entry.offsetLeft;
+                    const entryRight = entryLeft + entry.clientWidth;
+                    const containerWidth = container.clientWidth;
+
+                    // エントリが完全に表示されるようにスクロール位置を計算
+                    if (entryRight > containerWidth) {
+                        container.scrollLeft = entryRight - containerWidth;
                     } else {
-                        // ハッシュがない場合は最新エントリ（左端）にスクロール
                         container.scrollLeft = 0;
                     }
-                });
-            };
+                    flashEntry(entry);
+                } else {
+                    // ハッシュがない場合は最新エントリ（一番左のエントリ）にスクロール
+                    container.scrollLeft = 0;
+                }
+            }
+        });
+    };
+
+
 
         // ===== Navigation =====
         const getCurrentEntry = () => {
