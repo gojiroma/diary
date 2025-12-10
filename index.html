@@ -510,25 +510,28 @@
             });
         };
         // ===== Scroll Event Handling =====
-        const scrollToEntryFromHash = () => {
-            requestAnimationFrame(() => {
-                const hash = window.location.hash.substring(1);
-                const container = document.getElementById('diaryContainer');
-                if (hash && hash.match(/^\d{8}$/)) {
-                    const entry = document.getElementById(hash);
-                    if (entry) {
-                        targetEntry = entry;
-                        const entryLeft = entry.offsetLeft;
-                        const containerWidth = container.clientWidth;
-                        const entryWidth = entry.clientWidth;
-                        container.scrollLeft = entryLeft - (containerWidth / 2) + (entryWidth / 2);
-                        flashEntry(entry);
+            const scrollToEntryFromHash = () => {
+                requestAnimationFrame(() => {
+                    const hash = window.location.hash.substring(1);
+                    const container = document.getElementById('diaryContainer');
+                    if (hash && hash.match(/^\d{8}$/)) {
+                        const entry = document.getElementById(hash);
+                        if (entry) {
+                            targetEntry = entry;
+                            const entryLeft = entry.offsetLeft;
+                            const containerWidth = container.clientWidth;
+                            const entryWidth = entry.clientWidth;
+                            // エントリが画面中央に来るようにスクロール
+                            container.scrollLeft = entryLeft - (containerWidth / 2) + (entryWidth / 2);
+                            flashEntry(entry);
+                        }
+                    } else {
+                        // ハッシュがない場合は最新エントリ（左端）にスクロール
+                        container.scrollLeft = 0;
                     }
-                } else {
-                    container.scrollLeft = 0;
-                }
-            });
-        };
+                });
+            };
+
         // ===== Navigation =====
         const getCurrentEntry = () => {
             const hash = window.location.hash.substring(1);
