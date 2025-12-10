@@ -192,7 +192,7 @@
         <div class="diary-container" id="diaryContainer"></div>
     </div>
     <a href="rss.xml" class="rss-button">RSS</a>
-        <a href="https://kakuka.poet.blue" target="_blank" rel="noopener noreferrer" class="thin-blue-button">書くか</a>
+    <a href="https://kakuka.poet.blue" target="_blank" rel="noopener noreferrer" class="thin-blue-button">書くか</a>
     <script>
         // ===== Constants =====
         const THEMES = [
@@ -279,26 +279,6 @@
                     }, 100);
                 }, 100);
             }, 100);
-        };
-        const scrollToLastEntry = () => {
-            const container = document.getElementById('diaryContainer');
-            const entries = container.querySelectorAll('.diary-entry');
-            if (entries.length > 0) {
-                const firstEntry = entries[0];
-                const entryWidthHalf = firstEntry.clientWidth / 2;
-                container.style.paddingLeft = `calc(50% - ${entryWidthHalf}px)`;
-                container.scrollLeft = 0;
-            }
-        };
-        const wrapChars = () => {
-            document.querySelectorAll('.content').forEach(content => {
-                const text = content.textContent;
-                let wrapped = '';
-                for (let i = 0; i < text.length; i++) {
-                    wrapped += `<span class="char">${text[i]}</span>`;
-                }
-                content.innerHTML = wrapped;
-            });
         };
         // ===== Highlight Management =====
         const saveHighlights = () => {
@@ -469,18 +449,27 @@
             });
         };
         const scrollToEntryFromHash = () => {
-            const hash = window.location.hash.substring(1);
-            if (hash && hash.match(/^\d{8}$/)) {
-                const entry = document.getElementById(hash);
-                if (entry) {
-                    targetEntry = entry;
-                    const container = document.getElementById('diaryContainer');
-                    const entryLeft = entry.offsetLeft;
-                    container.scrollLeft = entryLeft - (container.clientWidth / 2) + (entry.clientWidth / 2);
-                    flashEntry(entry);
+            requestAnimationFrame(() => {
+                const hash = window.location.hash.substring(1);
+                const container = document.getElementById('diaryContainer');
+                if (hash && hash.match(/^\d{8}$/)) {
+                    const entry = document.getElementById(hash);
+                    if (entry) {
+                        targetEntry = entry;
+                        const entryLeft = entry.offsetLeft;
+                        container.scrollLeft = entryLeft - (container.clientWidth / 2) + (entry.clientWidth / 2);
+                        flashEntry(entry);
+                    }
+                } else {
+                    // ハッシュがない場合は最新エントリにスクロール
+                    const entries = container.querySelectorAll('.diary-entry');
+                    if (entries.length > 0) {
+                        container.scrollLeft = 0;
+                    }
                 }
-            }
+            });
         };
+
         // ===== Main Functions =====
         const loadDiaryEntries = async (filename = 'entry.md') => {
             try {
@@ -518,7 +507,6 @@
                 setupHoverAnimation();
                 setupTextSelection();
                 restoreHighlights();
-                scrollToLastEntry();
                 scrollToEntryFromHash();
             } catch (error) {
                 console.error('Error loading diary entries:', error);
@@ -568,8 +556,17 @@
             setupHoverAnimation();
             setupTextSelection();
             restoreHighlights();
-            scrollToLastEntry();
             scrollToEntryFromHash();
+        };
+        const wrapChars = () => {
+            document.querySelectorAll('.content').forEach(content => {
+                const text = content.textContent;
+                let wrapped = '';
+                for (let i = 0; i < text.length; i++) {
+                    wrapped += `<span class="char">${text[i]}</span>`;
+                }
+                content.innerHTML = wrapped;
+            });
         };
         // ===== Event Listeners =====
         document.querySelector('.page-title').addEventListener('click', () => {
