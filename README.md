@@ -1,1 +1,1 @@
-![https://nikki.poet.blue](/cover.png)
+[![](/cover.png)](https://nikki.poet.blue)
