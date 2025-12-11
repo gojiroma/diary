@@ -223,6 +223,35 @@
             z-index: 100;
             pointer-events: none;
         }
+
+        .swipe-zone {
+            position: fixed;
+            bottom: 20px;
+            left: 52%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 40px;
+            background-color: rgba(173, 216, 230, 0.1);
+            border-radius: 8px;
+            cursor: ew-resize;
+            z-index: 10;
+            opacity: 0.2;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .swipe-zone:hover {
+            opacity: 0.5;
+            background-color: rgba(173, 216, 230, 0.3);
+        }
+
+        .swipe-zone.active {
+            opacity: 0.8;
+            background-color: rgba(173, 216, 230, 0.5);
+        }
     </style>
 </head>
 
@@ -232,7 +261,10 @@
         <div class="diary-container" id="diaryContainer"></div>
     </div>
     <a href="rss.xml" class="rss-button">RSS</a>
-    <a href="https://kakuka.poet.blue" target="_blank" rel="noopener noreferrer" class="thin-blue-button">書くか</a>
+    <a href="https://kakuka.poet.blue" target="_blank" rel="noopener noreferrer" class="thin-blue-button"
+        data-count="0">書くか</a>
+    <div class="swipe-zone"></div>
+
     <a href="https://github.com/gojiroma/diary" target="_blank" rel="noopener noreferrer"
         class="github-button">GitHub</a>
 
@@ -506,37 +538,37 @@
                 });
             });
         };
-    const scrollToEntryFromHash = () => {
-        requestAnimationFrame(() => {
-            const hash = window.location.hash.substring(1);
-            const container = document.getElementById('diaryContainer');
-            const entries = document.querySelectorAll('.diary-entry');
+        const scrollToEntryFromHash = () => {
+            requestAnimationFrame(() => {
+                const hash = window.location.hash.substring(1);
+                const container = document.getElementById('diaryContainer');
+                const entries = document.querySelectorAll('.diary-entry');
 
-            if (hash && hash.match(/^\d{8}$/)) {
-                // ハッシュありの場合
-                const entry = document.getElementById(hash);
-                if (entry) {
-                    targetEntry = entry;
-                    const dateElement = entry.querySelector('.date');
+                if (hash && hash.match(/^\d{8}$/)) {
+                    // ハッシュありの場合
+                    const entry = document.getElementById(hash);
+                    if (entry) {
+                        targetEntry = entry;
+                        const dateElement = entry.querySelector('.date');
+                        const dateRect = dateElement.getBoundingClientRect();
+                        const containerRect = container.getBoundingClientRect();
+                        // 日付部分が画面右端に来るようにスクロール
+                        const scrollLeft = entry.offsetLeft + dateRect.left - containerRect.left - (container.clientWidth - dateRect.width - 20);
+                        container.scrollLeft = Math.max(0, scrollLeft);
+                        flashEntry(entry);
+                    }
+                } else if (entries.length > 0) {
+                    // ハッシュなしの場合（最新エントリ）
+                    const latestEntry = entries[0];
+                    const dateElement = latestEntry.querySelector('.date');
                     const dateRect = dateElement.getBoundingClientRect();
                     const containerRect = container.getBoundingClientRect();
                     // 日付部分が画面右端に来るようにスクロール
-                    const scrollLeft = entry.offsetLeft + dateRect.left - containerRect.left - (container.clientWidth - dateRect.width - 20);
+                    const scrollLeft = latestEntry.offsetLeft + dateRect.left - containerRect.left - (container.clientWidth - dateRect.width - 20);
                     container.scrollLeft = Math.max(0, scrollLeft);
-                    flashEntry(entry);
                 }
-            } else if (entries.length > 0) {
-                // ハッシュなしの場合（最新エントリ）
-                const latestEntry = entries[0];
-                const dateElement = latestEntry.querySelector('.date');
-                const dateRect = dateElement.getBoundingClientRect();
-                const containerRect = container.getBoundingClientRect();
-                // 日付部分が画面右端に来るようにスクロール
-                const scrollLeft = latestEntry.offsetLeft + dateRect.left - containerRect.left - (container.clientWidth - dateRect.width - 20);
-                container.scrollLeft = Math.max(0, scrollLeft);
-            }
-        });
-    };
+            });
+        };
 
 
 
@@ -681,6 +713,8 @@
                     `;
                     container.appendChild(entryElement);
                 });
+                const writeButton = document.querySelector('.thin-blue-button');
+                writeButton.setAttribute('data-count', entries.length);
                 // ===== Main Functions ===== 内の `wrapChars` 関数呼び出し後に追加
                 requestAnimationFrame(() => {
                     setupDateHover();
@@ -777,13 +811,103 @@
             applyRandomTheme();
             flashTitle();
         });
+
+        // スワイプゾーンの初期化
+        const initSwipeZone = () => {
+            const swipeZone = document.querySelector('.swipe-zone');
+            let isSwiping = false;
+            let swipeTimer = null;
+
+            // マウスイベント
+            swipeZone.addEventListener('mouseenter', () => {
+                swipeZone.classList.add('active');
+                isSwiping = true;
+            });
+
+            swipeZone.addEventListener('mouseleave', () => {
+                swipeZone.classList.remove('active');
+                isSwiping = false;
+                if (swipeTimer) {
+                    clearInterval(swipeTimer);
+                    swipeTimer = null;
+                }
+            });
+
+            swipeZone.addEventListener('mousemove', (e) => {
+                if (!isSwiping) return;
+                const rect = swipeZone.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const deltaX = e.clientX - centerX;
+
+                // 右に動かすと過去、左に動かすと未来
+                if (Math.abs(deltaX) > 10) {
+                    if (swipeTimer) clearInterval(swipeTimer);
+                    swipeTimer = setInterval(() => {
+                        const currentEntry = getCurrentEntry();
+                        if (!currentEntry) return;
+                        const direction = deltaX > 0 ? 1 : -1;
+                        const nextEntry = getAdjacentEntry(currentEntry, direction);
+                        if (nextEntry) {
+                            window.location.hash = nextEntry.id;
+                            scrollToEntryFromHash();
+                        }
+                    }, 100);
+                }
+            });
+
+            // タッチイベント（モバイル対応）
+            swipeZone.addEventListener('touchstart', (e) => {
+                swipeZone.classList.add('active');
+                isSwiping = true;
+                const startX = e.touches[0].clientX;
+                const rect = swipeZone.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+
+                const handleTouchMove = (e) => {
+                    e.preventDefault();
+                    const currentX = e.touches[0].clientX;
+                    const deltaX = currentX - startX;
+
+                    if (Math.abs(deltaX) > 10) {
+                        if (swipeTimer) clearInterval(swipeTimer);
+                        swipeTimer = setInterval(() => {
+                            const currentEntry = getCurrentEntry();
+                            if (!currentEntry) return;
+                            const direction = deltaX > 0 ? 1 : -1;
+                            const nextEntry = getAdjacentEntry(currentEntry, direction);
+                            if (nextEntry) {
+                                window.location.hash = nextEntry.id;
+                                scrollToEntryFromHash();
+                            }
+                        }, 100);
+                    }
+                };
+
+                swipeZone.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+                swipeZone.addEventListener('touchend', () => {
+                    swipeZone.classList.remove('active');
+                    isSwiping = false;
+                    if (swipeTimer) {
+                        clearInterval(swipeTimer);
+                        swipeTimer = null;
+                    }
+                    swipeZone.removeEventListener('touchmove', handleTouchMove);
+                }, { once: true });
+            });
+        };
+
         window.addEventListener('load', () => {
             document.body.style.opacity = 1;
+            if (location.host !== "nikki.poet.blue") {
+                document.title = "DEV - 誤字ロマの日記";
+            }
             applyRandomTheme();
             loadDiaryEntries();
             preloadFakeEntries();
             scrollToEntryFromHash();
             document.addEventListener('keydown', handleKeyDown);
+            initSwipeZone();
         });
         window.addEventListener('hashchange', scrollToEntryFromHash);
     </script>
