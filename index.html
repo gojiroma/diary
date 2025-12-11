@@ -506,36 +506,38 @@
                 });
             });
         };
-        const scrollToEntryFromHash = () => {
-                requestAnimationFrame(() => {
-                    const hash = window.location.hash.substring(1);
-                    const container = document.getElementById('diaryContainer');
-                    const entries = document.querySelectorAll('.diary-entry');
+    const scrollToEntryFromHash = () => {
+        requestAnimationFrame(() => {
+            const hash = window.location.hash.substring(1);
+            const container = document.getElementById('diaryContainer');
+            const entries = document.querySelectorAll('.diary-entry');
 
-                    if (hash && hash.match(/^\d{8}$/)) {
-                        const entry = document.getElementById(hash);
-                        if (entry) {
-                            targetEntry = entry;
-                            const isLatestEntry = entry === entries[0];
+            if (hash && hash.match(/^\d{8}$/)) {
+                // ハッシュありの場合
+                const entry = document.getElementById(hash);
+                if (entry) {
+                    targetEntry = entry;
+                    const dateElement = entry.querySelector('.date');
+                    const dateRect = dateElement.getBoundingClientRect();
+                    const containerRect = container.getBoundingClientRect();
+                    // 日付部分が画面右端に来るようにスクロール
+                    const scrollLeft = entry.offsetLeft + dateRect.left - containerRect.left - (container.clientWidth - dateRect.width - 20);
+                    container.scrollLeft = Math.max(0, scrollLeft);
+                    flashEntry(entry);
+                }
+            } else if (entries.length > 0) {
+                // ハッシュなしの場合（最新エントリ）
+                const latestEntry = entries[0];
+                const dateElement = latestEntry.querySelector('.date');
+                const dateRect = dateElement.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+                // 日付部分が画面右端に来るようにスクロール
+                const scrollLeft = latestEntry.offsetLeft + dateRect.left - containerRect.left - (container.clientWidth - dateRect.width - 20);
+                container.scrollLeft = Math.max(0, scrollLeft);
+            }
+        });
+    };
 
-                            if (isLatestEntry) {
-                                // 最新エントリの場合は左端にスクロール
-                                container.scrollLeft = 0;
-                            } else {
-                                // 最新エントリ以外の場合はエントリが中央に来るようにスクロール
-                                const entryLeft = entry.offsetLeft;
-                                const entryWidth = entry.clientWidth;
-                                const containerWidth = container.clientWidth;
-                                container.scrollLeft = Math.max(0, entryLeft - (containerWidth - entryWidth) / 2);
-                            }
-                            flashEntry(entry);
-                        }
-                    } else {
-                        // ハッシュがない場合は最新エントリ（一番左のエントリ）にスクロール
-                        container.scrollLeft = 0;
-                    }
-                });
-            };
 
 
 
