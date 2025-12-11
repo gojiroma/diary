@@ -181,14 +181,14 @@
             border-radius: 8px;
             font-size: 14px;
             cursor: pointer;
-            opacity: .2;
+            opacity: .1;
             transition: background-color 0.3s, color 0.3s;
         }
 
         .thin-blue-button:hover {
             opacity: 1;
             color: #1E90FF;
-            background-color: 1E90FF22;
+            background-color: #1E90FF11;
         }
 
         .github-button {
@@ -205,7 +205,7 @@
             transition: background-color 0.1s, color 0.1s, border-color 0.1s;
             text-decoration: none;
             color: #666;
-            opacity: .2;
+            opacity: .1;
             z-index: 10;
         }
 
@@ -229,9 +229,9 @@
             bottom: 20px;
             left: 52%;
             transform: translateX(-50%);
-            width: 200px;
+            width: 60%;
             height: 40px;
-            background-color: rgba(173, 216, 230, 0.1);
+            background-color: rgba(229, 229, 229, 0.1);
             border-radius: 8px;
             cursor: ew-resize;
             z-index: 10;
@@ -243,15 +243,28 @@
             -ms-user-select: none;
         }
 
-        .swipe-zone:hover {
-            opacity: 0.5;
-            background-color: rgba(173, 216, 230, 0.3);
-        }
-
         .swipe-zone.active {
             opacity: 0.8;
-            background-color: rgba(173, 216, 230, 0.5);
+            background-color: rgba(229, 229, 229, 0.5);
         }
+
+        .entry-count {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
+            font-size: 14px;
+            color: #999;
+            opacity: 0.3;
+            transition: opacity 0.2s ease;
+            user-select: none;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-style: italic;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
     </style>
 </head>
 
@@ -263,6 +276,8 @@
     <a href="rss.xml" class="rss-button">RSS</a>
     <a href="https://kakuka.poet.blue" target="_blank" rel="noopener noreferrer" class="thin-blue-button"
         data-count="0">書くか</a>
+    <div class="entry-count"></div>
+
     <div class="swipe-zone"></div>
 
     <a href="https://github.com/gojiroma/diary" target="_blank" rel="noopener noreferrer"
@@ -549,23 +564,19 @@
                     const entry = document.getElementById(hash);
                     if (entry) {
                         targetEntry = entry;
-                        const dateElement = entry.querySelector('.date');
-                        const dateRect = dateElement.getBoundingClientRect();
-                        const containerRect = container.getBoundingClientRect();
-                        // 日付部分が画面右端に来るようにスクロール
-                        const scrollLeft = entry.offsetLeft + dateRect.left - containerRect.left - (container.clientWidth - dateRect.width - 20);
-                        container.scrollLeft = Math.max(0, scrollLeft);
+                        // エントリの右端がコンテナの右端に来るようにスクロール
+                        const entryRight = entry.offsetLeft + entry.clientWidth;
+                        const containerWidth = container.clientWidth;
+                        container.scrollLeft = entryRight - containerWidth;
                         flashEntry(entry);
                     }
                 } else if (entries.length > 0) {
                     // ハッシュなしの場合（最新エントリ）
                     const latestEntry = entries[0];
-                    const dateElement = latestEntry.querySelector('.date');
-                    const dateRect = dateElement.getBoundingClientRect();
-                    const containerRect = container.getBoundingClientRect();
-                    // 日付部分が画面右端に来るようにスクロール
-                    const scrollLeft = latestEntry.offsetLeft + dateRect.left - containerRect.left - (container.clientWidth - dateRect.width - 20);
-                    container.scrollLeft = Math.max(0, scrollLeft);
+                    // 最新エントリの右端がコンテナの右端に来るようにスクロール
+                    const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
+                    const containerWidth = container.clientWidth;
+                    container.scrollLeft = entryRight - containerWidth;
                 }
             });
         };
@@ -686,6 +697,12 @@
             });
         };
 
+        const updateEntryCount = (count) => {
+            const entryCountElement = document.querySelector('.entry-count');
+            if (entryCountElement) {
+                entryCountElement.textContent = `${count}日分の生きた証`;
+            }
+        };
 
 
         // ===== Main Functions =====
@@ -713,9 +730,8 @@
                     `;
                     container.appendChild(entryElement);
                 });
-                const writeButton = document.querySelector('.thin-blue-button');
-                writeButton.setAttribute('data-count', entries.length);
-                // ===== Main Functions ===== 内の `wrapChars` 関数呼び出し後に追加
+                updateEntryCount(entries.length); // 追加
+// ===== Main Functions ===== 内の `wrapChars` 関数呼び出し後に追加
                 requestAnimationFrame(() => {
                     setupDateHover();
                     setupDateClick();
