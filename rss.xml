@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Wed, 10 Dec 2025 17:52:47 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 11 Dec 2025 22:47:55 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>十二月十一日（木）</title>
+      <link>https://nikki.poet.blue#20251211</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0900</pubDate>
+      <description>頭のシステムクロック的にはもう十五日であるが、現実はまだ十一日だった。やや身体活動が少ない一日。「とりあえず綴じておこう」で増えてしまった映画・美術展のチラシ、ミュージアムの冊子をリサイクルに出した。パラパラ見てこれは良い！と思ったものはハサミで切った。手元には「美しい昆虫標本」「埼玉の地形区分」「荒川の主な支流・分流」が残ったので、手帳に貼った。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20251211</guid>
+      <media:content url="https://nc.poet.blue/20251211" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>十二月十日（水）</title>
       <link>https://nikki.poet.blue#20251210</link>
