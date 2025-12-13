@@ -1,4 +1,5 @@
 import re
+import os
 from datetime import datetime, timezone, timedelta
 from xml.etree import ElementTree as ET
 from xml.dom import minidom
@@ -43,7 +44,29 @@ def format_japanese_date_with_day_of_week(yyyymmdd):
     dow = '月火水木金土日'[dt.weekday()]
     return f"{to_kanji_month(month)}{to_kanji_day(day)}（{dow}）"
 
+def parse_existing_pubdates(rss_file):
+    pubdates = {}
+    if not os.path.exists(rss_file):
+        return pubdates
+    try:
+        tree = ET.parse(rss_file)
+        root = tree.getroot()
+        channel = root.find('channel')
+        if channel is None: return pubdates
+        for item in channel.findall('item'):
+            guid = item.find('guid')
+            pubDate = item.find('pubDate')
+            if guid is not None and pubDate is not None and guid.text:
+                parts = guid.text.strip().split(':')
+                if len(parts) >= 3:
+                     date_str = parts[-1]
+                     pubdates[date_str] = pubDate.text
+    except Exception as e:
+        print(f"Warning: Failed to parse existing RSS: {e}")
+    return pubdates
+
 def generate_rss(entries, output_file):
+    existing_pubdates = parse_existing_pubdates(output_file)
     rss = ET.Element('rss', {
         'version': '2.0',
         'xmlns:atom': 'http://www.w3.org/2005/Atom',
@@ -69,12 +92,23 @@ def generate_rss(entries, output_file):
         'type': 'application/rss+xml'
     })
 
+    today_str = now_jst.strftime('%Y%m%d')
+
     for entry in sorted(entries, key=lambda x: x['date'], reverse=True):
         item = ET.SubElement(channel, 'item')
         ET.SubElement(item, 'title').text = format_japanese_date_with_day_of_week(entry['date'])
         ET.SubElement(item, 'link').text = f"https://nikki.poet.blue#{entry['date']}"
-        pub_dt = datetime.strptime(entry['date'], '%Y%m%d').replace(tzinfo=JST)
-        ET.SubElement(item, 'pubDate').text = pub_dt.strftime('%a, %d %b %Y 00:00:00 +0900')
+        
+        entry_date = entry['date']
+        if entry_date == today_str:
+            pub_date_str = now_jst.strftime('%a, %d %b %Y %H:%M:%S +0900')
+        elif entry_date in existing_pubdates:
+            pub_date_str = existing_pubdates[entry_date]
+        else:
+            pub_dt = datetime.strptime(entry['date'], '%Y%m%d').replace(tzinfo=JST)
+            pub_date_str = pub_dt.strftime('%a, %d %b %Y 00:00:00 +0900')
+            
+        ET.SubElement(item, 'pubDate').text = pub_date_str
         ET.SubElement(item, 'description').text = entry['content'].replace('\n', '<br />')
         ET.SubElement(item, 'guid', isPermaLink='false').text = f"urn:nikki.poet.blue:{entry['date']}"
         # 画像URLを追加
