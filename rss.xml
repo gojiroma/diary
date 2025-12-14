@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 13 Dec 2025 21:37:03 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 14 Dec 2025 10:12:48 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>十二月十四日（日）</title>
+      <link>https://nikki.poet.blue#20251214</link>
+      <pubDate>Sun, 14 Dec 2025 10:12:48 +0900</pubDate>
+      <description>修正テープのボディの形状は、牛に似ていると思う。後ろが丸く膨らんでいて、テープが露出しているところは先細っている。これを紙に当てると、ちょうど牛が牧草を食べているような姿勢に見える。今ざっと調べた感じ、牛のデザインの修正テープは存在していないようだ。ヒヨコはあるんだけどな。&lt;br /&gt;  今日はひたすら、文フリで買った本を読んでいく日になりそうだ。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20251214</guid>
+      <media:content url="https://nc.poet.blue/20251214" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>十二月十三日（土）</title>
       <link>https://nikki.poet.blue#20251213</link>
