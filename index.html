@@ -61,7 +61,6 @@
             transition: transform 0.2s ease;
         }
 
-
         .page-title.fake-mode {
             background-color: #000 !important;
             color: #fff !important;
@@ -82,12 +81,13 @@
         .diary-container-wrapper {
             width: 100%;
             max-width: 90%;
-            height: 70vh;
+            height: 75vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 0;
             box-sizing: border-box;
+            margin-top: 20px;
         }
 
         .diary-container {
@@ -157,6 +157,10 @@
             text-decoration: none;
             opacity: .2;
             z-index: 10;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         .rss-button:hover {
@@ -183,6 +187,10 @@
             cursor: pointer;
             opacity: .1;
             transition: background-color 0.3s, color 0.3s;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         .thin-blue-button:hover {
@@ -207,6 +215,10 @@
             color: #666;
             opacity: .1;
             z-index: 10;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         .github-button:hover {
@@ -224,30 +236,6 @@
             pointer-events: none;
         }
 
-        .swipe-zone {
-            position: fixed;
-            bottom: 20px;
-            left: 52%;
-            transform: translateX(-50%);
-            width: 60%;
-            height: 40px;
-            background-color: rgba(229, 229, 229, 0.1);
-            border-radius: 8px;
-            cursor: ew-resize;
-            z-index: 10;
-            opacity: 0.2;
-            transition: opacity 0.2s ease, background-color 0.2s ease;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
-
-        .swipe-zone.active {
-            opacity: 0.8;
-            background-color: rgba(229, 229, 229, 0.5);
-        }
-
         .entry-count {
             position: fixed;
             bottom: 20px;
@@ -259,12 +247,14 @@
             opacity: 0.3;
             transition: opacity 0.2s ease;
             user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
             padding: 5px 10px;
             border-radius: 8px;
             font-style: italic;
             background-color: rgba(255, 255, 255, 0.1);
         }
-
     </style>
 </head>
 
@@ -277,9 +267,6 @@
     <a href="https://kakuka.poet.blue" target="_blank" rel="noopener noreferrer" class="thin-blue-button"
         data-count="0">書くか</a>
     <div class="entry-count"></div>
-
-    <div class="swipe-zone"></div>
-
     <a href="https://github.com/gojiroma/diary" target="_blank" rel="noopener noreferrer"
         class="github-button">GitHub</a>
 
@@ -297,6 +284,7 @@
             { bg: "#fff0e6", text: "#cd5c5c", border: "#cd5c5c" },
             { bg: "#f0ffe6", text: "#228b22", border: "#228b22" }
         ];
+
         // ===== State =====
         let currentTheme = null;
         let targetEntry = null;
@@ -305,11 +293,13 @@
         let clickTimer = null;
         let disableTimer = null;
         let fakeEntriesCache = null;
+
         // ===== Utilities =====
         const toKanjiNumber = (num) => {
             const kanjiNumbers = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
             return num.toString().split('').map(digit => kanjiNumbers[digit]).join('');
         };
+
         const toKanjiMonth = (month) => {
             const kanjiMonths = [
                 '一月', '二月', '三月', '四月', '五月', '六月',
@@ -317,6 +307,7 @@
             ];
             return kanjiMonths[month - 1];
         };
+
         const toKanjiDay = (day) => {
             if (day === 10) return '十';
             if (day === 20) return '二十';
@@ -327,6 +318,7 @@
             if (day < 30) return '二十' + toKanjiNumber(day - 20);
             return toKanjiNumber(day);
         };
+
         const formatJapaneseDate = (yyyymmdd) => {
             const year = parseInt(yyyymmdd.substring(0, 4), 10);
             const month = parseInt(yyyymmdd.substring(4, 6), 10);
@@ -338,6 +330,18 @@
                 long: `${toKanjiNumber(year)}年${toKanjiMonth(month)}${toKanjiDay(day)}日（${isFakeMode ? '嘘' : dayOfWeek}）`
             };
         };
+
+        const generateRandomDate = () => {
+            const today = new Date();
+            const randomDaysAgo = Math.floor(Math.random() * 60) + 1;
+            const randomDate = new Date(today);
+            randomDate.setDate(today.getDate() - randomDaysAgo);
+            const year = randomDate.getFullYear();
+            const month = String(randomDate.getMonth() + 1).padStart(2, '0');
+            const day = String(randomDate.getDate()).padStart(2, '0');
+            return `${year}${month}${day}`;
+        };
+
         // ===== DOM Helpers =====
         const applyRandomTheme = () => {
             const randomTheme = THEMES[Math.floor(Math.random() * THEMES.length)];
@@ -352,6 +356,7 @@
                 el.style.color = randomTheme.text;
             });
         };
+
         const flashTitle = () => {
             const title = document.querySelector('.page-title');
             title.classList.add('flash');
@@ -370,6 +375,7 @@
                 }, 100);
             }, 100);
         };
+
         // ===== Highlight Management =====
         const saveHighlights = () => {
             const highlights = [];
@@ -383,6 +389,7 @@
             });
             localStorage.setItem('diaryHighlights', JSON.stringify(highlights));
         };
+
         const restoreHighlights = () => {
             const highlights = JSON.parse(localStorage.getItem('diaryHighlights') || '[]');
             highlights.forEach(h => {
@@ -407,6 +414,7 @@
             });
             setupHighlightRemoval();
         };
+
         const setupHighlightRemoval = () => {
             document.querySelectorAll('.highlight').forEach(el => {
                 el.addEventListener('click', () => {
@@ -417,6 +425,7 @@
                 });
             });
         };
+
         const setupTextSelection = () => {
             document.addEventListener('mouseup', () => {
                 const selection = window.getSelection();
@@ -435,9 +444,9 @@
                 setupHighlightRemoval();
             });
         };
+
         // ===== Flash Entry =====
         const flashEntry = (entry) => {
-            // 他のエントリのアニメーションをリセット
             document.querySelectorAll('.diary-entry').forEach(el => {
                 if (el !== entry) {
                     Object.assign(el.style, {
@@ -448,7 +457,6 @@
                 }
             });
 
-            // フォーカスしているエントリのみアニメーション
             Object.assign(entry.style, {
                 transition: 'transform 0.5s ease, filter 0.5s ease',
                 fontWeight: 'bold',
@@ -461,7 +469,6 @@
                 });
             }, 3000);
         };
-
 
         // ===== Mode Switch =====
         const toggleFakeMode = () => {
@@ -497,6 +504,7 @@
                 content.style.color = isFakeMode ? '#ff6600' : currentTheme.text;
             });
         };
+
         // ===== Event Handlers =====
         const setupHoverAnimation = () => {
             document.querySelectorAll('.content').forEach(content => {
@@ -541,6 +549,7 @@
                 });
             });
         };
+
         const setupDateClick = () => {
             document.querySelectorAll('.date').forEach(dateElement => {
                 dateElement.addEventListener('click', () => {
@@ -553,6 +562,7 @@
                 });
             });
         };
+
         const scrollToEntryFromHash = () => {
             requestAnimationFrame(() => {
                 const hash = window.location.hash.substring(1);
@@ -560,30 +570,22 @@
                 const entries = document.querySelectorAll('.diary-entry');
 
                 if (hash && hash.match(/^\d{8}$/)) {
-                    // ハッシュありの場合
                     const entry = document.getElementById(hash);
                     if (entry) {
                         targetEntry = entry;
-                        // エントリの右端がコンテナの右端に来るようにスクロール
                         const entryRight = entry.offsetLeft + entry.clientWidth;
                         const containerWidth = container.clientWidth;
                         container.scrollLeft = entryRight - containerWidth;
                         flashEntry(entry);
                     }
                 } else if (entries.length > 0) {
-                    // ハッシュなしの場合（最新エントリ）
                     const latestEntry = entries[0];
-                    // 最新エントリの右端がコンテナの右端に来るようにスクロール
                     const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
                     const containerWidth = container.clientWidth;
                     container.scrollLeft = entryRight - containerWidth;
                 }
             });
         };
-
-
-
-
 
         // ===== Navigation =====
         const getCurrentEntry = () => {
@@ -597,6 +599,7 @@
             }
             return null;
         };
+
         const getAdjacentEntry = (currentEntry, direction) => {
             const entries = document.querySelectorAll('.diary-entry');
             const currentIndex = Array.from(entries).indexOf(currentEntry);
@@ -607,6 +610,7 @@
 
             return entries[nextIndex];
         };
+
         const handleKeyDown = (e) => {
             if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
                 e.preventDefault();
@@ -633,12 +637,12 @@
                 }
             }
         };
+
         // ===== Falling Animation =====
         const startFallingAnimation = () => {
             const chars = document.querySelectorAll('.char');
             const dates = document.querySelectorAll('.date');
 
-            // 文字をバラバラに落下させる
             chars.forEach(char => {
                 const rect = char.getBoundingClientRect();
                 const delay = Math.random() * 2000;
@@ -664,10 +668,9 @@
                         char.style.left = `${rect.left + (Math.random() * 40 - 20)}px`;
                         char.style.opacity = '1';
                     }, 2000);
-                }, 180000 + delay); // 3分（180,000ミリ秒）後に開始
+                }, 180000 + delay);
             });
 
-            // 日付要素を落下させる
             dates.forEach(date => {
                 const rect = date.getBoundingClientRect();
                 const delay = Math.random() * 2000;
@@ -693,7 +696,7 @@
                         date.style.left = `${rect.left + (Math.random() * 40 - 20)}px`;
                         date.style.opacity = '1';
                     }, 2000);
-                }, 180000 + delay); // 3分（180,000ミリ秒）後に開始
+                }, 180000 + delay);
             });
         };
 
@@ -703,7 +706,6 @@
                 entryCountElement.textContent = `${count}日分の生きた証`;
             }
         };
-
 
         // ===== Main Functions =====
         const loadDiaryEntries = async (filename = 'entry.md') => {
@@ -730,8 +732,8 @@
                     `;
                     container.appendChild(entryElement);
                 });
-                updateEntryCount(entries.length); // 追加
-// ===== Main Functions ===== 内の `wrapChars` 関数呼び出し後に追加
+                updateEntryCount(entries.length);
+
                 requestAnimationFrame(() => {
                     setupDateHover();
                     setupDateClick();
@@ -740,13 +742,38 @@
                     setupTextSelection();
                     restoreHighlights();
                     scrollToEntryFromHash();
-                    startFallingAnimation(); // 追加
+                    startFallingAnimation();
                 });
             } catch (error) {
                 console.error('Error loading diary entries:', error);
+                showErrorEntry();
             }
         };
-        // 追加: 嘘日記を事前に読み込む関数
+
+        const showErrorEntry = () => {
+            const container = document.getElementById('diaryContainer');
+            container.innerHTML = '';
+            const randomDate = generateRandomDate();
+            const dateObj = formatJapaneseDate(randomDate);
+            const entryElement = document.createElement('div');
+            entryElement.className = 'diary-entry';
+            entryElement.id = randomDate;
+            entryElement.innerHTML = `
+                <div class="date" data-yyyymmdd="${randomDate}" style="color: ${currentTheme.text}">${dateObj.short}</div>
+                <div class="content" style="color: ${currentTheme.text}">残念ながら、作者の不手際かインフラの障害が起きているようだ。日記データを取得できないでいる。</div>
+            `;
+            container.appendChild(entryElement);
+
+            requestAnimationFrame(() => {
+                setupDateHover();
+                setupDateClick();
+                wrapChars();
+                setupHoverAnimation();
+                setupTextSelection();
+                scrollToEntryFromHash();
+            });
+        };
+
         const preloadFakeEntries = async () => {
             try {
                 const response = await fetch('fake.md');
@@ -756,7 +783,7 @@
                 console.error('Error preloading fake entries:', error);
             }
         };
-        // 追加: キャッシュから嘘日記を表示する関数
+
         const loadFakeEntriesFromCache = () => {
             if (!fakeEntriesCache) return;
             const entries = fakeEntriesCache.split('---').filter(entry => entry.trim());
@@ -788,6 +815,7 @@
                 scrollToEntryFromHash();
             });
         };
+
         const wrapChars = () => {
             document.querySelectorAll('.content').forEach(content => {
                 const text = content.textContent;
@@ -798,6 +826,7 @@
                 content.innerHTML = wrapped;
             });
         };
+
         // ===== Event Listeners =====
         document.querySelector('.page-title').addEventListener('click', () => {
             if (isFakeMode) {
@@ -828,91 +857,6 @@
             flashTitle();
         });
 
-        // スワイプゾーンの初期化
-        const initSwipeZone = () => {
-            const swipeZone = document.querySelector('.swipe-zone');
-            let isSwiping = false;
-            let swipeTimer = null;
-
-            // マウスイベント
-            swipeZone.addEventListener('mouseenter', () => {
-                swipeZone.classList.add('active');
-                isSwiping = true;
-            });
-
-            swipeZone.addEventListener('mouseleave', () => {
-                swipeZone.classList.remove('active');
-                isSwiping = false;
-                if (swipeTimer) {
-                    clearInterval(swipeTimer);
-                    swipeTimer = null;
-                }
-            });
-
-            swipeZone.addEventListener('mousemove', (e) => {
-                if (!isSwiping) return;
-                const rect = swipeZone.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const deltaX = e.clientX - centerX;
-
-                // 右に動かすと過去、左に動かすと未来
-                if (Math.abs(deltaX) > 10) {
-                    if (swipeTimer) clearInterval(swipeTimer);
-                    swipeTimer = setInterval(() => {
-                        const currentEntry = getCurrentEntry();
-                        if (!currentEntry) return;
-                        const direction = deltaX > 0 ? 1 : -1;
-                        const nextEntry = getAdjacentEntry(currentEntry, direction);
-                        if (nextEntry) {
-                            window.location.hash = nextEntry.id;
-                            scrollToEntryFromHash();
-                        }
-                    }, 100);
-                }
-            });
-
-            // タッチイベント（モバイル対応）
-            swipeZone.addEventListener('touchstart', (e) => {
-                swipeZone.classList.add('active');
-                isSwiping = true;
-                const startX = e.touches[0].clientX;
-                const rect = swipeZone.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-
-                const handleTouchMove = (e) => {
-                    e.preventDefault();
-                    const currentX = e.touches[0].clientX;
-                    const deltaX = currentX - startX;
-
-                    if (Math.abs(deltaX) > 10) {
-                        if (swipeTimer) clearInterval(swipeTimer);
-                        swipeTimer = setInterval(() => {
-                            const currentEntry = getCurrentEntry();
-                            if (!currentEntry) return;
-                            const direction = deltaX > 0 ? 1 : -1;
-                            const nextEntry = getAdjacentEntry(currentEntry, direction);
-                            if (nextEntry) {
-                                window.location.hash = nextEntry.id;
-                                scrollToEntryFromHash();
-                            }
-                        }, 100);
-                    }
-                };
-
-                swipeZone.addEventListener('touchmove', handleTouchMove, { passive: false });
-
-                swipeZone.addEventListener('touchend', () => {
-                    swipeZone.classList.remove('active');
-                    isSwiping = false;
-                    if (swipeTimer) {
-                        clearInterval(swipeTimer);
-                        swipeTimer = null;
-                    }
-                    swipeZone.removeEventListener('touchmove', handleTouchMove);
-                }, { once: true });
-            });
-        };
-
         window.addEventListener('load', () => {
             document.body.style.opacity = 1;
             if (location.host !== "nikki.poet.blue") {
@@ -923,8 +867,8 @@
             preloadFakeEntries();
             scrollToEntryFromHash();
             document.addEventListener('keydown', handleKeyDown);
-            initSwipeZone();
         });
+
         window.addEventListener('hashchange', scrollToEntryFromHash);
     </script>
 </body>
