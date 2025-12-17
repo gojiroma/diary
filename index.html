@@ -18,6 +18,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            min-height: 100svh;
             margin: 0;
             padding: 0;
             overflow: hidden;
@@ -82,6 +83,7 @@
             width: 100%;
             max-width: 90%;
             height: 75vh;
+            height: 75svh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -144,6 +146,7 @@
         .rss-button {
             position: fixed;
             bottom: 20px;
+            bottom: calc(20px + env(safe-area-inset-bottom));
             right: 20px;
             font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
             font-size: 18px;
@@ -176,6 +179,7 @@
         .thin-blue-button {
             position: fixed;
             bottom: 20px;
+            bottom: calc(20px + env(safe-area-inset-bottom));
             left: 20px;
             padding: 8px 16px;
             border: 1px solid #1E90FF;
@@ -239,6 +243,7 @@
         .entry-count {
             position: fixed;
             bottom: 20px;
+            bottom: calc(20px + env(safe-area-inset-bottom));
             left: 50%;
             transform: translateX(-50%);
             font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
