@@ -136,11 +136,13 @@
         }
 
         .char {
-            transition: font-size 0.2s ease;
+            display: inline-block;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
         }
 
         .char.hovered {
-            font-size: 1.8em;
+            transform: scale(1.5);
         }
 
         .rss-button {
@@ -513,31 +515,36 @@
         // ===== Event Handlers =====
         const setupHoverAnimation = () => {
             document.querySelectorAll('.content').forEach(content => {
+                const chars = Array.from(content.querySelectorAll('.char'));
+                let lastIndex = -1;
+
                 content.addEventListener('mousemove', (e) => {
                     const entry = content.closest('.diary-entry');
                     if (targetEntry && entry !== targetEntry) return;
 
-                    const chars = content.querySelectorAll('.char');
-                    const targetChar = document.elementFromPoint(e.clientX, e.clientY);
-                    if (!targetChar || !targetChar.classList.contains('char')) return;
-                    const index = Array.from(chars).indexOf(targetChar);
+                    const targetChar = e.target;
+                    if (!targetChar.classList.contains('char')) return;
+
+                    const index = chars.indexOf(targetChar);
+                    if (index === -1 || index === lastIndex) return;
+
+                    lastIndex = index;
                     const start = Math.max(0, index - 5);
                     const end = Math.min(chars.length - 1, index + 5);
+
                     chars.forEach((char, i) => {
-                        if (i >= start && i <= end) {
+                        const shouldHover = i >= start && i <= end;
+                        if (shouldHover && !char.classList.contains('hovered')) {
                             char.classList.add('hovered');
-                        } else {
+                        } else if (!shouldHover && char.classList.contains('hovered')) {
                             char.classList.remove('hovered');
                         }
                     });
                 });
-                content.addEventListener('mouseleave', () => {
-                    const entry = content.closest('.diary-entry');
-                    if (targetEntry && entry !== targetEntry) return;
 
-                    content.querySelectorAll('.char').forEach(char => {
-                        char.classList.remove('hovered');
-                    });
+                content.addEventListener('mouseleave', () => {
+                    lastIndex = -1;
+                    chars.forEach(char => char.classList.remove('hovered'));
                 });
             });
         };
