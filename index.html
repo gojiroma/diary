@@ -132,7 +132,7 @@
 
         .content {
             font-size: 1.3em;
-            white-space: pre-line;
+            white-space: pre-wrap;
         }
 
         .char {
@@ -734,14 +734,19 @@
                     if (!dateMatch || !contentMatch) return;
                     const yyyymmdd = dateMatch[1].trim();
                     const dateObj = formatJapaneseDate(yyyymmdd);
-                    const contentLines = contentMatch[1].split('\n').map(line => line.replace(/^\s*\|?\s*/, '')).join('\n').trim();
+                    const contentLines = contentMatch[1]
+                        .split('\n')
+                        .map(line => line.replace(/^\s*\|?\s*/, ''))
+                        .join('\n')
+                        .trim()
+                        .replace(/\n/g, '<br>'); // 1. の方法
                     const entryElement = document.createElement('div');
                     entryElement.className = 'diary-entry';
                     entryElement.id = yyyymmdd;
                     entryElement.innerHTML = `
-                        <div class="date" data-yyyymmdd="${yyyymmdd}" style="color: ${isFakeMode ? '#ff6600' : currentTheme.text}">${dateObj.short}</div>
-                        <div class="content" style="color: ${isFakeMode ? '#ff6600' : currentTheme.text}">${contentLines}</div>
-                    `;
+                <div class="date" data-yyyymmdd="${yyyymmdd}" style="color: ${isFakeMode ? '#ff6600' : currentTheme.text}">${dateObj.short}</div>
+                <div class="content" style="color: ${isFakeMode ? '#ff6600' : currentTheme.text}">${contentLines}</div>
+            `;
                     container.appendChild(entryElement);
                 });
                 updateEntryCount(entries.length);
