@@ -133,17 +133,10 @@
         .content {
             font-size: 1.3em;
             white-space: pre-line;
-            
         }
 
         .char {
             display: inline-block;
-            transition: transform 0.1s ease-out;
-            will-change: transform;
-        }
-
-        .char.hovered {
-            transform: scale(1.5);
         }
 
         .rss-button {
@@ -192,8 +185,8 @@
             border-radius: 8px;
             font-size: 14px;
             cursor: pointer;
-            opacity: .1;
-            transition: background-color 0.3s, color 0.3s;
+            opacity: 0;
+            transition: opacity 0.3s;
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -513,55 +506,8 @@
             });
         };
 
-        // ===== Event Handlers =====
-        const setupHoverAnimation = () => {
-            document.querySelectorAll('.content').forEach(content => {
-                const chars = Array.from(content.querySelectorAll('.char'));
-                let lastIndex = -1;
-
-                content.addEventListener('mousemove', (e) => {
-                    const entry = content.closest('.diary-entry');
-                    if (targetEntry && entry !== targetEntry) return;
-
-                    const targetChar = e.target;
-                    if (!targetChar.classList.contains('char')) return;
-
-                    const index = chars.indexOf(targetChar);
-                    if (index === -1 || index === lastIndex) return;
-
-                    lastIndex = index;
-                    const start = Math.max(0, index - 5);
-                    const end = Math.min(chars.length - 1, index + 5);
-
-                    chars.forEach((char, i) => {
-                        const shouldHover = i >= start && i <= end;
-                        if (shouldHover && !char.classList.contains('hovered')) {
-                            char.classList.add('hovered');
-                        } else if (!shouldHover && char.classList.contains('hovered')) {
-                            char.classList.remove('hovered');
-                        }
-                    });
-                });
-
-                content.addEventListener('mouseleave', () => {
-                    lastIndex = -1;
-                    chars.forEach(char => char.classList.remove('hovered'));
-                });
-            });
-        };
-
-        const setupDateHover = () => {
-            document.querySelectorAll('.date').forEach(dateElement => {
-                const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
-                const dateObj = formatJapaneseDate(yyyymmdd);
-                dateElement.addEventListener('mouseenter', () => {
-                    dateElement.textContent = dateObj.long;
-                });
-                dateElement.addEventListener('mouseleave', () => {
-                    dateElement.textContent = dateObj.short;
-                });
-            });
-        };
+        // setupDateHover関数を削除
+        const setupDateHover = () => { };
 
         const setupDateClick = () => {
             document.querySelectorAll('.date').forEach(dateElement => {
@@ -575,6 +521,9 @@
                 });
             });
         };
+
+        // setupHoverAnimation関数を削除
+        const setupHoverAnimation = () => { };
 
         const scrollToEntryFromHash = () => {
             requestAnimationFrame(() => {
@@ -740,7 +689,7 @@
                         .map(line => line.replace(/^\s*\|?\s*/, ''))
                         .join('\n')
                         .trim()
-                        .replace(/\n/g, '<br>'); // 1. の方法
+                        .replace(/\n/g, '<br>');
                     const entryElement = document.createElement('div');
                     entryElement.className = 'diary-entry';
                     entryElement.id = yyyymmdd;
@@ -753,10 +702,8 @@
                 updateEntryCount(entries.length);
 
                 requestAnimationFrame(() => {
-                    setupDateHover();
                     setupDateClick();
                     wrapChars();
-                    setupHoverAnimation();
                     setupTextSelection();
                     restoreHighlights();
                     scrollToEntryFromHash();
@@ -783,10 +730,8 @@
             container.appendChild(entryElement);
 
             requestAnimationFrame(() => {
-                setupDateHover();
                 setupDateClick();
                 wrapChars();
-                setupHoverAnimation();
                 setupTextSelection();
                 scrollToEntryFromHash();
             });
@@ -824,10 +769,8 @@
                 container.appendChild(entryElement);
             });
             requestAnimationFrame(() => {
-                setupDateHover();
                 setupDateClick();
                 wrapChars();
-                setupHoverAnimation();
                 setupTextSelection();
                 restoreHighlights();
                 scrollToEntryFromHash();
