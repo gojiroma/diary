@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 19 Dec 2025 23:58:27 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 20 Dec 2025 16:39:27 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>十二月二十日（土）</title>
+      <link>https://nikki.poet.blue#20251220</link>
+      <pubDate>Sat, 20 Dec 2025 16:39:27 +0900</pubDate>
+      <description>ちょっと遅めに起きて、バーガーキングで「朝食」。O美術館で織物の展示を見て、何枚かフライヤーを受け取ってどこに行くか決定。下北沢まで電車移動。一度も歩いたことがなかったので……。下北沢から西太子堂間で歩く。そこから路面電車で上町。平成建設のショールームを見てきた。職人が使う道具の名称と、使っている様子の動画説明が良かった。鉄骨をワイアで巻いている様子が素早く軽快で、美しさがあった。どの動画も「動画を撮るために実演しています」というわざとらしい感じではなく、「いつもこんな感じだよ」といった感じ。熟練者の体の動きは、どんなジャンルでも美しい。&lt;br /&gt;  そもそもこのショールームはアートギャラリーをやっていて、元々ガラス作品を見るために行ったが、会社のショールームとしての魅力が強かった。部屋ごとにテイストの違うトイレも、一つずつ見て回った。どれも魅力的だが、間接照明が弱くて暗い場所はやっぱり苦手だなと思った。&lt;br /&gt;  豪徳寺まで歩いてデニーズで早めの夕食。バースデーパンケーキを食べてきた。「おめでとうございます」と言われると周りがこっち見るのがちょっと恥ずかしいが、嬉しいものだ。珈琲舘のパンケーキと違い、少し厚みがあって腹持ちの良い食感。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20251220</guid>
+      <media:content url="https://nc.poet.blue/20251220" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>十二月十九日（金）</title>
       <link>https://nikki.poet.blue#20251219</link>
