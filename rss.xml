@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sun, 21 Dec 2025 17:33:49 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 22 Dec 2025 20:02:47 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>十二月二十二日（月）</title>
+      <link>https://nikki.poet.blue#20251222</link>
+      <pubDate>Mon, 22 Dec 2025 20:02:47 +0900</pubDate>
+      <description>土手歩き、温泉、焼肉、寝る。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20251222</guid>
+      <media:content url="https://nc.poet.blue/20251222" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>十二月二十一日（日）</title>
       <link>https://nikki.poet.blue#20251221</link>
