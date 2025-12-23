@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Mon, 22 Dec 2025 20:02:47 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 23 Dec 2025 14:44:46 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>十二月二十三日（火）</title>
+      <link>https://nikki.poet.blue#20251223</link>
+      <pubDate>Tue, 23 Dec 2025 14:44:46 +0900</pubDate>
+      <description>いつも以上にたっぷり寝たため、とても穏やかだ。十一月のはじめ、ホームセンターで二百十七円で買ったカランコエ、大きく二株あり、片方は鮮やかなオレンジの花がたくさんついた。もう片方の株は後から咲き始めたが色が薄く、枯れてしまった。今までベランダの室外機の上に置いていたが、さすがに寒かったのだろう。鮮やかな花が咲き始めたころ、まだ十一月の中頃だった。そのあとから冷えて、若い株は耐えられなかった。もっと早く室内に引き上げればよかった。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20251223</guid>
+      <media:content url="https://nc.poet.blue/20251223" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>十二月二十二日（月）</title>
       <link>https://nikki.poet.blue#20251222</link>
