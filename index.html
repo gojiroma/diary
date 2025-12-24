@@ -254,6 +254,11 @@
             border-radius: 8px;
             font-style: italic;
             background-color: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .entry-count:hover {
+            opacity: 1;
         }
     </style>
 </head>
@@ -266,7 +271,7 @@
     <a href="rss.xml" class="rss-button">RSS</a>
     <a href="https://kakuka.poet.blue" target="_blank" rel="noopener noreferrer" class="thin-blue-button"
         data-count="0">書くか</a>
-    <div class="entry-count"></div>
+    <div class="entry-count" id="entryCount"></div>
     <a href="https://github.com/gojiroma/diary" target="_blank" rel="noopener noreferrer"
         class="github-button">GitHub</a>
 
@@ -505,9 +510,6 @@
             });
         };
 
-        // setupDateHover関数を削除
-        const setupDateHover = () => { };
-
         const setupDateClick = () => {
             document.querySelectorAll('.date').forEach(dateElement => {
                 dateElement.addEventListener('click', () => {
@@ -520,9 +522,6 @@
                 });
             });
         };
-
-        // setupHoverAnimation関数を削除
-        const setupHoverAnimation = () => { };
 
         const scrollToEntryFromHash = () => {
             requestAnimationFrame(() => {
@@ -662,10 +661,49 @@
         };
 
         const updateEntryCount = (count) => {
-            const entryCountElement = document.querySelector('.entry-count');
+            const entryCountElement = document.getElementById('entryCount');
             if (entryCountElement) {
                 entryCountElement.textContent = `${count}日分の生きた証`;
             }
+        };
+
+        // ===== Date Picker =====
+        const setupDatePicker = () => {
+            const entryCountElement = document.getElementById('entryCount');
+            entryCountElement.addEventListener('click', () => {
+                const dateInput = document.createElement('input');
+                dateInput.type = 'date';
+                dateInput.style.position = 'fixed';
+                dateInput.style.top = '50%';
+                dateInput.style.left = '50%';
+                dateInput.style.transform = 'translate(-50%, -50%)';
+                dateInput.style.zIndex = '1000';
+                dateInput.style.padding = '10px';
+                dateInput.style.fontSize = '16px';
+                dateInput.style.borderRadius = '8px';
+                dateInput.style.border = '1px solid #ccc';
+                dateInput.style.backgroundColor = 'white';
+                dateInput.style.opacity = '0.9';
+                document.body.appendChild(dateInput);
+
+                dateInput.focus();
+
+                dateInput.addEventListener('change', (e) => {
+                    const selectedDate = e.target.value.replace(/-/g, '');
+                    const entry = document.getElementById(selectedDate);
+                    if (entry) {
+                        window.location.hash = selectedDate;
+                        scrollToEntryFromHash();
+                    } else {
+                        alert('その日の記録は存在しない');
+                    }
+                    dateInput.remove();
+                });
+
+                dateInput.addEventListener('blur', () => {
+                    dateInput.remove();
+                });
+            });
         };
 
         // ===== Main Functions =====
@@ -693,9 +731,9 @@
                     entryElement.className = 'diary-entry';
                     entryElement.id = yyyymmdd;
                     entryElement.innerHTML = `
-                <div class="date" data-yyyymmdd="${yyyymmdd}" style="color: ${isFakeMode ? '#ff6600' : currentTheme.text}">${dateObj.short}</div>
-                <div class="content" style="color: ${isFakeMode ? '#ff6600' : currentTheme.text}">${contentLines}</div>
-            `;
+                        <div class="date" data-yyyymmdd="${yyyymmdd}" style="color: ${isFakeMode ? '#ff6600' : currentTheme.text}">${dateObj.short}</div>
+                        <div class="content" style="color: ${isFakeMode ? '#ff6600' : currentTheme.text}">${contentLines}</div>
+                    `;
                     container.appendChild(entryElement);
                 });
                 updateEntryCount(entries.length);
@@ -827,6 +865,7 @@
             preloadFakeEntries();
             scrollToEntryFromHash();
             document.addEventListener('keydown', handleKeyDown);
+            setupDatePicker();
         });
 
         window.addEventListener('hashchange', scrollToEntryFromHash);
