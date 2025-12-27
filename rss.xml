@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 26 Dec 2025 15:20:37 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 27 Dec 2025 16:41:40 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>十二月二十七日（土）</title>
+      <link>https://nikki.poet.blue#20251227</link>
+      <pubDate>Sat, 27 Dec 2025 16:41:40 +0900</pubDate>
+      <description>朝起きたら、DBを使う俺アプリが全滅していた。無料枠を超過したようだ。有料プランに変更を試みたが、正しい支払い手段なのにエラーばかり。discordで調べたら、DB側の管理画面ではなく、ホスティングサービス本体の管理画面からプラン上げが必要だった。うはぁ</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20251227</guid>
+      <media:content url="https://nc.poet.blue/20251227" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>十二月二十六日（金）</title>
       <link>https://nikki.poet.blue#20251226</link>
