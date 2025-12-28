@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 27 Dec 2025 16:41:40 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 28 Dec 2025 15:18:42 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>十二月二十八日（日）</title>
+      <link>https://nikki.poet.blue#20251228</link>
+      <pubDate>Sun, 28 Dec 2025 15:18:42 +0900</pubDate>
+      <description>鏡餅のセットアップを済ませた。今年選んだのは「サトウの鏡餅 極小」だ。橙は紙からプラスチックに変更。これは去年から変わったようだ。越後製菓を選べば従来どおりだが、スーパーでノリで決めたのがサトウの鏡餅だった。別に紙でいいと思う。橙はこの時期余るほどあるし、餅を食べてしまったら、あとは転がして遊んで捨てるだけだから。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20251228</guid>
+      <media:content url="https://nc.poet.blue/20251228" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>十二月二十七日（土）</title>
       <link>https://nikki.poet.blue#20251227</link>
