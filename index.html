@@ -15,7 +15,8 @@
     <style>
         body {
             font-family: "Zen Old Mincho", serif;
-            font-weight: 400; font-style: normal;
+            font-weight: 400;
+            font-style: normal;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -125,6 +126,8 @@
             padding: 0 10px;
             transition: background-color 0.3s ease;
             flex-shrink: 0;
+            text-wrap: balance;
+            overflow-wrap: break-word;
         }
 
         .date {
@@ -137,10 +140,8 @@
         .content {
             font-size: 1.3em;
             white-space: pre-line;
-        }
-
-        .char {
-            display: inline-block;
+            text-wrap: balance;
+            overflow-wrap: break-word;
         }
 
         .rss-button {
@@ -295,13 +296,6 @@
             { bg: "#f0ffe6", text: "#228b22", border: "#228b22" }
         ];
 
-        // 禁則処理用の文字リスト
-        const KINSOKU_CHARS = {
-            opening: '（［［｛「『【〔〈《',
-            closing: '）］］｝」』】〕〉》、，．．。',
-            both: '・：；'
-        };
-
         // ===== State =====
         let currentTheme = null;
         let targetEntry = null;
@@ -359,53 +353,6 @@
             return `${year}${month}${day}`;
         };
 
-        // 禁則処理用ヘルパー
-        const isKinsokuOpening = (char) => KINSOKU_CHARS.opening.includes(char);
-        const isKinsokuClosing = (char) => KINSOKU_CHARS.closing.includes(char);
-        const isKinsokuBoth = (char) => KINSOKU_CHARS.both.includes(char);
-
-        // 禁則処理本体
-        const processKinsoku = (text) => {
-            // 一度全ての改行を統一
-            let normalizedText = text.replace(/\r?\n/g, '\n');
-
-            // 空行を除去
-            const lines = normalizedText.split('\n').filter(line => line.trim().length > 0);
-            if (lines.length === 0) return normalizedText;
-
-            // 禁則処理
-            for (let i = 0; i < lines.length; i++) {
-                const currentLine = lines[i];
-                if (i === lines.length - 1) break; // 最後の行は処理しない
-
-                const nextLine = lines[i + 1];
-
-                // 行末が開始禁則文字の場合、次行頭に移動
-                if (currentLine.length > 0) {
-                    let lastChar = currentLine[currentLine.length - 1];
-                    while (currentLine.length > 0 && isKinsokuOpening(lastChar)) {
-                        lines[i] = currentLine.slice(0, -1);
-                        lines[i + 1] = lastChar + nextLine;
-                        if (lines[i].length === 0) break;
-                        lastChar = lines[i][lines[i].length - 1];
-                    }
-                }
-
-                // 次の行頭が終了禁則文字の場合、現在の行末に移動
-                if (nextLine.length > 0) {
-                    let firstChar = nextLine[0];
-                    while (nextLine.length > 0 && (isKinsokuClosing(firstChar) || isKinsokuBoth(firstChar))) {
-                        lines[i] = lines[i] + firstChar;
-                        lines[i + 1] = nextLine.slice(1);
-                        if (lines[i + 1].length === 0) break;
-                        firstChar = lines[i + 1][0];
-                    }
-                }
-            }
-
-            return lines.join('\n');
-        };
-
         // ===== DOM Helpers =====
         const applyRandomTheme = () => {
             const randomTheme = THEMES[Math.floor(Math.random() * THEMES.length)];
@@ -447,7 +394,7 @@
                 const content = el.closest('.content');
                 const date = content.previousElementSibling.getAttribute('data-yyyymmdd');
                 const text = content.textContent;
-                const start = Array.from(content.childNodes).indexOf(el);
+                const start = content.textContent.indexOf(el.textContent);
                 const length = el.textContent.length;
                 highlights.push({ date, start, length, text: el.textContent });
             });
@@ -460,21 +407,13 @@
                 const dateElement = document.querySelector(`.date[data-yyyymmdd="${h.date}"]`);
                 if (!dateElement) return;
                 const content = dateElement.nextElementSibling;
-                const chars = content.querySelectorAll('.char');
-                if (chars.length <= h.start) return;
-                let span = document.createElement('span');
-                span.className = 'highlight';
-                for (let i = h.start; i < h.start + h.length && i < chars.length; i++) {
-                    span.appendChild(chars[i].cloneNode(true));
-                }
-                for (let i = h.start; i < h.start + h.length && i < chars.length; i++) {
-                    chars[i].remove();
-                }
-                if (chars[h.start - 1]) {
-                    chars[h.start - 1].after(span);
-                } else if (chars[h.start]) {
-                    chars[h.start].before(span);
-                }
+                const text = content.textContent;
+                const start = text.indexOf(h.text);
+                if (start === -1) return;
+                const before = text.substring(0, start);
+                const middle = text.substring(start, start + h.length);
+                const after = text.substring(start + h.length);
+                content.innerHTML = `${before}<span class="highlight">${middle}</span>${after}`;
             });
             setupHighlightRemoval();
         };
@@ -482,9 +421,8 @@
         const setupHighlightRemoval = () => {
             document.querySelectorAll('.highlight').forEach(el => {
                 el.addEventListener('click', () => {
-                    const range = document.createRange();
-                    range.selectNodeContents(el);
-                    el.replaceWith(...Array.from(el.childNodes));
+                    const text = el.textContent;
+                    el.replaceWith(text);
                     saveHighlights();
                 });
             });
@@ -658,7 +596,19 @@
         };
 
         // ===== Falling Animation =====
+        const wrapCharsForFalling = () => {
+            document.querySelectorAll('.content').forEach(content => {
+                const text = content.textContent;
+                let wrapped = '';
+                for (let i = 0; i < text.length; i++) {
+                    wrapped += `<span class="char">${text[i]}</span>`;
+                }
+                content.innerHTML = wrapped;
+            });
+        };
+
         const startFallingAnimation = () => {
+            wrapCharsForFalling();
             const chars = document.querySelectorAll('.char');
             const dates = document.querySelectorAll('.date');
 
@@ -687,7 +637,7 @@
                         char.style.left = `${rect.left + (Math.random() * 40 - 20)}px`;
                         char.style.opacity = '1';
                     }, 2000);
-                }, 180000 + delay);
+                }, delay);
             });
 
             dates.forEach(date => {
@@ -715,7 +665,7 @@
                         date.style.left = `${rect.left + (Math.random() * 40 - 20)}px`;
                         date.style.opacity = '1';
                     }, 2000);
-                }, 180000 + delay);
+                }, delay);
             });
         };
 
@@ -765,19 +715,6 @@
             });
         };
 
-        // 禁則処理付きで文字をspanで囲む
-        const wrapCharsWithKinsoku = () => {
-            document.querySelectorAll('.content').forEach(content => {
-                const originalText = content.textContent;
-                const processedText = processKinsoku(originalText);
-                let wrapped = '';
-                for (let i = 0; i < processedText.length; i++) {
-                    wrapped += `<span class="char">${processedText[i]}</span>`;
-                }
-                content.innerHTML = wrapped;
-            });
-        };
-
         // ===== Main Functions =====
         const loadDiaryEntries = async (filename = 'entry.md') => {
             try {
@@ -811,11 +748,10 @@
 
                 requestAnimationFrame(() => {
                     setupDateClick();
-                    wrapCharsWithKinsoku();
                     setupTextSelection();
                     restoreHighlights();
                     scrollToEntryFromHash();
-                    startFallingAnimation();
+                    setTimeout(startFallingAnimation, 180000); // 3分後に実行
                 });
             } catch (error) {
                 console.error('Error loading diary entries:', error);
@@ -839,9 +775,9 @@
 
             requestAnimationFrame(() => {
                 setupDateClick();
-                wrapCharsWithKinsoku();
                 setupTextSelection();
                 scrollToEntryFromHash();
+                setTimeout(startFallingAnimation, 180000); // 3分後に実行
             });
         };
 
@@ -878,10 +814,10 @@
             });
             requestAnimationFrame(() => {
                 setupDateClick();
-                wrapCharsWithKinsoku();
                 setupTextSelection();
                 restoreHighlights();
                 scrollToEntryFromHash();
+                setTimeout(startFallingAnimation, 180000); // 3分後に実行
             });
         };
 
