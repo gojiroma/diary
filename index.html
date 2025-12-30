@@ -366,29 +366,43 @@
 
         // 禁則処理本体
         const processKinsoku = (text) => {
-            const lines = text.split('\n');
-            for (let i = 0; i < lines.length - 1; i++) {
+            // 一度全ての改行を統一
+            let normalizedText = text.replace(/\r?\n/g, '\n');
+
+            // 空行を除去
+            const lines = normalizedText.split('\n').filter(line => line.trim().length > 0);
+            if (lines.length === 0) return normalizedText;
+
+            // 禁則処理
+            for (let i = 0; i < lines.length; i++) {
                 const currentLine = lines[i];
+                if (i === lines.length - 1) break; // 最後の行は処理しない
+
                 const nextLine = lines[i + 1];
 
-                // 行末が開始禁則文字の場合、次の行頭に移動
+                // 行末が開始禁則文字の場合、次行頭に移動
                 if (currentLine.length > 0) {
-                    const lastChar = currentLine[currentLine.length - 1];
-                    if (isKinsokuOpening(lastChar)) {
+                    let lastChar = currentLine[currentLine.length - 1];
+                    while (currentLine.length > 0 && isKinsokuOpening(lastChar)) {
                         lines[i] = currentLine.slice(0, -1);
                         lines[i + 1] = lastChar + nextLine;
+                        if (lines[i].length === 0) break;
+                        lastChar = lines[i][lines[i].length - 1];
                     }
                 }
 
                 // 次の行頭が終了禁則文字の場合、現在の行末に移動
                 if (nextLine.length > 0) {
-                    const firstChar = nextLine[0];
-                    if (isKinsokuClosing(firstChar) || isKinsokuBoth(firstChar)) {
-                        lines[i] = currentLine + firstChar;
+                    let firstChar = nextLine[0];
+                    while (nextLine.length > 0 && (isKinsokuClosing(firstChar) || isKinsokuBoth(firstChar))) {
+                        lines[i] = lines[i] + firstChar;
                         lines[i + 1] = nextLine.slice(1);
+                        if (lines[i + 1].length === 0) break;
+                        firstChar = lines[i + 1][0];
                     }
                 }
             }
+
             return lines.join('\n');
         };
 
