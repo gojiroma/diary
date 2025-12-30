@@ -295,6 +295,13 @@
             { bg: "#f0ffe6", text: "#228b22", border: "#228b22" }
         ];
 
+        // 禁則処理用の文字リスト
+        const KINSOKU_CHARS = {
+            opening: '（［［｛「『【〔〈《',
+            closing: '）］］｝」』】〕〉》、，．．。',
+            both: '・：；'
+        };
+
         // ===== State =====
         let currentTheme = null;
         let targetEntry = null;
@@ -350,6 +357,39 @@
             const month = String(randomDate.getMonth() + 1).padStart(2, '0');
             const day = String(randomDate.getDate()).padStart(2, '0');
             return `${year}${month}${day}`;
+        };
+
+        // 禁則処理用ヘルパー
+        const isKinsokuOpening = (char) => KINSOKU_CHARS.opening.includes(char);
+        const isKinsokuClosing = (char) => KINSOKU_CHARS.closing.includes(char);
+        const isKinsokuBoth = (char) => KINSOKU_CHARS.both.includes(char);
+
+        // 禁則処理本体
+        const processKinsoku = (text) => {
+            const lines = text.split('\n');
+            for (let i = 0; i < lines.length - 1; i++) {
+                const currentLine = lines[i];
+                const nextLine = lines[i + 1];
+
+                // 行末が開始禁則文字の場合、次の行頭に移動
+                if (currentLine.length > 0) {
+                    const lastChar = currentLine[currentLine.length - 1];
+                    if (isKinsokuOpening(lastChar)) {
+                        lines[i] = currentLine.slice(0, -1);
+                        lines[i + 1] = lastChar + nextLine;
+                    }
+                }
+
+                // 次の行頭が終了禁則文字の場合、現在の行末に移動
+                if (nextLine.length > 0) {
+                    const firstChar = nextLine[0];
+                    if (isKinsokuClosing(firstChar) || isKinsokuBoth(firstChar)) {
+                        lines[i] = currentLine + firstChar;
+                        lines[i + 1] = nextLine.slice(1);
+                    }
+                }
+            }
+            return lines.join('\n');
         };
 
         // ===== DOM Helpers =====
@@ -711,6 +751,19 @@
             });
         };
 
+        // 禁則処理付きで文字をspanで囲む
+        const wrapCharsWithKinsoku = () => {
+            document.querySelectorAll('.content').forEach(content => {
+                const originalText = content.textContent;
+                const processedText = processKinsoku(originalText);
+                let wrapped = '';
+                for (let i = 0; i < processedText.length; i++) {
+                    wrapped += `<span class="char">${processedText[i]}</span>`;
+                }
+                content.innerHTML = wrapped;
+            });
+        };
+
         // ===== Main Functions =====
         const loadDiaryEntries = async (filename = 'entry.md') => {
             try {
@@ -730,8 +783,7 @@
                         .split('\n')
                         .map(line => line.replace(/^\s*\|?\s*/, ''))
                         .join('\n')
-                        .trim()
-                        .replace(/\n/g, '<br>');
+                        .trim();
                     const entryElement = document.createElement('div');
                     entryElement.className = 'diary-entry';
                     entryElement.id = yyyymmdd;
@@ -745,7 +797,7 @@
 
                 requestAnimationFrame(() => {
                     setupDateClick();
-                    wrapChars();
+                    wrapCharsWithKinsoku();
                     setupTextSelection();
                     restoreHighlights();
                     scrollToEntryFromHash();
@@ -773,7 +825,7 @@
 
             requestAnimationFrame(() => {
                 setupDateClick();
-                wrapChars();
+                wrapCharsWithKinsoku();
                 setupTextSelection();
                 scrollToEntryFromHash();
             });
@@ -812,21 +864,10 @@
             });
             requestAnimationFrame(() => {
                 setupDateClick();
-                wrapChars();
+                wrapCharsWithKinsoku();
                 setupTextSelection();
                 restoreHighlights();
                 scrollToEntryFromHash();
-            });
-        };
-
-        const wrapChars = () => {
-            document.querySelectorAll('.content').forEach(content => {
-                const text = content.textContent;
-                let wrapped = '';
-                for (let i = 0; i < text.length; i++) {
-                    wrapped += `<span class="char">${text[i]}</span>`;
-                }
-                content.innerHTML = wrapped;
             });
         };
 
