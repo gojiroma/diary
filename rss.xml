@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Mon, 29 Dec 2025 17:23:33 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 30 Dec 2025 20:26:21 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>十二月三十日（火）</title>
+      <link>https://nikki.poet.blue#20251230</link>
+      <pubDate>Tue, 30 Dec 2025 20:26:21 +0900</pubDate>
+      <description>きりたんぽにピザに酒。うまいッ！！　で、私は酒が入ると掃除がしたくなる。床にペンライトを置いて埃を確認し、掃除機をかける。今日はいつもよりノッていて、ペンライトを点滅モードにしてスティッククリーナーの中にセット。ベージュのボディーが光り出して愉快。なんていうんだろう、少年が仮面ライダーのおもちゃを授かった時の気持ちですね。これは。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20251230</guid>
+      <media:content url="https://nc.poet.blue/20251230" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>十二月二十九日（月）</title>
       <link>https://nikki.poet.blue#20251229</link>
