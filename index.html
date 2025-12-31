@@ -191,7 +191,7 @@
             border-radius: 8px;
             font-size: 14px;
             cursor: pointer;
-            opacity: 0;
+            opacity: 0.8;
             transition: opacity 0.3s;
             user-select: none;
             -webkit-user-select: none;
@@ -276,8 +276,7 @@
         <div class="diary-container" id="diaryContainer"></div>
     </div>
     <a href="rss.xml" class="rss-button">RSS</a>
-    <a href="https://kakuka.poet.blue" target="_blank" rel="noopener noreferrer" class="thin-blue-button"
-        data-count="0">書くか</a>
+    <a href="#" class="thin-blue-button" id="downloadButton">DL</a>
     <div class="entry-count" id="entryCount"></div>
     <a href="https://github.com/gojiroma/diary" target="_blank" rel="noopener noreferrer"
         class="github-button">GitHub</a>
@@ -305,6 +304,7 @@
         let clickTimer = null;
         let disableTimer = null;
         let fakeEntriesCache = null;
+        let diaryEntries = [];
 
         // ===== Utilities =====
         const toKanjiNumber = (num) => {
@@ -608,48 +608,89 @@
                 content.innerHTML = wrapped;
             });
         };
-            const startFallingAnimation = () => {
-                wrapCharsForFalling();
-                const chars = document.querySelectorAll('.char');
-                const dates = document.querySelectorAll('.date');
+        const startFallingAnimation = () => {
+            wrapCharsForFalling();
+            const chars = document.querySelectorAll('.char');
+            const dates = document.querySelectorAll('.date');
 
-                const animateFalling = (element, rect) => {
-                    const delay = Math.random() * 3100;
-                    const randomXOffset = (Math.random() - 0.5) * window.innerWidth * 0.6;
-                    const randomYOffset = Math.random() * -window.innerHeight * 0.83
-                    const startTop = window.innerHeight + randomYOffset;
-                    const startLeft = rect.left + randomXOffset;
-                    const angle = (Math.random() * 63) - 34;
-                    const duration = 1 + Math.random() * 72;
-                    const landingPosition = window.innerHeight * 0.9 + Math.random() * 1200; // 着地位置を画面下部から30%上に設定
+            const animateFalling = (element, rect) => {
+                const delay = Math.random() * 3100;
+                const randomXOffset = (Math.random() - 0.5) * window.innerWidth * 0.6;
+                const randomYOffset = Math.random() * -window.innerHeight * 0.83
+                const startTop = window.innerHeight + randomYOffset;
+                const startLeft = rect.left + randomXOffset;
+                const angle = (Math.random() * 63) - 34;
+                const duration = 1 + Math.random() * 72;
+                const landingPosition = window.innerHeight * 0.9 + Math.random() * 1200;
+
+                setTimeout(() => {
+                    element.style.position = 'fixed';
+                    element.style.left = `${startLeft}px`;
+                    element.style.top = `${startTop}px`;
+                    element.style.transform = `rotate(${angle}deg)`;
+                    element.style.opacity = '1';
+                    element.classList.add('falling');
 
                     setTimeout(() => {
-                        element.style.position = 'fixed';
-                        element.style.left = `${startLeft}px`;
-                        element.style.top = `${startTop}px`;
-                        element.style.transform = `rotate(${angle}deg)`;
-                        element.style.opacity = '1';
-                        element.classList.add('falling');
-
-                        setTimeout(() => {
-                            element.style.transition = `transform ${duration}s cubic-bezier(0.4, 0, 0.2, 1)`;
-                            element.style.transform = `rotate(${angle + (Math.random() * 20 - 10)}deg) translateY(${landingPosition - startTop}px)`;
-                        }, 10);
-                    }, delay);
-                };
-
-                chars.forEach(char => {
-                    const rect = char.getBoundingClientRect();
-                    animateFalling(char, rect);
-                });
-
-                dates.forEach(date => {
-                    const rect = date.getBoundingClientRect();
-                    animateFalling(date, rect);
-                });
+                        element.style.transition = `transform ${duration}s cubic-bezier(0.4, 0, 0.2, 1)`;
+                        element.style.transform = `rotate(${angle + (Math.random() * 20 - 10)}deg) translateY(${landingPosition - startTop}px)`;
+                    }, 10);
+                }, delay);
             };
 
+            chars.forEach(char => {
+                const rect = char.getBoundingClientRect();
+                animateFalling(char, rect);
+            });
 
+            dates.forEach(date => {
+                const rect = date.getBoundingClientRect();
+                animateFalling(date, rect);
+            });
+        };
+
+        // ===== Download Function =====
+        const downloadDiaryAsText = () => {
+            if (diaryEntries.length === 0) {
+                alert('ダウンロードする日記がありません。');
+                return;
+            }
+
+            // 日記エントリを日付順にソート
+            const sortedEntries = [...diaryEntries].sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
+
+            // 最古と最新の日付を取得
+            const oldestDate = sortedEntries[0].yyyymmdd;
+            const newestDate = sortedEntries[sortedEntries.length - 1].yyyymmdd;
+
+            // ファイル名を生成
+            const formatDateForFilename = (yyyymmdd) => {
+                const year = yyyymmdd.substring(2, 4);
+                const month = yyyymmdd.substring(4, 6);
+                const day = yyyymmdd.substring(6, 8);
+                return `${year}${month}${day}`;
+            };
+
+            const filename = `誤字ロマの日記 ${formatDateForFilename(oldestDate)}-${formatDateForFilename(newestDate)}.txt`;
+
+            // テキストコンテンツを生成
+            let content = '';
+            sortedEntries.forEach(entry => {
+                const dateObj = formatJapaneseDate(entry.yyyymmdd);
+                content += `${dateObj.long}\n${entry.content}\n\n`;
+            });
+
+            // ファイルをダウンロード
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
 
         const updateEntryCount = (count) => {
             const entryCountElement = document.getElementById('entryCount');
@@ -706,6 +747,8 @@
                 const entries = text.split('---').filter(entry => entry.trim());
                 const container = document.getElementById('diaryContainer');
                 container.innerHTML = '';
+                diaryEntries = [];
+
                 entries.reverse().forEach(entry => {
                     const dateMatch = entry.match(/date:\s*(.*)/);
                     const contentMatch = entry.match(/content:\s*\|\n([\s\S]*?)(?=\n---|\n$)/m);
@@ -717,6 +760,7 @@
                         .map(line => line.replace(/^\s*\|?\s*/, ''))
                         .join('\n')
                         .trim();
+
                     const entryElement = document.createElement('div');
                     entryElement.className = 'diary-entry';
                     entryElement.id = yyyymmdd;
@@ -725,7 +769,14 @@
                         <div class="content" style="color: ${isFakeMode ? '#ff6600' : currentTheme.text}">${contentLines}</div>
                     `;
                     container.appendChild(entryElement);
+
+                    // 日記エントリを保存
+                    diaryEntries.push({
+                        yyyymmdd: yyyymmdd,
+                        content: contentLines
+                    });
                 });
+
                 updateEntryCount(entries.length);
 
                 requestAnimationFrame(() => {
@@ -778,6 +829,8 @@
             const entries = fakeEntriesCache.split('---').filter(entry => entry.trim());
             const container = document.getElementById('diaryContainer');
             container.innerHTML = '';
+            diaryEntries = [];
+
             entries.reverse().forEach(entry => {
                 const dateMatch = entry.match(/date:\s*(.*)/);
                 const contentMatch = entry.match(/content:\s*\|\n([\s\S]*?)(?=\n---|\n$)/m);
@@ -785,6 +838,7 @@
                 const yyyymmdd = dateMatch[1].trim();
                 const dateObj = formatJapaneseDate(yyyymmdd);
                 const contentLines = contentMatch[1].split('\n').map(line => line.replace(/^\s*\|?\s*/, '')).join('\n').trim();
+
                 const entryElement = document.createElement('div');
                 entryElement.className = 'diary-entry';
                 entryElement.id = yyyymmdd;
@@ -793,7 +847,16 @@
                     <div class="content" style="color: #ff6600">${contentLines}</div>
                 `;
                 container.appendChild(entryElement);
+
+                // 日記エントリを保存
+                diaryEntries.push({
+                    yyyymmdd: yyyymmdd,
+                    content: contentLines
+                });
             });
+
+            updateEntryCount(entries.length);
+
             requestAnimationFrame(() => {
                 setupDateClick();
                 setupTextSelection();
@@ -831,6 +894,11 @@
             }, 1000);
             applyRandomTheme();
             flashTitle();
+        });
+
+        document.getElementById('downloadButton').addEventListener('click', (e) => {
+            e.preventDefault();
+            downloadDiaryAsText();
         });
 
         window.addEventListener('load', () => {
