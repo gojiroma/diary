@@ -107,6 +107,7 @@
             scroll-behavior: smooth;
             scrollbar-width: none;
             -ms-overflow-style: none;
+            will-change: transform;
         }
 
         .diary-container::-webkit-scrollbar {
@@ -128,6 +129,7 @@
             flex-shrink: 0;
             text-wrap: balance;
             overflow-wrap: break-word;
+            will-change: transform;
         }
 
         .date {
@@ -541,7 +543,7 @@
                     const latestEntry = entries[0];
                     const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
                     const containerWidth = container.clientWidth;
-                        container.scrollLeft = entryRight - containerWidth;
+                    container.scrollLeft = entryRight - containerWidth;
                 }
             });
         };
@@ -869,4 +871,5 @@
         window.addEventListener('hashchange', scrollToEntryFromHash);
     </script>
 </body>
+
 </html>
