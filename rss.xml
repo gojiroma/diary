@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Tue, 30 Dec 2025 20:26:21 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 31 Dec 2025 17:42:50 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>十二月三十一日（水）</title>
+      <link>https://nikki.poet.blue#20251231</link>
+      <pubDate>Wed, 31 Dec 2025 17:42:50 +0900</pubDate>
+      <description>今年は大豊作の一年だった。まず、退職。パンパカパ〜ン！！　前職、よく喋っていた人はほぼ全員退職した気がする。すごいな。次に、本がたくさん買えたこと。アマギフ年初一括三十万円は精神衛生上すごくいい。クレジットカードの明細がアマゾンアマゾンになっていくのが嫌だからね。この電子書籍は買うべきか？という学生時代の体質から脱却できた。あとは気力体力時間の問題になってくる。そして、道半ばだが、今までの「転職活動」というスコープに囚われない考え方ができたこと。キャリアブレイクという概念が知れたのが大きい。求人をずっと見たり、職業訓練だけに囚われていたらできなかったことがたくさんある。文学フリマに初めて参加したことも大きい。コーチングも初体験した。来年以降、どのような社会参加とゲットマネーを実現しているかわからないけれど、やらなきゃ！にこだわりすぎず、これなら無理がないというものを見つけたい。今年は体調を崩してから「個人として元気」というレベルになるのに時間がかかった。来年は「誰かと楽しい」を広げたい。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20251231</guid>
+      <media:content url="https://nc.poet.blue/20251231" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>十二月三十日（火）</title>
       <link>https://nikki.poet.blue#20251230</link>
