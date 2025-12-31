@@ -43,7 +43,7 @@
             position: fixed;
             top: 10px;
             right: 20px;
-            font-family: "Zen Old Mincho", serif;
+            font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
             font-size: 18px;
             font-weight: bold;
             border: 1px solid #333;
@@ -107,7 +107,6 @@
             scroll-behavior: smooth;
             scrollbar-width: none;
             -ms-overflow-style: none;
-            will-change: transform;
         }
 
         .diary-container::-webkit-scrollbar {
@@ -129,11 +128,9 @@
             flex-shrink: 0;
             text-wrap: balance;
             overflow-wrap: break-word;
-            will-change: transform;
         }
 
         .date {
-            font-family: "Zen Old Mincho", serif;
             font-weight: bold;
             font-size: 1.4em;
             margin-right: 20px;
@@ -141,7 +138,6 @@
         }
 
         .content {
-            font-family: "Zen Old Mincho", serif;
             font-size: 1.3em;
             white-space: pre-line;
             text-wrap: balance;
@@ -153,7 +149,7 @@
             bottom: 20px;
             bottom: calc(20px + env(safe-area-inset-bottom));
             right: 20px;
-            font-family: "Zen Old Mincho", serif;
+            font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
             font-size: 18px;
             font-weight: bold;
             border: 1px solid #ff9966;
@@ -212,7 +208,7 @@
             position: fixed;
             top: 10px;
             left: 20px;
-            font-family: "Zen Old Mincho", serif;
+            font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
             font-size: 18px;
             font-weight: bold;
             border: 1px solid #999;
@@ -251,7 +247,7 @@
             bottom: calc(20px + env(safe-area-inset-bottom));
             left: 50%;
             transform: translateX(-50%);
-            font-family: "Zen Old Mincho", serif;
+            font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
             font-size: 14px;
             color: #999;
             opacity: 0.3;
@@ -367,7 +363,7 @@
             title.style.backgroundColor = randomTheme.bg;
             title.style.borderColor = randomTheme.border;
             title.style.color = randomTheme.text;
-            document.querySelectorAll('.date, .content, .rss-button, .github-button, .entry-count').forEach(el => {
+            document.querySelectorAll('.date, .content').forEach(el => {
                 el.style.color = randomTheme.text;
             });
         };
@@ -755,7 +751,7 @@
                     setupTextSelection();
                     restoreHighlights();
                     scrollToEntryFromHash();
-                    setTimeout(startFallingAnimation, 180000);
+                    setTimeout(startFallingAnimation, 180000); // 3分後に実行
                 });
             } catch (error) {
                 console.error('Error loading diary entries:', error);
@@ -781,7 +777,7 @@
                 setupDateClick();
                 setupTextSelection();
                 scrollToEntryFromHash();
-                setTimeout(startFallingAnimation, 180000);
+                setTimeout(startFallingAnimation, 180000); // 3分後に実行
             });
         };
 
@@ -821,7 +817,7 @@
                 setupTextSelection();
                 restoreHighlights();
                 scrollToEntryFromHash();
-                setTimeout(startFallingAnimation, 180000);
+                setTimeout(startFallingAnimation, 180000); // 3分後に実行
             });
         };
 
