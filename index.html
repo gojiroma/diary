@@ -126,8 +126,6 @@
             padding: 0 10px;
             transition: background-color 0.3s ease;
             flex-shrink: 0;
-            text-wrap: balance;
-            overflow-wrap: break-word;
         }
 
         .date {
@@ -140,8 +138,10 @@
         .content {
             font-size: 1.3em;
             white-space: pre-line;
-            text-wrap: balance;
-            overflow-wrap: break-word;
+        }
+
+        .char {
+            display: inline-block;
         }
 
         .rss-button {
@@ -394,7 +394,7 @@
                 const content = el.closest('.content');
                 const date = content.previousElementSibling.getAttribute('data-yyyymmdd');
                 const text = content.textContent;
-                const start = content.textContent.indexOf(el.textContent);
+                const start = Array.from(content.childNodes).indexOf(el);
                 const length = el.textContent.length;
                 highlights.push({ date, start, length, text: el.textContent });
             });
@@ -407,13 +407,21 @@
                 const dateElement = document.querySelector(`.date[data-yyyymmdd="${h.date}"]`);
                 if (!dateElement) return;
                 const content = dateElement.nextElementSibling;
-                const text = content.textContent;
-                const start = text.indexOf(h.text);
-                if (start === -1) return;
-                const before = text.substring(0, start);
-                const middle = text.substring(start, start + h.length);
-                const after = text.substring(start + h.length);
-                content.innerHTML = `${before}<span class="highlight">${middle}</span>${after}`;
+                const chars = content.querySelectorAll('.char');
+                if (chars.length <= h.start) return;
+                let span = document.createElement('span');
+                span.className = 'highlight';
+                for (let i = h.start; i < h.start + h.length && i < chars.length; i++) {
+                    span.appendChild(chars[i].cloneNode(true));
+                }
+                for (let i = h.start; i < h.start + h.length && i < chars.length; i++) {
+                    chars[i].remove();
+                }
+                if (chars[h.start - 1]) {
+                    chars[h.start - 1].after(span);
+                } else if (chars[h.start]) {
+                    chars[h.start].before(span);
+                }
             });
             setupHighlightRemoval();
         };
@@ -421,8 +429,9 @@
         const setupHighlightRemoval = () => {
             document.querySelectorAll('.highlight').forEach(el => {
                 el.addEventListener('click', () => {
-                    const text = el.textContent;
-                    el.replaceWith(text);
+                    const range = document.createRange();
+                    range.selectNodeContents(el);
+                    el.replaceWith(...Array.from(el.childNodes));
                     saveHighlights();
                 });
             });
@@ -596,19 +605,7 @@
         };
 
         // ===== Falling Animation =====
-        const wrapCharsForFalling = () => {
-            document.querySelectorAll('.content').forEach(content => {
-                const text = content.textContent;
-                let wrapped = '';
-                for (let i = 0; i < text.length; i++) {
-                    wrapped += `<span class="char">${text[i]}</span>`;
-                }
-                content.innerHTML = wrapped;
-            });
-        };
-
         const startFallingAnimation = () => {
-            wrapCharsForFalling();
             const chars = document.querySelectorAll('.char');
             const dates = document.querySelectorAll('.date');
 
@@ -637,7 +634,7 @@
                         char.style.left = `${rect.left + (Math.random() * 40 - 20)}px`;
                         char.style.opacity = '1';
                     }, 2000);
-                }, delay);
+                }, 180000 + delay);
             });
 
             dates.forEach(date => {
@@ -665,7 +662,7 @@
                         date.style.left = `${rect.left + (Math.random() * 40 - 20)}px`;
                         date.style.opacity = '1';
                     }, 2000);
-                }, delay);
+                }, 180000 + delay);
             });
         };
 
@@ -734,7 +731,8 @@
                         .split('\n')
                         .map(line => line.replace(/^\s*\|?\s*/, ''))
                         .join('\n')
-                        .trim();
+                        .trim()
+                        .replace(/\n/g, '<br>');
                     const entryElement = document.createElement('div');
                     entryElement.className = 'diary-entry';
                     entryElement.id = yyyymmdd;
@@ -748,10 +746,11 @@
 
                 requestAnimationFrame(() => {
                     setupDateClick();
+                    wrapChars();
                     setupTextSelection();
                     restoreHighlights();
                     scrollToEntryFromHash();
-                    setTimeout(startFallingAnimation, 180000); // 3分後に実行
+                    startFallingAnimation();
                 });
             } catch (error) {
                 console.error('Error loading diary entries:', error);
@@ -775,9 +774,9 @@
 
             requestAnimationFrame(() => {
                 setupDateClick();
+                wrapChars();
                 setupTextSelection();
                 scrollToEntryFromHash();
-                setTimeout(startFallingAnimation, 180000); // 3分後に実行
             });
         };
 
@@ -814,10 +813,21 @@
             });
             requestAnimationFrame(() => {
                 setupDateClick();
+                wrapChars();
                 setupTextSelection();
                 restoreHighlights();
                 scrollToEntryFromHash();
-                setTimeout(startFallingAnimation, 180000); // 3分後に実行
+            });
+        };
+
+        const wrapChars = () => {
+            document.querySelectorAll('.content').forEach(content => {
+                const text = content.textContent;
+                let wrapped = '';
+                for (let i = 0; i < text.length; i++) {
+                    wrapped += `<span class="char">${text[i]}</span>`;
+                }
+                content.innerHTML = wrapped;
             });
         };
 
