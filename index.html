@@ -43,7 +43,7 @@
             position: fixed;
             top: 10px;
             right: 20px;
-            font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
+            font-family: "Zen Old Mincho", serif;
             font-size: 18px;
             font-weight: bold;
             border: 1px solid #333;
@@ -116,7 +116,6 @@
         .diary-entry {
             writing-mode: vertical-rl;
             text-orientation: upright;
-            word-break: keep-all;
             line-height: 2;
             letter-spacing: 0.1em;
             width: auto;
@@ -126,9 +125,12 @@
             padding: 0 10px;
             transition: background-color 0.3s ease;
             flex-shrink: 0;
+            text-wrap: balance;
+            overflow-wrap: break-word;
         }
 
         .date {
+            font-family: "Zen Old Mincho", serif;
             font-weight: bold;
             font-size: 1.4em;
             margin-right: 20px;
@@ -136,12 +138,11 @@
         }
 
         .content {
+            font-family: "Zen Old Mincho", serif;
             font-size: 1.3em;
             white-space: pre-line;
-        }
-
-        .char {
-            display: inline-block;
+            text-wrap: balance;
+            overflow-wrap: break-word;
         }
 
         .rss-button {
@@ -149,7 +150,7 @@
             bottom: 20px;
             bottom: calc(20px + env(safe-area-inset-bottom));
             right: 20px;
-            font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
+            font-family: "Zen Old Mincho", serif;
             font-size: 18px;
             font-weight: bold;
             border: 1px solid #ff9966;
@@ -208,7 +209,7 @@
             position: fixed;
             top: 10px;
             left: 20px;
-            font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
+            font-family: "Zen Old Mincho", serif;
             font-size: 18px;
             font-weight: bold;
             border: 1px solid #999;
@@ -247,7 +248,7 @@
             bottom: calc(20px + env(safe-area-inset-bottom));
             left: 50%;
             transform: translateX(-50%);
-            font-family: "Yu Mincho", "Hiragino Mincho Pro", serif;
+            font-family: "Zen Old Mincho", serif;
             font-size: 14px;
             color: #999;
             opacity: 0.3;
@@ -363,7 +364,7 @@
             title.style.backgroundColor = randomTheme.bg;
             title.style.borderColor = randomTheme.border;
             title.style.color = randomTheme.text;
-            document.querySelectorAll('.date, .content').forEach(el => {
+            document.querySelectorAll('.date, .content, .rss-button, .github-button, .entry-count').forEach(el => {
                 el.style.color = randomTheme.text;
             });
         };
@@ -394,7 +395,7 @@
                 const content = el.closest('.content');
                 const date = content.previousElementSibling.getAttribute('data-yyyymmdd');
                 const text = content.textContent;
-                const start = Array.from(content.childNodes).indexOf(el);
+                const start = content.textContent.indexOf(el.textContent);
                 const length = el.textContent.length;
                 highlights.push({ date, start, length, text: el.textContent });
             });
@@ -407,21 +408,13 @@
                 const dateElement = document.querySelector(`.date[data-yyyymmdd="${h.date}"]`);
                 if (!dateElement) return;
                 const content = dateElement.nextElementSibling;
-                const chars = content.querySelectorAll('.char');
-                if (chars.length <= h.start) return;
-                let span = document.createElement('span');
-                span.className = 'highlight';
-                for (let i = h.start; i < h.start + h.length && i < chars.length; i++) {
-                    span.appendChild(chars[i].cloneNode(true));
-                }
-                for (let i = h.start; i < h.start + h.length && i < chars.length; i++) {
-                    chars[i].remove();
-                }
-                if (chars[h.start - 1]) {
-                    chars[h.start - 1].after(span);
-                } else if (chars[h.start]) {
-                    chars[h.start].before(span);
-                }
+                const text = content.textContent;
+                const start = text.indexOf(h.text);
+                if (start === -1) return;
+                const before = text.substring(0, start);
+                const middle = text.substring(start, start + h.length);
+                const after = text.substring(start + h.length);
+                content.innerHTML = `${before}<span class="highlight">${middle}</span>${after}`;
             });
             setupHighlightRemoval();
         };
@@ -429,9 +422,8 @@
         const setupHighlightRemoval = () => {
             document.querySelectorAll('.highlight').forEach(el => {
                 el.addEventListener('click', () => {
-                    const range = document.createRange();
-                    range.selectNodeContents(el);
-                    el.replaceWith(...Array.from(el.childNodes));
+                    const text = el.textContent;
+                    el.replaceWith(text);
                     saveHighlights();
                 });
             });
@@ -605,7 +597,19 @@
         };
 
         // ===== Falling Animation =====
+        const wrapCharsForFalling = () => {
+            document.querySelectorAll('.content').forEach(content => {
+                const text = content.textContent;
+                let wrapped = '';
+                for (let i = 0; i < text.length; i++) {
+                    wrapped += `<span class="char">${text[i]}</span>`;
+                }
+                content.innerHTML = wrapped;
+            });
+        };
+
         const startFallingAnimation = () => {
+            wrapCharsForFalling();
             const chars = document.querySelectorAll('.char');
             const dates = document.querySelectorAll('.date');
 
@@ -634,7 +638,7 @@
                         char.style.left = `${rect.left + (Math.random() * 40 - 20)}px`;
                         char.style.opacity = '1';
                     }, 2000);
-                }, 180000 + delay);
+                }, delay);
             });
 
             dates.forEach(date => {
@@ -662,7 +666,7 @@
                         date.style.left = `${rect.left + (Math.random() * 40 - 20)}px`;
                         date.style.opacity = '1';
                     }, 2000);
-                }, 180000 + delay);
+                }, delay);
             });
         };
 
@@ -731,8 +735,7 @@
                         .split('\n')
                         .map(line => line.replace(/^\s*\|?\s*/, ''))
                         .join('\n')
-                        .trim()
-                        .replace(/\n/g, '<br>');
+                        .trim();
                     const entryElement = document.createElement('div');
                     entryElement.className = 'diary-entry';
                     entryElement.id = yyyymmdd;
@@ -746,11 +749,10 @@
 
                 requestAnimationFrame(() => {
                     setupDateClick();
-                    wrapChars();
                     setupTextSelection();
                     restoreHighlights();
                     scrollToEntryFromHash();
-                    startFallingAnimation();
+                    setTimeout(startFallingAnimation, 180000);
                 });
             } catch (error) {
                 console.error('Error loading diary entries:', error);
@@ -774,9 +776,9 @@
 
             requestAnimationFrame(() => {
                 setupDateClick();
-                wrapChars();
                 setupTextSelection();
                 scrollToEntryFromHash();
+                setTimeout(startFallingAnimation, 180000);
             });
         };
 
@@ -813,21 +815,10 @@
             });
             requestAnimationFrame(() => {
                 setupDateClick();
-                wrapChars();
                 setupTextSelection();
                 restoreHighlights();
                 scrollToEntryFromHash();
-            });
-        };
-
-        const wrapChars = () => {
-            document.querySelectorAll('.content').forEach(content => {
-                const text = content.textContent;
-                let wrapped = '';
-                for (let i = 0; i < text.length; i++) {
-                    wrapped += `<span class="char">${text[i]}</span>`;
-                }
-                content.innerHTML = wrapped;
+                setTimeout(startFallingAnimation, 180000);
             });
         };
 
