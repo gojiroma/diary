@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Wed, 31 Dec 2025 20:52:04 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 01 Jan 2026 17:43:15 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月一日（木）</title>
+      <link>https://nikki.poet.blue#20260101</link>
+      <pubDate>Thu, 01 Jan 2026 17:43:15 +0900</pubDate>
+      <description>毎年恒例の利根川サイクリングに行ってきた。人よりも鳥の方が多い気がして開放感がある。天気も良く、山々がはっきり映えていて最高。ついでに期限が迫っているコカ・コーラのドリンクチケットを消費。通常版のコカ・コーラを飲み干してキャップを見ると「糖入り」と書かれていて、ゼロシュガーと区別したいのはわかるが、ストレートに書いてあると良くないものを飲んでいる感じがする。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260101</guid>
+      <media:content url="https://nc.poet.blue/20260101" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>十二月三十一日（水）</title>
       <link>https://nikki.poet.blue#20251231</link>
