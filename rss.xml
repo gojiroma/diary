@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Tue, 06 Jan 2026 14:00:33 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 07 Jan 2026 09:21:00 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月七日（水）</title>
+      <link>https://nikki.poet.blue#20260107</link>
+      <pubDate>Wed, 07 Jan 2026 09:21:00 +0900</pubDate>
+      <description>「年明けの冷えで不調」パターンを今年も繰り返していることがわかった。物理的な対策として、ホームセンターで大型のスチレンボードを買すことにした。（ここで十分な手が打てていれば、去年退職しなかったのにな、踏みとどまれたのにな）とも思った。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260107</guid>
+      <media:content url="https://nc.poet.blue/20260107" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月六日（火）</title>
       <link>https://nikki.poet.blue#20260106</link>
