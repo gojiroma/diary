@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>誤字ロマの日記</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&family=M+PLUS+1p:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --real-bg: #f8f6f0;
+            --real-text: #3a3a3a;
+            --real-accent: #3498db;
+            --real-border: #d4d4d4;
+            --fake-bg: #fff8f0;
+            --fake-text: #8b4513;
+            --fake-accent: #ff9966;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'M PLUS 1p', sans-serif;
+            background-color: var(--real-bg);
+            color: var(--real-text);
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Kiwi Maru', serif;
+            color: var(--real-accent);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .diary-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .entry {
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px var(--shadow);
+            writing-mode: horizontal-tb;
+            position: relative;
+        }
+
+        .entry.real {
+            background-color: white;
+            border-left: 5px solid var(--real-accent);
+        }
+
+        .entry.fake {
+            background-color: var(--fake-bg);
+            border-left: 5px solid var(--fake-accent);
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed var(--real-border);
+        }
+
+        .entry-date {
+            font-family: 'Kiwi Maru', serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .entry-type {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .entry.real .entry-type {
+            background-color: var(--real-accent);
+        }
+
+        .entry.fake .entry-type {
+            background-color: var(--fake-accent);
+        }
+
+        .entry-content {
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border: 1px solid var(--real-border);
+            border-radius: 20px;
+            background-color: white;
+            cursor: pointer;
+            font-family: 'Kiwi Maru', serif;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--real-accent);
+            color: white;
+            border-color: var(--real-accent);
+        }
+
+        .btn.fake-toggle {
+            background-color: var(--fake-bg);
+            border-color: var(--fake-accent);
+            color: var(--fake-text);
+        }
+
+        .btn.fake-toggle:hover {
+            background-color: var(--fake-accent);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>誤字ロマの日記</h1>
+
+    <div class="controls">
+        <button class="btn fake-toggle" id="toggleFake">嘘日記を非表示</button>
+        <button class="btn" id="shuffleEntries">日記をシャッフル</button>
+    </div>
+
+    <div class="diary-container" id="diaryContainer">
+        <div class="loading">日記を読み込み中...</div>
+    </div>
+
+    <script>
+        // 日付を和暦風にフォーマット
+        function formatJapaneseDate(yyyymmdd) {
+            const year = parseInt(yyyymmdd.substring(0, 4));
+            const month = parseInt(yyyymmdd.substring(4, 6));
+            const day = parseInt(yyyymmdd.substring(6, 8));
+
+            const kanjiMonths = ['睦月', '如月', '弥生', '卯月', '皐月', '水無月',
+                               '文月', '葉月', '長月', '神無月', '霜月', '師走'];
+            const kanjiDays = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十',
+                             '十一', '十二', '十三', '十四', '十五', '十六', '十七',
+                             '十八', '十九', '二十', '二十一', '二十二', '二十三',
+                             '二十四', '二十五', '二十六', '二十七', '二十八', '二十九', '三十', '三十一'];
+
+            const date = new Date(year, month - 1, day);
+            const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+
+            return `${year}年${kanjiMonths[month - 1]}${kanjiDays[day - 1]}日（${dayOfWeek}）`;
+        }
+
+        // 日記エントリをパース
+        function parseEntries(text) {
+            return text.split('---')
+                .filter(entry => entry.trim())
+                .map(entry => {
+                    const dateMatch = entry.match(/date:\s*(.*)/);
+                    const contentMatch = entry.match(/content:\s*\|\n([\s\S]*?)(?=\n---|\n$)/m);
+                    if (!dateMatch || !contentMatch) return null;
+
+                    const yyyymmdd = dateMatch[1].trim();
+                    const contentLines = contentMatch[1]
+                        .split('\n')
+                        .map(line => line.replace(/^\s*\|?\s*/, ''))
+                        .join('\n')
+                        .trim();
+                    return { date: yyyymmdd, content: contentLines };
+                })
+                .filter(entry => entry !== null)
+                .reverse();
+        }
+
+        // エントリを表示
+        function displayEntries(entries) {
+            const container = document.getElementById('diaryContainer');
+            container.innerHTML = '';
+
+            if (entries.length === 0) {
+                container.innerHTML = '<div class="loading">エントリが見つかりませんでした。</div>';
+                return;
+            }
+
+            entries.forEach(entry => {
+                const entryElement = document.createElement('div');
+                entryElement.className = `entry ${entry.type}`;
+
+                const dateStr = formatJapaneseDate(entry.date);
+                const typeLabel = entry.type === 'real' ? '本物' : '嘘';
+
+                entryElement.innerHTML = `
+                    <div class="entry-header">
+                        <div class="entry-date">${dateStr}</div>
+                        <div class="entry-type">${typeLabel}</div>
+                    </div>
+                    <div class="entry-content">${entry.content}</div>
+                `;
+
+                container.appendChild(entryElement);
+            });
+        }
+
+        // ファイル読み込み
+        async function loadFiles() {
+            try {
+                const [realResponse, fakeResponse] = await Promise.all([
+                    fetch('entry.md'),
+                    fetch('fake.md')
+                ]);
+
+                if (!realResponse.ok || !fakeResponse.ok) {
+                    throw new Error('ファイル読み込み失敗');
+                }
+
+                const realText = await realResponse.text();
+                const fakeText = await fakeResponse.text();
+
+                const realEntries = parseEntries(realText).map(e => ({...e, type: 'real'}));
+                const fakeEntries = parseEntries(fakeText).map(e => ({...e, type: 'fake'}));
+
+                // 日付でソート
+                const allEntries = [...realEntries, ...fakeEntries].sort((a, b) =>
+                    b.date.localeCompare(a.date)
+                );
+
+                displayEntries(allEntries);
+                return allEntries;
+            } catch (error) {
+                console.error('エラー:', error);
+                document.getElementById('diaryContainer').innerHTML =
+                    `<div class="loading">ファイル読み込みエラー: ${error.message}</div>`;
+                return [];
+            }
+        }
+
+        // シャッフル関数
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // 初期読み込み
+        let allEntries = [];
+        document.addEventListener('DOMContentLoaded', async () => {
+            allEntries = await loadFiles();
+
+            // シャッフルボタン
+            document.getElementById('shuffleEntries').addEventListener('click', () => {
+                displayEntries(shuffleArray([...allEntries]));
+            });
+
+            // 切替ボタン
+            document.getElementById('toggleFake').addEventListener('click', () => {
+                const btn = document.getElementById('toggleFake');
+                const showFake = btn.textContent === '嘘日記を表示';
+
+                if (showFake) {
+                    displayEntries(allEntries);
+                    btn.textContent = '嘘日記を非表示';
+                } else {
+                    const realOnly = allEntries.filter(e => e.type === 'real');
+                    displayEntries(realOnly);
+                    btn.textContent = '嘘日記を表示';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
