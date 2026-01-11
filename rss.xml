@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 10 Jan 2026 17:42:33 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 11 Jan 2026 15:44:48 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月十一日（日）</title>
+      <link>https://nikki.poet.blue#20260111</link>
+      <pubDate>Sun, 11 Jan 2026 15:44:48 +0900</pubDate>
+      <description>親のスマホが遅いということで、色々データを退避した上でファクトリーリセットを行った。各種銀行アプリに再ログインしたり、KYCをやり直したり、指紋を登録させたり。そこそこの面倒さだった。一部はサポートの連絡を待たないと使えないアプリもあった（これは代行息子として運用をミスったやつ...。初期化の前にコード発行やログアウトを忘れたパターン）ついでに銀行口座を整理する段取り、楽な運用を決めた。今日は気温が高いが強風なので、外出せず、普段やる気が出ないタスクをやる日にする。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260111</guid>
+      <media:content url="https://nc.poet.blue/20260111" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月十日（土）</title>
       <link>https://nikki.poet.blue#20260110</link>
