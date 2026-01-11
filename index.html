@@ -89,8 +89,7 @@
         .diary-container-wrapper {
             width: 100%;
             max-width: 90%;
-            height: 75vh;
-            height: 75svh;
+            height: 78vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -726,64 +725,75 @@
             const maxDay = parseInt(maxDate.substring(6, 8), 10);
             const maxDateObj = new Date(maxYear, maxMonth, maxDay);
 
-            // 月曜始まりの最初の日付を計算
-            const startDate = new Date(minDateObj);
-            startDate.setDate(startDate.getDate() - ((startDate.getDay() + 6) % 7));
+            // 月ごとに処理
+            let currentDate = new Date(minDateObj);
+            currentDate.setDate(1); // 月の1日に設定
 
-            // 日曜終わりの最後の日付を計算
-            const endDate = new Date(maxDateObj);
-            endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
+            while (currentDate <= maxDateObj) {
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
 
-            let currentDate = new Date(startDate);
-            let currentMonth = null;
+                // 月の見出しを追加
+                const monthHeader = document.createElement('div');
+                monthHeader.className = 'date-picker-month-header';
+                monthHeader.textContent = `${year}年${month + 1}月`;
+                daysContainer.appendChild(monthHeader);
 
-            while (currentDate <= endDate) {
-                // 月が変わったら見出しを追加
-                if (currentDate.getMonth() !== currentMonth) {
-                    currentMonth = currentDate.getMonth();
-                    const monthHeader = document.createElement('div');
-                    monthHeader.className = 'date-picker-month-header';
-                    monthHeader.textContent = `${currentDate.getFullYear()}年${currentDate.getMonth() + 1}月`;
-                    daysContainer.appendChild(monthHeader);
+                // 月の1日の曜日を取得（0: 日曜日, 1: 月曜日, ..., 6: 土曜日）
+                const firstDayOfWeek = currentDate.getDay();
+
+                // 月曜始まりに調整するためのオフセットを計算
+                // 日曜日(0)が1日なら、月曜始まりにするために6つ空白セルを追加
+                // 月曜日(1)が1日なら、空白セルは不要
+                const offset = (firstDayOfWeek === 0) ? 6 : firstDayOfWeek - 1;
+
+                // 月曜始まりになるように空白セルを追加
+                for (let i = 0; i < offset; i++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.className = 'date-picker-day empty';
+                    daysContainer.appendChild(emptyDay);
                 }
 
-                const dayOfWeek = currentDate.getDay();
-                const yyyymmdd = `${currentDate.getFullYear()}${String(currentDate.getMonth() + 1).padStart(2, '0')}${String(currentDate.getDate()).padStart(2, '0')}`;
-                const dayElement = document.createElement('div');
-                dayElement.className = 'date-picker-day';
-                dayElement.textContent = currentDate.getDate();
-                dayElement.dataset.yyyymmdd = yyyymmdd;
+                // 月の日数を取得
+                const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
 
-                // 日記エントリがあるかチェック
-                if (diaryEntries.some(entry => entry.yyyymmdd === yyyymmdd)) {
-                    dayElement.classList.add('has-entry');
-                    dayElement.addEventListener('click', () => {
-                        document.querySelectorAll('.date-picker-day').forEach(el => el.classList.remove('selected'));
+                // 月の日数分ループ
+                for (let day = 1; day <= lastDayOfMonth; day++) {
+                    const date = new Date(year, month, day);
+                    if (date > maxDateObj) break;
+
+                    const yyyymmdd = `${year}${String(month + 1).padStart(2, '0')}${String(day).padStart(2, '0')}`;
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'date-picker-day';
+                    dayElement.textContent = day;
+                    dayElement.dataset.yyyymmdd = yyyymmdd;
+
+                    // 日記エントリがあるかチェック
+                    if (diaryEntries.some(entry => entry.yyyymmdd === yyyymmdd)) {
+                        dayElement.classList.add('has-entry');
+                        dayElement.addEventListener('click', () => {
+                            document.querySelectorAll('.date-picker-day').forEach(el => el.classList.remove('selected'));
+                            dayElement.classList.add('selected');
+                            window.location.hash = yyyymmdd;
+                            scrollToEntryFromHash();
+                            closeDatePickerModal();
+                        });
+                    } else {
+                        dayElement.classList.add('empty');
+                        dayElement.style.cursor = 'not-allowed';
+                    }
+
+                    // 選択済みの日付をハイライト
+                    if (window.location.hash === `#${yyyymmdd}`) {
                         dayElement.classList.add('selected');
-                        window.location.hash = yyyymmdd;
-                        scrollToEntryFromHash();
-                        closeDatePickerModal();
-                    });
-                } else {
-                    dayElement.classList.add('empty');
-                    dayElement.style.cursor = 'not-allowed';
+                    }
+
+                    daysContainer.appendChild(dayElement);
                 }
 
-                // 選択済みの日付をハイライト
-                if (window.location.hash === `#${yyyymmdd}`) {
-                    dayElement.classList.add('selected');
-                }
-
-                // 日記エントリ開始前の日付は非アクティブ
-                if (currentDate < minDateObj) {
-                    dayElement.classList.add('empty');
-                    dayElement.style.cursor = 'not-allowed';
-                }
-
-                daysContainer.appendChild(dayElement);
-
-                // 次の日に進める
-                currentDate.setDate(currentDate.getDate() + 1);
+                // 次の月に進める
+                currentDate.setMonth(month + 1);
+                currentDate.setDate(1);
             }
         };
 
