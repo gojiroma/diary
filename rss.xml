@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Mon, 12 Jan 2026 17:48:40 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 13 Jan 2026 12:47:35 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月十三日（火）</title>
+      <link>https://nikki.poet.blue#20260113</link>
+      <pubDate>Tue, 13 Jan 2026 12:47:35 +0900</pubDate>
+      <description>①働きたいなぁ、という気持ちが復活してきた。今日はパーソルミライズの面談日。エージェントじゃないところが良い。面談まで時間があったので、Geminiに相談してみた。「職歴からすると、総務やコーポレートITがおすすめされがち。なんか違うんだよね」と伝えて、興味をいくつか書いたところ「図書館や博物館の事務はどうだろう」とサジェスチョンがあった。いきなり求人を見るのは辛いけど、インタビュー記事は前向きになれるのは発見だった。②地元のショッピングモールからオーダースーツコーナー終了のお知らせが届いた。大手スーツメーカーが参入してきたので、近々終了するだろうなと思っていた。ここでスーツを買った経験は、いい思い出ばかりだ。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260113</guid>
+      <media:content url="https://nc.poet.blue/20260113" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月十二日（月）</title>
       <link>https://nikki.poet.blue#20260112</link>
