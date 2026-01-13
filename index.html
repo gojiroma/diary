@@ -41,7 +41,8 @@
         }
 
         body.fake-mode .date,
-        body.fake-mode .content {
+        body.fake-mode .content,
+        body.fake-mode .days-ago {
             color: #fff !important;
         }
 
@@ -129,15 +130,38 @@
             text-wrap: balance;
             overflow-wrap: break-word;
             background-color: transparent;
+            position: relative;
+        }
+
+        .date-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-right: 20px;
+            margin-left: 20px;
         }
 
         .date {
             font-family: "Zen Old Mincho", serif;
             font-size: 1.6em;
-            margin-right: 20px;
-            margin-left: 20px;
             cursor: pointer;
             color: #003366;
+            white-space: nowrap;
+        }
+
+        .days-ago {
+            font-family: "Zen Old Mincho", serif;
+            font-size: 0.8em;
+            color: inherit;
+            opacity: 0;
+            transition: opacity 0.2s, filter 0.2s, color 0.2s;
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+
+        .date-container:hover .days-ago,
+        .date-container:focus-within .days-ago {
+            opacity: 1;
         }
 
         .content {
@@ -284,6 +308,17 @@
             return `${year}${month}${day}`;
         };
 
+        const calculateDaysAgo = (yyyymmdd) => {
+            const year = parseInt(yyyymmdd.substring(0, 4), 10);
+            const month = parseInt(yyyymmdd.substring(4, 6), 10) - 1;
+            const day = parseInt(yyyymmdd.substring(6, 8), 10);
+            const entryDate = new Date(year, month, day);
+            const today = new Date();
+            const diffTime = today - entryDate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays === 0 ? '今日' : `${diffDays}日前`;
+        };
+
         // ===== State =====
         let currentTheme = null;
         let targetEntry = null;
@@ -343,7 +378,20 @@
         };
 
         const setupDateClick = () => {
-            document.querySelectorAll('.date').forEach(dateElement => {
+            document.querySelectorAll('.date-container').forEach(container => {
+                const dateElement = container.querySelector('.date');
+                const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
+                const daysAgo = calculateDaysAgo(yyyymmdd);
+                const daysAgoElement = container.querySelector('.days-ago');
+                if (daysAgoElement) {
+                    daysAgoElement.textContent = daysAgo;
+                } else {
+                    const newDaysAgoElement = document.createElement('div');
+                    newDaysAgoElement.className = 'days-ago';
+                    newDaysAgoElement.textContent = daysAgo;
+                    container.appendChild(newDaysAgoElement);
+                }
+
                 dateElement.addEventListener('click', () => {
                     const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
                     window.location.hash = yyyymmdd;
@@ -378,6 +426,12 @@
                 const container = document.getElementById('diaryContainer');
                 const entries = document.querySelectorAll('.diary-entry');
 
+                // 一旦全ての .days-ago を非表示にする
+                document.querySelectorAll('.days-ago').forEach(el => {
+                    el.style.opacity = '0';
+                    el.style.filter = 'brightness(1)';
+                });
+
                 if (hash && hash.match(/^\d{8}$/)) {
                     const entry = document.getElementById(hash);
                     if (entry) {
@@ -386,6 +440,20 @@
                         const containerWidth = container.clientWidth;
                         smoothScrollTo(container, entryRight - containerWidth);
                         flashEntry(entry);
+
+                        // 対象の .days-ago を一瞬表示
+                        const dateElement = entry.querySelector('.date');
+                        if (dateElement) {
+                            const daysAgoElement = dateElement.parentNode.querySelector('.days-ago');
+                            if (daysAgoElement) {
+                                daysAgoElement.style.opacity = '1';
+                                daysAgoElement.style.filter = 'brightness(2)';
+                                setTimeout(() => {
+                                    daysAgoElement.style.opacity = '0';
+                                    daysAgoElement.style.filter = 'brightness(1)';
+                                }, 1000);
+                            }
+                        }
                     }
                 } else if (entries.length > 0) {
                     const latestEntry = entries[0];
@@ -409,16 +477,35 @@
                 }
             });
 
+            // エントリのフラッシュ
             Object.assign(entry.style, {
                 transition: 'filter 0.2s ease, color 0.2s ease',
                 color: isFakeMode ? '#fff' : '#333333',
                 filter: 'brightness(2)'
             });
+
+            // days-ago のフラッシュ
+            const daysAgoElement = entry.querySelector('.days-ago');
+            if (daysAgoElement) {
+                Object.assign(daysAgoElement.style, {
+                    transition: 'filter 0.2s ease, color 0.2s ease',
+                    color: isFakeMode ? '#fff' : '#333333',
+                    filter: 'brightness(2)'
+                });
+            }
+
             setTimeout(() => {
                 Object.assign(entry.style, {
                     color: isFakeMode ? '#fff' : currentTheme.text,
                     filter: 'brightness(1)'
                 });
+
+                if (daysAgoElement) {
+                    Object.assign(daysAgoElement.style, {
+                        color: isFakeMode ? '#fff' : currentTheme.text,
+                        filter: 'brightness(1)'
+                    });
+                }
             }, 1200);
         };
 
@@ -491,7 +578,8 @@
                 return `${year}${month}${day}`;
             };
 
-            const filename = `誤字ロマの日記 ${formatDateForFilename(oldestDate)}-${formatDateForFilename(newestDate)}.txt`;
+            const modePrefix = isFakeMode ? '嘘日記_' : '';
+            const filename = `${modePrefix}誤字ロマの日記 ${formatDateForFilename(oldestDate)}-${formatDateForFilename(newestDate)}.txt`;
 
             let content = '';
             sortedEntries.forEach(entry => {
@@ -557,14 +645,12 @@
                 timeline.appendChild(container);
             });
 
-            // タッチイベントのロジックを修正：左端が最新、右端が最古
             timeline.addEventListener('touchmove', (e) => {
                 e.preventDefault();
                 const touch = e.touches[0];
                 const rect = timeline.getBoundingClientRect();
                 const x = touch.clientX - rect.left;
                 const percent = x / rect.width;
-                // 逆順にインデックスを割り当てる
                 const index = Math.floor((1 - percent) * sortedEntries.length);
                 if (index >= 0 && index < sortedEntries.length) {
                     const yyyymmdd = sortedEntries[index].yyyymmdd;
@@ -601,7 +687,9 @@
                     entryElement.className = 'diary-entry';
                     entryElement.id = yyyymmdd;
                     entryElement.innerHTML = `
-                        <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
+                        <div class="date-container">
+                            <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
+                        </div>
                         <div class="content">${contentLines}</div>
                     `;
                     container.appendChild(entryElement);
@@ -634,7 +722,9 @@
             entryElement.className = 'diary-entry';
             entryElement.id = randomDate;
             entryElement.innerHTML = `
-                <div class="date" data-yyyymmdd="${randomDate}">${dateObj.short}</div>
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="${randomDate}">${dateObj.short}</div>
+                </div>
                 <div class="content">残念ながら、作者の不手際かインフラの障害が起きているようだ。日記データを取得できないでいる。</div>
             `;
             container.appendChild(entryElement);
@@ -674,7 +764,9 @@
                 entryElement.className = 'diary-entry';
                 entryElement.id = yyyymmdd;
                 entryElement.innerHTML = `
-                    <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
+                    <div class="date-container">
+                        <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
+                    </div>
                     <div class="content">${contentLines}</div>
                 `;
                 container.appendChild(entryElement);
