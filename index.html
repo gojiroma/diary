@@ -184,30 +184,23 @@
         .timeline-bar {
             width: 8px;
             height: 100%;
-            /* 親の高さ(30px)いっぱいに広げる */
             margin: 0 1px;
             background-color: transparent;
-            /* 背景は透明にする */
             cursor: pointer;
             display: flex;
             align-items: flex-end;
-            /* 下揃えにする */
         }
 
-        /* 中身の通常時の色を指定 */
         .timeline-bar-inner {
             width: 100%;
             background-color: #003366;
-            /* ここに元の色（紺）を塗る */
             transition: background-color 0.2s;
         }
 
-        /* 偽モードの時の中身の色 */
         body.fake-mode .timeline-bar-inner {
             background-color: #fff;
         }
 
-        /* ホバーした時、中身をオレンジにする */
         .timeline-bar:hover .timeline-bar-inner {
             background-color: #ff9900 !important;
         }
@@ -487,14 +480,10 @@
                 return;
             }
 
-            // 日記エントリを日付順にソート
             const sortedEntries = [...diaryEntries].sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
-
-            // 最古と最新の日付を取得
             const oldestDate = sortedEntries[0].yyyymmdd;
             const newestDate = sortedEntries[sortedEntries.length - 1].yyyymmdd;
 
-            // ファイル名を生成
             const formatDateForFilename = (yyyymmdd) => {
                 const year = yyyymmdd.substring(2, 4);
                 const month = yyyymmdd.substring(4, 6);
@@ -504,14 +493,12 @@
 
             const filename = `誤字ロマの日記 ${formatDateForFilename(oldestDate)}-${formatDateForFilename(newestDate)}.txt`;
 
-            // テキストコンテンツを生成
             let content = '';
             sortedEntries.forEach(entry => {
                 const dateObj = formatJapaneseDate(entry.yyyymmdd);
                 content += `${dateObj.long}\n${entry.content}\n\n`;
             });
 
-            // ファイルをダウンロード
             const blob = new Blob([content], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -530,13 +517,9 @@
 
             if (diaryEntries.length === 0) return;
 
-            // 日記エントリを日付順にソート
             const sortedEntries = [...diaryEntries].sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
-
-            // コンテンツの長さの配列を作成
             const contentLengths = sortedEntries.map(entry => entry.content.length);
 
-            // 外れ値の上限を設定（例: 95パーセンタイル）
             const percentile95 = (arr) => {
                 const sorted = [...arr].sort((a, b) => a - b);
                 const index = Math.floor(sorted.length * 0.95);
@@ -544,11 +527,9 @@
             };
             const maxContentLength = Math.min(percentile95(contentLengths), 500);
 
-            // 基本の高さと比率を設定
             const baseHeight = 5;
             const heightRatio = 45 / maxContentLength;
 
-            // 各エントリに対してタイムラインバーを作成
             sortedEntries.forEach((entry, index) => {
                 const container = document.createElement('div');
                 container.className = 'timeline-bar';
@@ -557,18 +538,15 @@
                 const innerBar = document.createElement('div');
                 innerBar.className = 'timeline-bar-inner';
 
-                // コンテンツの長さに応じて高さを設定（上限を適用）
                 const contentLength = Math.min(entry.content.length, maxContentLength);
                 const height = Math.max(baseHeight, contentLength * heightRatio);
                 innerBar.style.height = `${height}px`;
 
-                // ホバー時のイベントを設定
                 container.addEventListener('mouseover', () => {
                     window.location.hash = entry.yyyymmdd;
                     scrollToEntryFromHash();
                 });
 
-                // タッチイベントを設定
                 container.addEventListener('touchstart', (e) => {
                     e.preventDefault();
                     window.location.hash = entry.yyyymmdd;
@@ -579,14 +557,15 @@
                 timeline.appendChild(container);
             });
 
-            // タイムライン全体のタッチイベントを設定
+            // タッチイベントのロジックを修正：左端が最新、右端が最古
             timeline.addEventListener('touchmove', (e) => {
                 e.preventDefault();
                 const touch = e.touches[0];
                 const rect = timeline.getBoundingClientRect();
                 const x = touch.clientX - rect.left;
                 const percent = x / rect.width;
-                const index = Math.floor(percent * sortedEntries.length);
+                // 逆順にインデックスを割り当てる
+                const index = Math.floor((1 - percent) * sortedEntries.length);
                 if (index >= 0 && index < sortedEntries.length) {
                     const yyyymmdd = sortedEntries[index].yyyymmdd;
                     window.location.hash = yyyymmdd;
@@ -627,7 +606,6 @@
                     `;
                     container.appendChild(entryElement);
 
-                    // 日記エントリを保存
                     diaryEntries.push({
                         yyyymmdd: yyyymmdd,
                         content: contentLines
@@ -701,7 +679,6 @@
                 `;
                 container.appendChild(entryElement);
 
-                // 日記エントリを保存
                 diaryEntries.push({
                     yyyymmdd: yyyymmdd,
                     content: contentLines
