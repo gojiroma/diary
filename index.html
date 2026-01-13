@@ -261,7 +261,7 @@
             opacity: 1;
         }
 
-        /* Date Picker Modal */
+        /* Organic Date Picker Modal */
         .date-picker-modal {
             display: none;
             position: fixed;
@@ -269,7 +269,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.2);
             z-index: 2000;
             justify-content: center;
             align-items: center;
@@ -277,121 +277,115 @@
         }
 
         .date-picker-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.42);
+            padding: 10px;
+            border-radius: 20px;
             width: 90%;
-            max-width: 500px;
+            max-width: 900px;
             max-height: 80vh;
             overflow-y: auto;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .date-picker-header {
+        .date-picker-month-container {
             display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            margin-bottom: 15px;
+            flex-direction: row;
+            align-items: flex-start;
+            margin: 20px 0;
+            width: 100%;
+            position: relative;
+            min-height: 110px;
         }
 
-        .date-picker-close {
-            background: none;
-            border: none;
-            font-size: 1.5em;
-            cursor: pointer;
-            color: #666;
-        }
-
-        .date-picker-weekdays {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            text-align: center;
+        .month-label {
+            font-size: 50px;
+            color:rgba(105, 107, 104, 0.37);
             font-weight: bold;
-            margin-bottom: 10px;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 0.2em;
+            position: absolute;
+            right: 5px;
+            top: 0;
         }
 
-        .date-picker-days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
+        .dates-container {
+            display: flex;
+            flex-direction: row-reverse;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 80%;
+            padding: 10px;
+            justify-content: end;
+            margin-left: 40px;
         }
 
-        .date-picker-day {
-            aspect-ratio: 1;
+        .date-oval {
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.2s;
+            font-weight: 600;
+            font-family: "Zen Old Mincho", serif;
+            user-select: none;
+            transition: all 0.2s ease;
+            box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            color: #333;
+            background-color: rgba(173, 216, 230, 0.6);
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            position: relative;
         }
 
-        .date-picker-day:hover {
-            background-color: #f0f0f0;
+        .date-oval:hover {
+            transform: scale(1.08);
+            box-shadow: 2px 5px 12px rgba(0, 0, 0, 0.15);
+            background-color: rgba(135, 206, 250, 0.8);
         }
 
-        .date-picker-day.empty {
+        .date-oval.highlight {
+            background-color: #4682b4;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(70, 130, 180, 0.6);
+        }
+
+        .date-oval::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50% 60% 50% 40% / 60% 45% 50% 55%;
+            padding: 2px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+            z-index: -1;
+        }
+
+        .date-oval.empty {
             background-color: transparent;
             cursor: default;
-        }
-
-        .date-picker-day.selected {
-            background-color: #1E90FF;
-            color: white;
-        }
-
-        .date-picker-day.has-entry {
-            background-color: #e6f3ff;
-        }
-
-        .date-picker-day.has-entry.selected {
-            background-color: #0066cc;
-            color: white;
-        }
-
-        .date-picker-month-header {
-            background-color: #f0f0f0;
-            font-size: 0.9em;
-            color: #666;
-            grid-column: 1 / -1;
-            text-align: center;
-            font-weight: bold;
-            padding: 5px 0;
+            box-shadow: none;
         }
 
         /* Dark theme for date picker in fake mode */
         body.fake-mode .date-picker-content {
-            background-color: #333;
+            background-color: rgba(50, 50, 50, 0.6);
             color: #fff;
         }
 
-        body.fake-mode .date-picker-close {
+        body.fake-mode .date-oval {
             color: #fff;
+            background-color: rgba(70, 130, 180, 0.6);
         }
 
-        body.fake-mode .date-picker-weekdays {
-            color: #fff;
-        }
-
-        body.fake-mode .date-picker-day {
-            color: #fff;
-        }
-
-        body.fake-mode .date-picker-day:hover {
-            background-color: #555;
-        }
-
-        body.fake-mode .date-picker-day.has-entry {
-            background-color: #444;
-        }
-
-        body.fake-mode .date-picker-day.selected {
-            background-color: #1E90FF;
-            color: white;
-        }
-
-        body.fake-mode .date-picker-month-header {
-            background-color: #444;
-            color: #ccc;
+        body.fake-mode .date-oval:hover {
+            background-color: rgba(100, 144, 255, 0.8);
         }
     </style>
 </head>
@@ -409,38 +403,11 @@
 
     <div class="date-picker-modal" id="datePickerModal">
         <div class="date-picker-content">
-            <div class="date-picker-header">
-                <button class="date-picker-close" id="datePickerClose">×</button>
-            </div>
-            <div class="date-picker-weekdays">
-                <div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div>土</div><div>日</div>
-            </div>
-            <div class="date-picker-days" id="datePickerDays"></div>
+            <div id="datePickerDays"></div>
         </div>
     </div>
 
     <script>
-        // ===== Constants =====
-        const THEMES = [
-            { bg: "#e6f3ff", text: "#003366", border: "#003366" },
-            { bg: "#fff8e6", text: "#8b4513", border: "#8b4513" },
-            { bg: "#e6ffe6", text: "#2e8b57", border: "#2e8b57" },
-            { bg: "#ffe6f0", text: "#8b008b", border: "#8b008b" },
-            { bg: "#f0f0ff", text: "#4b0082", border: "#4b0082" },
-            { bg: "#ffffe6", text: "#b8860b", border: "#b8860b" },
-            { bg: "#e6ffff", text: "#0066cc", border: "#0066cc" },
-            { bg: "#f0e6ff", text: "#800080", border: "#800080" },
-            { bg: "#fff0e6", text: "#cd5c5c", border: "#cd5c5c" },
-            { bg: "#f0ffe6", text: "#228b22", border: "#228b22" }
-        ];
-
-        // ===== State =====
-        let currentTheme = null;
-        let targetEntry = null;
-        let isFakeMode = false;
-        let fakeEntriesCache = null;
-        let diaryEntries = [];
-
         // ===== Utilities =====
         const toKanjiNumber = (num) => {
             const kanjiNumbers = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
@@ -466,6 +433,25 @@
             return toKanjiNumber(day);
         };
 
+        const toJapaneseEra = (year) => {
+            if (year >= 2019) {
+                const eraYear = year - 2018;
+                return `${toKanjiNumber(eraYear)}年`;
+            } else if (year >= 1989) {
+                const eraYear = year - 1988;
+                return `平成${toKanjiNumber(eraYear)}年`;
+            } else if (year >= 1926) {
+                const eraYear = year - 1925;
+                return `昭和${toKanjiNumber(eraYear)}年`;
+            } else if (year >= 1912) {
+                const eraYear = year - 1911;
+                return `大正${toKanjiNumber(eraYear)}年`;
+            } else {
+                const eraYear = year - 1867;
+                return `明治${toKanjiNumber(eraYear)}年`;
+            }
+        };
+
         const formatJapaneseDate = (yyyymmdd) => {
             const year = parseInt(yyyymmdd.substring(0, 4), 10);
             const month = parseInt(yyyymmdd.substring(4, 6), 10);
@@ -474,7 +460,7 @@
             const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
             return {
                 short: `${toKanjiMonth(month)}${toKanjiDay(day)}日（${isFakeMode ? '嘘' : dayOfWeek}）`,
-                long: `${toKanjiNumber(year)}年${toKanjiMonth(month)}${toKanjiDay(day)}日（${isFakeMode ? '嘘' : dayOfWeek}）`
+                long: `${toJapaneseEra(year)}${toKanjiMonth(month)}${toKanjiDay(day)}日（${isFakeMode ? '嘘' : dayOfWeek}）`
             };
         };
 
@@ -488,6 +474,27 @@
             const day = String(randomDate.getDate()).padStart(2, '0');
             return `${year}${month}${day}`;
         };
+
+        // ===== State =====
+        let currentTheme = null;
+        let targetEntry = null;
+        let isFakeMode = false;
+        let fakeEntriesCache = null;
+        let diaryEntries = [];
+
+        // ===== Constants =====
+        const THEMES = [
+            { bg: "#e6f3ff", text: "#003366", border: "#003366" },
+            { bg: "#fff8e6", text: "#8b4513", border: "#8b4513" },
+            { bg: "#e6ffe6", text: "#2e8b57", border: "#2e8b57" },
+            { bg: "#ffe6f0", text: "#8b008b", border: "#8b008b" },
+            { bg: "#f0f0ff", text: "#4b0082", border: "#4b0082" },
+            { bg: "#ffffe6", text: "#b8860b", border: "#b8860b" },
+            { bg: "#e6ffff", text: "#0066cc", border: "#0066cc" },
+            { bg: "#f0e6ff", text: "#800080", border: "#800080" },
+            { bg: "#fff0e6", text: "#cd5c5c", border: "#cd5c5c" },
+            { bg: "#f0ffe6", text: "#228b22", border: "#228b22" }
+        ];
 
         // ===== DOM Helpers =====
         const applyRandomTheme = () => {
@@ -690,11 +697,11 @@
             }
         };
 
-        // ===== Date Picker Modal =====
+        // ===== Organic Date Picker Modal =====
         const openDatePickerModal = () => {
             const modal = document.getElementById('datePickerModal');
             modal.style.display = 'flex';
-            renderDatePickerDays();
+            renderOrganicDatePickerDays();
         };
 
         const closeDatePickerModal = () => {
@@ -702,7 +709,7 @@
             modal.style.display = 'none';
         };
 
-        const renderDatePickerDays = () => {
+        const renderOrganicDatePickerDays = () => {
             const daysContainer = document.getElementById('datePickerDays');
             daysContainer.innerHTML = '';
 
@@ -733,63 +740,97 @@
                 const year = currentDate.getFullYear();
                 const month = currentDate.getMonth();
 
+                // 月ごとのコンテナを作成
+                const monthContainer = document.createElement('div');
+                monthContainer.className = 'date-picker-month-container';
+
                 // 月の見出しを追加
                 const monthHeader = document.createElement('div');
-                monthHeader.className = 'date-picker-month-header';
-                monthHeader.textContent = `${year}年${month + 1}月`;
-                daysContainer.appendChild(monthHeader);
+                monthHeader.className = 'month-label';
+                monthHeader.textContent = `${toKanjiMonth(month + 1)}`;
+                monthContainer.appendChild(monthHeader);
 
-                // 月の1日の曜日を取得（0: 日曜日, 1: 月曜日, ..., 6: 土曜日）
-                const firstDayOfWeek = currentDate.getDay();
-
-                // 月曜始まりに調整するためのオフセットを計算
-                // 日曜日(0)が1日なら、月曜始まりにするために6つ空白セルを追加
-                // 月曜日(1)が1日なら、空白セルは不要
-                const offset = (firstDayOfWeek === 0) ? 6 : firstDayOfWeek - 1;
-
-                // 月曜始まりになるように空白セルを追加
-                for (let i = 0; i < offset; i++) {
-                    const emptyDay = document.createElement('div');
-                    emptyDay.className = 'date-picker-day empty';
-                    daysContainer.appendChild(emptyDay);
-                }
+                // 日付コンテナを作成
+                const datesContainer = document.createElement('div');
+                datesContainer.className = 'dates-container';
 
                 // 月の日数を取得
                 const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
 
+                // 日記エントリの最小日付を取得
+                const entriesInMonth = sortedEntries.filter(entry => {
+                    const entryYear = parseInt(entry.yyyymmdd.substring(0, 4), 10);
+                    const entryMonth = parseInt(entry.yyyymmdd.substring(4, 6), 10) - 1;
+                    return entryYear === year && entryMonth === month;
+                });
+
+                // エントリがある最小の日付を取得
+                let startDay = 1;
+                if (entriesInMonth.length > 0) {
+                    const minEntryDay = Math.min(...entriesInMonth.map(entry => parseInt(entry.yyyymmdd.substring(6, 8), 10)));
+                    startDay = minEntryDay;
+                }
+
                 // 月の日数分ループ
-                for (let day = 1; day <= lastDayOfMonth; day++) {
+                for (let day = startDay; day <= lastDayOfMonth; day++) {
                     const date = new Date(year, month, day);
                     if (date > maxDateObj) break;
 
                     const yyyymmdd = `${year}${String(month + 1).padStart(2, '0')}${String(day).padStart(2, '0')}`;
                     const dayElement = document.createElement('div');
-                    dayElement.className = 'date-picker-day';
-                    dayElement.textContent = day;
+                    dayElement.className = 'date-oval';
+                    dayElement.textContent = toKanjiDay(day);
                     dayElement.dataset.yyyymmdd = yyyymmdd;
 
                     // 日記エントリがあるかチェック
-                    if (diaryEntries.some(entry => entry.yyyymmdd === yyyymmdd)) {
-                        dayElement.classList.add('has-entry');
-                        dayElement.addEventListener('click', () => {
-                            document.querySelectorAll('.date-picker-day').forEach(el => el.classList.remove('selected'));
-                            dayElement.classList.add('selected');
-                            window.location.hash = yyyymmdd;
-                            scrollToEntryFromHash();
-                            closeDatePickerModal();
-                        });
-                    } else {
+                    const hasEntry = diaryEntries.some(entry => entry.yyyymmdd === yyyymmdd);
+                    if (!hasEntry) {
                         dayElement.classList.add('empty');
                         dayElement.style.cursor = 'not-allowed';
                     }
 
                     // 選択済みの日付をハイライト
                     if (window.location.hash === `#${yyyymmdd}`) {
-                        dayElement.classList.add('selected');
+                        dayElement.classList.add('highlight');
                     }
 
-                    daysContainer.appendChild(dayElement);
+                    // 日記エントリのコンテンツ文字数を取得
+                    const entry = diaryEntries.find(entry => entry.yyyymmdd === yyyymmdd);
+                    const contentLength = entry ? entry.content.length : 0;
+
+                    // 文字数に応じてサイズを調整
+                    const baseSize = 44 + Math.min(contentLength / 10, 30);
+                    const width = baseSize + (Math.random() * 20 - 10);
+                    const height = width * 1.2;
+
+                    // ランダムな位置と傾きを設定
+                    const rotateX = (Math.random() * 8 - 4).toFixed(2);
+                    const rotateY = (Math.random() * 8 - 4).toFixed(2);
+                    const translateX = (Math.random() * 15 - 7);
+                    const translateY = (Math.random() * 15 - 7);
+
+                    // 不規則な楕円形を設定
+                    const borderRadius = `${50 + Math.random() * 15}% ${60 + Math.random() * 15}% ${50 + Math.random() * 15}% ${40 + Math.random() * 15}% / ${60 + Math.random() * 15}% ${45 + Math.random() * 15}% ${50 + Math.random() * 15}% ${55 + Math.random() * 15}%`;
+
+                    dayElement.style.width = `${width}px`;
+                    dayElement.style.height = `${height}px`;
+                    dayElement.style.borderRadius = borderRadius;
+                    dayElement.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate(${translateX}px, ${translateY}px)`;
+
+                    if (hasEntry) {
+                        dayElement.addEventListener('mouseover', () => {
+                            document.querySelectorAll('.date-oval').forEach(el => el.classList.remove('highlight'));
+                            dayElement.classList.add('highlight');
+                            window.location.hash = yyyymmdd;
+                            scrollToEntryFromHash();
+                        });
+                    }
+
+                    datesContainer.appendChild(dayElement);
                 }
+
+                monthContainer.appendChild(datesContainer);
+                daysContainer.appendChild(monthContainer);
 
                 // 次の月に進める
                 currentDate.setMonth(month + 1);
@@ -800,8 +841,6 @@
         const setupDatePicker = () => {
             const entryCountElement = document.getElementById('entryCount');
             entryCountElement.addEventListener('click', openDatePickerModal);
-
-            document.getElementById('datePickerClose').addEventListener('click', closeDatePickerModal);
 
             // モーダル外クリックで閉じる
             document.getElementById('datePickerModal').addEventListener('click', (e) => {
