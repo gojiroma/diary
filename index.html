@@ -28,7 +28,7 @@
             overflow: hidden;
             position: relative;
             opacity: 0;
-            transition: opacity 0.3s ease, background-color 0.5s ease;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
             background-color: #e6f3ff;
         }
 
@@ -96,7 +96,7 @@
             padding: 0;
             box-sizing: border-box;
             margin-top: 20px;
-            transition: background-color 0.5s ease;
+            transition: background-color 0.2s ease;
             background-color: #e6f3ff;
         }
 
@@ -108,7 +108,6 @@
             height: 100%;
             padding: 0;
             overflow-x: auto;
-            scroll-behavior: smooth;
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
@@ -237,8 +236,7 @@
 
         .entry-count {
             position: fixed;
-            bottom: 20px;
-            bottom: calc(20px + env(safe-area-inset-bottom));
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             font-family: "Zen Old Mincho", serif;
@@ -255,157 +253,84 @@
             font-style: italic;
             background-color: rgba(255, 255, 255, 0.1);
             cursor: pointer;
+            z-index: 10;
         }
 
         .entry-count:hover {
             opacity: 1;
         }
 
-        /* Organic Date Picker Modal */
-        .date-picker-modal {
-            display: none;
+        /* Timeline */
+        .timeline-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.2);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            font-family: "Zen Old Mincho", serif;
-        }
-
-        .date-picker-content {
-            background-color: rgba(255, 255, 255, 0.42);
-            padding: 10px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 900px;
-            max-height: 80vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .date-picker-month-container {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            margin: 20px 0;
-            width: 100%;
-            position: relative;
-            min-height: 110px;
-        }
-
-        .month-label {
-            font-size: 50px;
-            color:rgba(105, 107, 104, 0.37);
-            font-weight: bold;
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            letter-spacing: 0.2em;
-            position: absolute;
-            right: 5px;
-            top: 0;
-        }
-
-        .dates-container {
-            display: flex;
-            flex-direction: row-reverse;
-            flex-wrap: wrap;
-            gap: 12px;
-            width: 80%;
-            padding: 10px;
-            justify-content: end;
-            margin-left: 40px;
-        }
-
-        .date-oval {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-weight: 600;
-            font-family: "Zen Old Mincho", serif;
-            user-select: none;
-            transition: all 0.2s ease;
-            box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.1);
-            position: relative;
-            color: #333;
-            background-color: rgba(173, 216, 230, 0.6);
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            position: relative;
-        }
-
-        .date-oval:hover {
-            transform: scale(1.08);
-            box-shadow: 2px 5px 12px rgba(0, 0, 0, 0.15);
-            background-color: rgba(135, 206, 250, 0.8);
-        }
-
-        .date-oval.highlight {
-            background-color: #4682b4;
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 0 15px rgba(70, 130, 180, 0.6);
-        }
-
-        .date-oval::before {
-            content: "";
-            position: absolute;
-            top: 0;
+            bottom: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            border-radius: 50% 60% 50% 40% / 60% 45% 50% 55%;
-            padding: 2px;
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
-            z-index: -1;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            padding: 0 10%;
+            box-sizing: border-box;
         }
 
-        .date-oval.empty {
-            background-color: transparent;
-            cursor: default;
-            box-shadow: none;
+        .timeline {
+            position: relative;
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            align-items: flex-end;
+            height: 100%;
+            width: 100%;
+            opacity: .2;
+            transition: opacity 0.2s;
         }
 
-        /* Dark theme for date picker in fake mode */
-        body.fake-mode .date-picker-content {
-            background-color: rgba(50, 50, 50, 0.6);
-            color: #fff;
+        .timeline:hover {
+            opacity: 1;
         }
 
-        body.fake-mode .date-oval {
-            color: #fff;
-            background-color: rgba(70, 130, 180, 0.6);
+        .timeline-bar {
+            width: 8px;
+            padding-top: 30px;
+            margin: 0 1px;
+            background-color: #003366;
+            cursor: pointer;
+            pointer-events: auto;
         }
 
-        body.fake-mode .date-oval:hover {
-            background-color: rgba(100, 144, 255, 0.8);
+        .timeline-bar-inner {
+            width: 100%;
+            height: 100%;
+            background-color: inherit;
+            transform-origin: bottom;
+        }
+
+        .timeline-bar:hover .timeline-bar-inner {
+            transform: scaleY(2.2);
+            background-color: #ff9900 !important;
+        }
+
+        body.fake-mode .timeline-bar {
+            background-color: #fff;
         }
     </style>
 </head>
 
 <body>
     <div class="page-title">誤字ロマの日記</div>
+    <div class="entry-count" id="entryCount"></div>
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
     </div>
+    <div class="timeline-container">
+        <div class="timeline" id="timeline"></div>
+    </div>
     <a href="rss.xml" class="rss-button">RSS</a>
     <a href="#" class="thin-blue-button" id="downloadButton">DL</a>
-    <div class="entry-count" id="entryCount"></div>
     <a href="https://github.com/gojiroma/diary" target="_blank" rel="noopener noreferrer"
         class="github-button">GitHub</a>
-
-    <div class="date-picker-modal" id="datePickerModal">
-        <div class="date-picker-content">
-            <div id="datePickerDays"></div>
-        </div>
-    </div>
 
     <script>
         // ===== Utilities =====
@@ -546,6 +471,23 @@
             });
         };
 
+        const smoothScrollTo = (element, targetPosition, duration = 50) => {
+            const startPosition = element.scrollLeft;
+            const startTime = performance.now();
+
+            const animateScroll = (currentTime) => {
+                const elapsedTime = currentTime - startTime;
+                const progress = Math.min(elapsedTime / duration, 1);
+                element.scrollLeft = startPosition + (targetPosition - startPosition) * progress;
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateScroll);
+                }
+            };
+
+            requestAnimationFrame(animateScroll);
+        };
+
         const scrollToEntryFromHash = () => {
             requestAnimationFrame(() => {
                 const hash = window.location.hash.substring(1);
@@ -558,14 +500,14 @@
                         targetEntry = entry;
                         const entryRight = entry.offsetLeft + entry.clientWidth;
                         const containerWidth = container.clientWidth;
-                        container.scrollLeft = entryRight - containerWidth;
+                        smoothScrollTo(container, entryRight - containerWidth);
                         flashEntry(entry);
                     }
                 } else if (entries.length > 0) {
                     const latestEntry = entries[0];
                     const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
                     const containerWidth = container.clientWidth;
-                    container.scrollLeft = entryRight - containerWidth;
+                    smoothScrollTo(container, entryRight - containerWidth);
                 }
             });
         };
@@ -584,7 +526,7 @@
             });
 
             Object.assign(entry.style, {
-                transition: 'filter 0.5s ease, color 0.5s ease',
+                transition: 'filter 0.2s ease, color 0.2s ease',
                 color: isFakeMode ? '#fff' : '#333333',
                 filter: 'brightness(2)'
             });
@@ -697,156 +639,53 @@
             }
         };
 
-        // ===== Organic Date Picker Modal =====
-        const openDatePickerModal = () => {
-            const modal = document.getElementById('datePickerModal');
-            modal.style.display = 'flex';
-            renderOrganicDatePickerDays();
-        };
+        // ===== Timeline =====
+        const renderTimeline = () => {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = '';
 
-        const closeDatePickerModal = () => {
-            const modal = document.getElementById('datePickerModal');
-            modal.style.display = 'none';
-        };
-
-        const renderOrganicDatePickerDays = () => {
-            const daysContainer = document.getElementById('datePickerDays');
-            daysContainer.innerHTML = '';
-
-            // 日記エントリがなければ終了
             if (diaryEntries.length === 0) return;
 
-            // 日記エントリの日付をソート
+            // 日記エントリを日付順にソート
             const sortedEntries = [...diaryEntries].sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
-            const minDate = sortedEntries[0].yyyymmdd;
-            const maxDate = sortedEntries[sortedEntries.length - 1].yyyymmdd;
 
-            // 最古の日付と最新の日付をDateオブジェクトに変換
-            const minYear = parseInt(minDate.substring(0, 4), 10);
-            const minMonth = parseInt(minDate.substring(4, 6), 10) - 1;
-            const minDay = parseInt(minDate.substring(6, 8), 10);
-            const minDateObj = new Date(minYear, minMonth, minDay);
+            // コンテンツの長さの配列を作成
+            const contentLengths = sortedEntries.map(entry => entry.content.length);
 
-            const maxYear = parseInt(maxDate.substring(0, 4), 10);
-            const maxMonth = parseInt(maxDate.substring(4, 6), 10) - 1;
-            const maxDay = parseInt(maxDate.substring(6, 8), 10);
-            const maxDateObj = new Date(maxYear, maxMonth, maxDay);
+            // 外れ値の上限を設定（例: 95パーセンタイル）
+            const percentile95 = (arr) => {
+                const sorted = [...arr].sort((a, b) => a - b);
+                const index = Math.floor(sorted.length * 0.95);
+                return sorted[index];
+            };
+            const maxContentLength = Math.min(percentile95(contentLengths), 500); // 200文字以上は上限とする
 
-            // 月ごとに処理
-            let currentDate = new Date(minDateObj);
-            currentDate.setDate(1); // 月の1日に設定
+            // 基本の高さと比率を設定
+            const baseHeight = 5;
+            const heightRatio = 50 / maxContentLength;
 
-            while (currentDate <= maxDateObj) {
-                const year = currentDate.getFullYear();
-                const month = currentDate.getMonth();
+            // 各エントリに対してタイムラインバーを作成
+            sortedEntries.forEach((entry, index) => {
+                const container = document.createElement('div');
+                container.className = 'timeline-bar';
+                container.dataset.yyyymmdd = entry.yyyymmdd;
 
-                // 月ごとのコンテナを作成
-                const monthContainer = document.createElement('div');
-                monthContainer.className = 'date-picker-month-container';
+                const innerBar = document.createElement('div');
+                innerBar.className = 'timeline-bar-inner';
 
-                // 月の見出しを追加
-                const monthHeader = document.createElement('div');
-                monthHeader.className = 'month-label';
-                monthHeader.textContent = `${toKanjiMonth(month + 1)}`;
-                monthContainer.appendChild(monthHeader);
+                // コンテンツの長さに応じて高さを設定（上限を適用）
+                const contentLength = Math.min(entry.content.length, maxContentLength);
+                const height = Math.max(baseHeight, contentLength * heightRatio);
+                innerBar.style.height = `${height}px`;
 
-                // 日付コンテナを作成
-                const datesContainer = document.createElement('div');
-                datesContainer.className = 'dates-container';
-
-                // 月の日数を取得
-                const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
-
-                // 日記エントリの最小日付を取得
-                const entriesInMonth = sortedEntries.filter(entry => {
-                    const entryYear = parseInt(entry.yyyymmdd.substring(0, 4), 10);
-                    const entryMonth = parseInt(entry.yyyymmdd.substring(4, 6), 10) - 1;
-                    return entryYear === year && entryMonth === month;
+                // ホバー時のイベントを設定
+                container.addEventListener('mouseover', () => {
+                    window.location.hash = entry.yyyymmdd;
+                    scrollToEntryFromHash();
                 });
 
-                // エントリがある最小の日付を取得
-                let startDay = 1;
-                if (entriesInMonth.length > 0) {
-                    const minEntryDay = Math.min(...entriesInMonth.map(entry => parseInt(entry.yyyymmdd.substring(6, 8), 10)));
-                    startDay = minEntryDay;
-                }
-
-                // 月の日数分ループ
-                for (let day = startDay; day <= lastDayOfMonth; day++) {
-                    const date = new Date(year, month, day);
-                    if (date > maxDateObj) break;
-
-                    const yyyymmdd = `${year}${String(month + 1).padStart(2, '0')}${String(day).padStart(2, '0')}`;
-                    const dayElement = document.createElement('div');
-                    dayElement.className = 'date-oval';
-                    dayElement.textContent = toKanjiDay(day);
-                    dayElement.dataset.yyyymmdd = yyyymmdd;
-
-                    // 日記エントリがあるかチェック
-                    const hasEntry = diaryEntries.some(entry => entry.yyyymmdd === yyyymmdd);
-                    if (!hasEntry) {
-                        dayElement.classList.add('empty');
-                        dayElement.style.cursor = 'not-allowed';
-                    }
-
-                    // 選択済みの日付をハイライト
-                    if (window.location.hash === `#${yyyymmdd}`) {
-                        dayElement.classList.add('highlight');
-                    }
-
-                    // 日記エントリのコンテンツ文字数を取得
-                    const entry = diaryEntries.find(entry => entry.yyyymmdd === yyyymmdd);
-                    const contentLength = entry ? entry.content.length : 0;
-
-                    // 文字数に応じてサイズを調整
-                    const baseSize = 44 + Math.min(contentLength / 10, 30);
-                    const width = baseSize + (Math.random() * 20 - 10);
-                    const height = width * 1.2;
-
-                    // ランダムな位置と傾きを設定
-                    const rotateX = (Math.random() * 8 - 4).toFixed(2);
-                    const rotateY = (Math.random() * 8 - 4).toFixed(2);
-                    const translateX = (Math.random() * 15 - 7);
-                    const translateY = (Math.random() * 15 - 7);
-
-                    // 不規則な楕円形を設定
-                    const borderRadius = `${50 + Math.random() * 15}% ${60 + Math.random() * 15}% ${50 + Math.random() * 15}% ${40 + Math.random() * 15}% / ${60 + Math.random() * 15}% ${45 + Math.random() * 15}% ${50 + Math.random() * 15}% ${55 + Math.random() * 15}%`;
-
-                    dayElement.style.width = `${width}px`;
-                    dayElement.style.height = `${height}px`;
-                    dayElement.style.borderRadius = borderRadius;
-                    dayElement.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate(${translateX}px, ${translateY}px)`;
-
-                    if (hasEntry) {
-                        dayElement.addEventListener('mouseover', () => {
-                            document.querySelectorAll('.date-oval').forEach(el => el.classList.remove('highlight'));
-                            dayElement.classList.add('highlight');
-                            window.location.hash = yyyymmdd;
-                            scrollToEntryFromHash();
-                        });
-                    }
-
-                    datesContainer.appendChild(dayElement);
-                }
-
-                monthContainer.appendChild(datesContainer);
-                daysContainer.appendChild(monthContainer);
-
-                // 次の月に進める
-                currentDate.setMonth(month + 1);
-                currentDate.setDate(1);
-            }
-        };
-
-        const setupDatePicker = () => {
-            const entryCountElement = document.getElementById('entryCount');
-            entryCountElement.addEventListener('click', openDatePickerModal);
-
-            // モーダル外クリックで閉じる
-            document.getElementById('datePickerModal').addEventListener('click', (e) => {
-                if (e.target === e.currentTarget) {
-                    closeDatePickerModal();
-                }
+                container.appendChild(innerBar);
+                timeline.appendChild(container);
             });
         };
 
@@ -890,6 +729,7 @@
                 });
 
                 updateEntryCount(entries.length);
+                renderTimeline();
 
                 requestAnimationFrame(() => {
                     setupDateClick();
@@ -963,6 +803,7 @@
             });
 
             updateEntryCount(entries.length);
+            renderTimeline();
 
             requestAnimationFrame(() => {
                 setupDateClick();
@@ -990,7 +831,6 @@
             preloadFakeEntries();
             scrollToEntryFromHash();
             document.addEventListener('keydown', handleKeyDown);
-            setupDatePicker();
         });
 
         window.addEventListener('hashchange', scrollToEntryFromHash);
