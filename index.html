@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho&display=swap" rel="stylesheet">
-    <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="rss.xml">
     <title>誤字ロマの日記</title>
     <link rel="icon" href="diary-icon.png" type="image/png">
 
@@ -42,8 +41,7 @@
         }
 
         body.fake-mode .date,
-        body.fake-mode .content,
-        body.fake-mode .entry-count {
+        body.fake-mode .content {
             color: #fff !important;
         }
 
@@ -151,128 +149,20 @@
             color: #003366;
         }
 
-        .rss-button {
-            position: fixed;
-            bottom: 20px;
-            bottom: calc(20px + env(safe-area-inset-bottom));
-            right: 20px;
-            font-family: "Zen Old Mincho", serif;
-            font-size: 18px;
-            font-weight: 700;
-            border: 1px solid #ff9966;
-            padding: 5px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.1s, color 0.1s, border-color 0.1s;
-            color: #ff6600;
-            text-decoration: none;
-            opacity: 0;
-            z-index: 10;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
-
-        .rss-button:hover {
-            opacity: 1;
-            background-color: rgba(255, 153, 102, 0.4);
-        }
-
-        .thin-blue-button {
-            position: fixed;
-            bottom: 20px;
-            bottom: calc(20px + env(safe-area-inset-bottom));
-            left: 20px;
-            padding: 8px 16px;
-            border: 1px solid #1E90FF;
-            background-color: transparent;
-            color: #1E90FF;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
-
-        .thin-blue-button:hover {
-            opacity: 1;
-            color: #1E90FF;
-            background-color: #1E90FF11;
-        }
-
-        .github-button {
-            position: fixed;
-            top: 10px;
-            left: 20px;
-            font-family: "Zen Old Mincho", serif;
-            font-size: 18px;
-            font-weight: 700;
-            border: 1px solid #999;
-            padding: 5px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.1s, color 0.1s, border-color 0.1s;
-            text-decoration: none;
-            color: #666;
-            opacity: .0;
-            z-index: 10;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
-
-        .github-button:hover {
-            opacity: 1;
-            background-color: rgba(150, 150, 150, 0.2);
-            color: #333;
-        }
-
-        .entry-count {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: "Zen Old Mincho", serif;
-            font-size: 14px;
-            color: #999;
-            opacity: 0.3;
-            transition: opacity 0.2s ease, color 0.3s ease;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            padding: 5px 10px;
-            border-radius: 8px;
-            font-style: italic;
-            background-color: rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            z-index: 10;
-        }
-
-        .entry-count:hover {
-            opacity: 1;
-        }
-
         /* Timeline */
         .timeline-container {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 35px;
+            height: 30px;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 10;
             padding: 0 10%;
             box-sizing: border-box;
+            touch-action: none;
         }
 
         .timeline {
@@ -293,44 +183,45 @@
 
         .timeline-bar {
             width: 8px;
-            padding-top: 30px;
+            height: 100%;
+            /* 親の高さ(30px)いっぱいに広げる */
             margin: 0 1px;
-            background-color: #003366;
+            background-color: transparent;
+            /* 背景は透明にする */
             cursor: pointer;
-            pointer-events: auto;
+            display: flex;
+            align-items: flex-end;
+            /* 下揃えにする */
         }
 
+        /* 中身の通常時の色を指定 */
         .timeline-bar-inner {
             width: 100%;
-            height: 100%;
-            background-color: inherit;
-            transform-origin: bottom;
+            background-color: #003366;
+            /* ここに元の色（紺）を塗る */
+            transition: background-color 0.2s;
         }
 
-        .timeline-bar:hover .timeline-bar-inner {
-            transform: scaleY(2.2);
-            background-color: #ff9900 !important;
-        }
-
-        body.fake-mode .timeline-bar {
+        /* 偽モードの時の中身の色 */
+        body.fake-mode .timeline-bar-inner {
             background-color: #fff;
+        }
+
+        /* ホバーした時、中身をオレンジにする */
+        .timeline-bar:hover .timeline-bar-inner {
+            background-color: #ff9900 !important;
         }
     </style>
 </head>
 
 <body>
-    <div class="page-title">誤字ロマの日記</div>
-    <div class="entry-count" id="entryCount"></div>
+    <div class="page-title" id="pageTitle">誤字ロマの日記</div>
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
     </div>
     <div class="timeline-container">
         <div class="timeline" id="timeline"></div>
     </div>
-    <a href="rss.xml" class="rss-button">RSS</a>
-    <a href="#" class="thin-blue-button" id="downloadButton">DL</a>
-    <a href="https://github.com/gojiroma/diary" target="_blank" rel="noopener noreferrer"
-        class="github-button">GitHub</a>
 
     <script>
         // ===== Utilities =====
@@ -361,7 +252,7 @@
         const toJapaneseEra = (year) => {
             if (year >= 2019) {
                 const eraYear = year - 2018;
-                return `${toKanjiNumber(eraYear)}年`;
+                return `令和${toKanjiNumber(eraYear)}年`;
             } else if (year >= 1989) {
                 const eraYear = year - 1988;
                 return `平成${toKanjiNumber(eraYear)}年`;
@@ -431,7 +322,7 @@
             title.style.backgroundColor = randomTheme.bg;
             title.style.borderColor = randomTheme.border;
             title.style.color = randomTheme.text;
-            document.querySelectorAll('.date, .content, .rss-button, .github-button, .entry-count').forEach(el => {
+            document.querySelectorAll('.date, .content').forEach(el => {
                 el.style.color = randomTheme.text;
             });
         };
@@ -632,13 +523,6 @@
             URL.revokeObjectURL(url);
         };
 
-        const updateEntryCount = (count) => {
-            const entryCountElement = document.getElementById('entryCount');
-            if (entryCountElement) {
-                entryCountElement.textContent = `${count}日分の生きた証`;
-            }
-        };
-
         // ===== Timeline =====
         const renderTimeline = () => {
             const timeline = document.getElementById('timeline');
@@ -658,11 +542,11 @@
                 const index = Math.floor(sorted.length * 0.95);
                 return sorted[index];
             };
-            const maxContentLength = Math.min(percentile95(contentLengths), 500); // 200文字以上は上限とする
+            const maxContentLength = Math.min(percentile95(contentLengths), 500);
 
             // 基本の高さと比率を設定
             const baseHeight = 5;
-            const heightRatio = 50 / maxContentLength;
+            const heightRatio = 45 / maxContentLength;
 
             // 各エントリに対してタイムラインバーを作成
             sortedEntries.forEach((entry, index) => {
@@ -684,9 +568,31 @@
                     scrollToEntryFromHash();
                 });
 
+                // タッチイベントを設定
+                container.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    window.location.hash = entry.yyyymmdd;
+                    scrollToEntryFromHash();
+                });
+
                 container.appendChild(innerBar);
                 timeline.appendChild(container);
             });
+
+            // タイムライン全体のタッチイベントを設定
+            timeline.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = timeline.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const percent = x / rect.width;
+                const index = Math.floor(percent * sortedEntries.length);
+                if (index >= 0 && index < sortedEntries.length) {
+                    const yyyymmdd = sortedEntries[index].yyyymmdd;
+                    window.location.hash = yyyymmdd;
+                    scrollToEntryFromHash();
+                }
+            }, { passive: false });
         };
 
         // ===== Main Functions =====
@@ -728,8 +634,8 @@
                     });
                 });
 
-                updateEntryCount(entries.length);
                 renderTimeline();
+                updatePageTitle(entries.length);
 
                 requestAnimationFrame(() => {
                     setupDateClick();
@@ -802,8 +708,8 @@
                 });
             });
 
-            updateEntryCount(entries.length);
             renderTimeline();
+            updatePageTitle(entries.length);
 
             requestAnimationFrame(() => {
                 setupDateClick();
@@ -811,14 +717,31 @@
             });
         };
 
+        const updatePageTitle = (count) => {
+            const pageTitle = document.getElementById('pageTitle');
+            pageTitle.textContent = `誤字ロマの${count}日間`;
+        };
+
         // ===== Event Listeners =====
-        document.querySelector('.page-title').addEventListener('click', () => {
-            toggleFakeMode();
+        let pressTimer;
+        document.querySelector('.page-title').addEventListener('mousedown', () => {
+            pressTimer = setTimeout(() => {
+                downloadDiaryAsText();
+            }, 1000);
         });
 
-        document.getElementById('downloadButton').addEventListener('click', (e) => {
-            e.preventDefault();
-            downloadDiaryAsText();
+        document.querySelector('.page-title').addEventListener('mouseup', () => {
+            clearTimeout(pressTimer);
+        });
+
+        document.querySelector('.page-title').addEventListener('mouseleave', () => {
+            clearTimeout(pressTimer);
+        });
+
+        document.querySelector('.page-title').addEventListener('click', (e) => {
+            if (!e.defaultPrevented) {
+                toggleFakeMode();
+            }
         });
 
         window.addEventListener('load', () => {
