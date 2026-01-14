@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Tue, 13 Jan 2026 12:47:35 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 14 Jan 2026 19:36:18 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月十四日（水）</title>
+      <link>https://nikki.poet.blue#20260114</link>
+      <pubDate>Wed, 14 Jan 2026 19:36:18 +0900</pubDate>
+      <description>整理の日だった。余った棚板を別の棚に移してアイテムの並び替えを行ったり、デスクトップウィジェットに凝ったり、過去ログを高速に読み返すツールを作ったりした。色々やっていたら一日が終わってしまい、ノー外出デーになっていた。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260114</guid>
+      <media:content url="https://nc.poet.blue/20260114" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月十三日（火）</title>
       <link>https://nikki.poet.blue#20260113</link>
