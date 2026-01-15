@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Wed, 14 Jan 2026 19:36:18 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 15 Jan 2026 17:07:52 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月十五日（木）</title>
+      <link>https://nikki.poet.blue#20260115</link>
+      <pubDate>Thu, 15 Jan 2026 17:07:52 +0900</pubDate>
+      <description>地元のシネマの賛助会員を更新してきた。ここに来る時、いつも近所だからと気が抜けて、駐輪RTAが始まってしまう。今日はそこまでギリギリではなかったが、唐揚げRTAになってしまった（すぐ隣に飲食店がある）。ただ毎回、有酸素運動をして落ち着いた頃に本編が始まることで、感性が高まっているような気もする。期待や考え事がリセットされて、冷静な気持ちになって見られるのも良い。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260115</guid>
+      <media:content url="https://nc.poet.blue/20260115" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月十四日（水）</title>
       <link>https://nikki.poet.blue#20260114</link>
