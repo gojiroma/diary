@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 16 Jan 2026 18:40:05 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 17 Jan 2026 21:08:36 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月十七日（土）</title>
+      <link>https://nikki.poet.blue#20260117</link>
+      <pubDate>Sat, 17 Jan 2026 21:08:36 +0900</pubDate>
+      <description>たまーに行きたくなる人工湖に行ってきた。今回は初めて電動アシスト自転車を借りて向かう。自宅周辺と違い、傾斜がつよい細道が多く、満足感がある。湖の売店でアイスを食べていたら、ミカンを食べてくか？と試食（一個!）をいただいた。スーパーで売っているよりもかなり安く、素晴らしい味だったので一袋買って帰った。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260117</guid>
+      <media:content url="https://nc.poet.blue/20260117" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月十六日（金）</title>
       <link>https://nikki.poet.blue#20260116</link>
