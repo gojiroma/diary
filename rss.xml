@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 17 Jan 2026 21:08:36 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 18 Jan 2026 18:22:43 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月十八日（日）</title>
+      <link>https://nikki.poet.blue#20260118</link>
+      <pubDate>Sun, 18 Jan 2026 18:22:43 +0900</pubDate>
+      <description>「一秒を一秒として感じられる日にしたい」が叶った日曜日。何が今日を良くしただろう。第一にベランダの掃除、第二にカーテンの撤去がある。部屋が明るくなって、換気がしやすくなった。外の穏やかな環境音が通る部屋は、開放感がある。第三には、昨日思いっきり身体を動かしたのもある。人間、画面ばかり見ているのは良くない。机の前に座ってしまうと、画面上の作業ばかりが捗ってしまう。それは生活全体を停滞させてしまう。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260118</guid>
+      <media:content url="https://nc.poet.blue/20260118" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月十七日（土）</title>
       <link>https://nikki.poet.blue#20260117</link>
