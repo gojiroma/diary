@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Mon, 19 Jan 2026 10:30:24 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 20 Jan 2026 17:12:51 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月二十日（火）</title>
+      <link>https://nikki.poet.blue#20260120</link>
+      <pubDate>Tue, 20 Jan 2026 17:12:51 +0900</pubDate>
+      <description>だいか〜ん、大寒。強風で外出せず。集英社の「青春と読書」到着。武田砂鉄の連載「感動の正体」が印象に残る。人々が集まるイベントで、その場の一体感を演出するために発される言葉や工夫が存在する。その中でもこれは暴力的だな、と感じた瞬間が過去にあった。思想が弱いこと、浅いことにいちいち違和感を感じて生きてきた。これからも違和感を無かったことにせずに生きていきたい。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260120</guid>
+      <media:content url="https://nc.poet.blue/20260120" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月十九日（月）</title>
       <link>https://nikki.poet.blue#20260119</link>
