@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Thu, 22 Jan 2026 10:27:40 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 23 Jan 2026 21:12:24 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月二十三日（金）</title>
+      <link>https://nikki.poet.blue#20260123</link>
+      <pubDate>Fri, 23 Jan 2026 21:12:24 +0900</pubDate>
+      <description>mineoから日本通信にMNPした。あと、移住促進のポータルサイトを複数見て、近場で日帰りの街歩きイベントを発見したので抽選に申し込んだ。サイクリングの日からこもりがちの日が続いたが、今日は歩いた。猫を三匹見た。伊原六花のポッドキャストが最近のお気に入りだ。近傍にあること、リレータブルなこと。それがはっきり見えるように身辺を整えること。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260123</guid>
+      <media:content url="https://nc.poet.blue/20260123" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月二十二日（木）</title>
       <link>https://nikki.poet.blue#20260122</link>
