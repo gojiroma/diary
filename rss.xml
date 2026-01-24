@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 23 Jan 2026 21:12:24 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 24 Jan 2026 16:11:54 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月二十四日（土）</title>
+      <link>https://nikki.poet.blue#20260124</link>
+      <pubDate>Sat, 24 Jan 2026 16:11:54 +0900</pubDate>
+      <description>時々「消えたい。」と思うことはあるかもしれないが、大丈夫。「我を忘れる」ことはできる。交通量が著しく少なく、空が広がっているところをただ、斜め上を見ながら歩くと「消える」ことができる。平坦な場所ではなく、多少ガタガタしていたり、草が生えているところを歩くと尚良い。「私はどこかに移動しているわけではなく、手足を往復している筒で、景色が少しずつ移動している」と思ってぼんやり動作に集中していると、日々の考え事から解放される。何も持たないで歩くと効果抜群だ。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260124</guid>
+      <media:content url="https://nc.poet.blue/20260124" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月二十三日（金）</title>
       <link>https://nikki.poet.blue#20260123</link>
