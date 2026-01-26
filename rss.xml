@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sun, 25 Jan 2026 09:44:07 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 26 Jan 2026 12:01:13 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月二十六日（月）</title>
+      <link>https://nikki.poet.blue#20260126</link>
+      <pubDate>Mon, 26 Jan 2026 12:01:13 +0900</pubDate>
+      <description>『さわやか自然百景』を観ていた。雪山で、猿が木の枝先にいる。先端の実に手を伸ばそうとすると、枝がしなって自重で脱落してしまう。人生だな、と思った。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260126</guid>
+      <media:content url="https://nc.poet.blue/20260126" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月二十五日（日）</title>
       <link>https://nikki.poet.blue#20260125</link>
