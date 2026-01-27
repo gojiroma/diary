@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Mon, 26 Jan 2026 12:01:13 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 27 Jan 2026 14:30:20 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月二十七日（火）</title>
+      <link>https://nikki.poet.blue#20260127</link>
+      <pubDate>Tue, 27 Jan 2026 14:30:20 +0900</pubDate>
+      <description>徒歩で温浴施設に行き、普段と違うルートで帰ろうと公園の桜並木を歩いていた。頭上から何か叩く音がする。静かに上を見ると、アカゲラがいる！こんな住宅地の公園にアカゲラがいるなんて！！本当に木をつついている。モネの睡蓮よりも長く眺めていた。帰宅して、私はアイスクリームの容器の底をスプーンでつついた。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260127</guid>
+      <media:content url="https://nc.poet.blue/20260127" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月二十六日（月）</title>
       <link>https://nikki.poet.blue#20260126</link>
