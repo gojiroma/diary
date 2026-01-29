@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Thu, 29 Jan 2026 12:48:06 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 29 Jan 2026 17:01:00 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月二十九日（木）</title>
+      <link>https://nikki.poet.blue#20260129</link>
+      <pubDate>Thu, 29 Jan 2026 17:01:00 +0900</pubDate>
+      <description>「久喜でクッキーを買いました！」というダジャレを実現しに、ではなく県立久喜図書館に用があり、久喜に行ってきた。クッキーは実際に買った。ここの図書館はメディア論（などの自然科学、技術、芸術、言語、文学）の本が多数あって日が暮れてしまう。同施設内の「子ども読書支援センター」は熊谷館同様、絶妙な部屋の大きさで雰囲気がよく、やはりここでもスタッフが本の話やイベント企画の話をしていた。やっぱり図書館は宝箱だ。その宝箱は、（未来の）読み手を想い、試行錯誤するスタッフがいて成立している。隣にあるプラネタリウムの上映も観たかったが、帰宅が遅くなるので別の機会に。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260129</guid>
+      <media:content url="https://nc.poet.blue/20260129" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月二十八日（水）</title>
       <link>https://nikki.poet.blue#20260128</link>
