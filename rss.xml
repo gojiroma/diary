@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Thu, 29 Jan 2026 17:01:00 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 30 Jan 2026 21:43:42 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月三十日（金）</title>
+      <link>https://nikki.poet.blue#20260130</link>
+      <pubDate>Fri, 30 Jan 2026 21:43:42 +0900</pubDate>
+      <description>電話を使った令和のニューメディアを作れないかとぼんやり考えている。例えばtwilioを使って「個人版リカちゃんでんわ（対話付き）」を作るとか、公衆電話の発信限定で、謎解きができるとか。据え置きの電話設備をロカティブ・メディアとして捉え直すことができないか？と風呂で考えようとしたが、特に新たな発見はなかった。ポケモンGO、なんか違う。特定の世界観はいらないし、画面を見たいわけではない。音声ガイド、画一的で個人の興味に最適化できていない。セカイカメラ、面白かったのに消えてしまって惜しい。リカちゃんでんでんわ、何か応用できそう。フィールドレコーディングの事例はすでにあって面白いけど、そこに興味があるわけではない。位置情報に基づいた音声コンテンツをなんか作りたい、と２０１４年頃から思っていたが、難しく考えすぎてしまって、手が止まっている。元々は通勤・通学・散歩の経路に違った意味を持たせたい、画面を見たり能動的に調べなくても、経路周辺のおもしろスポットとか、歴史がわかるといいな、と思っていた。その発想でいくと、音声ガイドになってしまう気がして、そのコンテンツを作るのが面倒だなと思ってしまう。今ならLLMを使って何かできるかもしれないが、常にガイドを聞くのも鬱陶しいと思う。ならば地図を可聴化して、アンビエントな音楽を生成したらどうだろう、と思ったけど面倒でやっていない。「位置×音」の原体験といえば、テープ・レコード・ラジオだ。テープとレコードは、ピックアップの位置を変えると任意の地点の音が聞ける。動かし方によってはピッチが変わる。ラジオは、場所によって明瞭度が変わったり、ノイズを拾ったりする。地域によっては、同じ周波数でも違う放送局のコンテンツが聞こえる。そういう体験はあるのに、応用までいかないなぁ。今調べたら公衆電話の事例が出てきた（遠山昇司の「ポイントホープ」）。まだまだ追えていない面白い体験がありそうだ。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260130</guid>
+      <media:content url="https://nc.poet.blue/20260130" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月二十九日（木）</title>
       <link>https://nikki.poet.blue#20260129</link>
