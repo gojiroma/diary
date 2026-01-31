@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 30 Jan 2026 21:45:49 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 31 Jan 2026 22:34:11 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>一月三十一日（土）</title>
+      <link>https://nikki.poet.blue#20260131</link>
+      <pubDate>Sat, 31 Jan 2026 22:34:11 +0900</pubDate>
+      <description>Lifetance EXPO 2026に行ってきた。良心の集合体という感じがして良かったなぁ。いろいろな商品やブランドの中の人と直接話せる場、もっと増えてほしい。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260131</guid>
+      <media:content url="https://nc.poet.blue/20260131" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>一月三十日（金）</title>
       <link>https://nikki.poet.blue#20260130</link>
