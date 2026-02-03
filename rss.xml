@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Mon, 02 Feb 2026 23:02:26 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 03 Feb 2026 21:23:10 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>二月三日（火）</title>
+      <link>https://nikki.poet.blue#20260203</link>
+      <pubDate>Tue, 03 Feb 2026 21:23:10 +0900</pubDate>
+      <description>絵本「Zちゃん かべのあな」を読み返していた。江國香織の「物語のなかとそと」で紹介されていて、実際に読んで印象に強く残った本。とにかく色遣いね。空は白いし、空はさつまいも色だし、道は真っ黄色。絶対に忘れないでしょ。暗闇には全てがある！という話は記憶にあったが、Zちゃんが漆黒の世界から抜け出す方法、１００歩前進、回れ右して２００歩！みたいな、「はじめてのBASIC講座」風だったのを完全に忘れていた。おそらく当時はそのように見えておらず、記銘していなかったからリコールもされなかったんだな。もし生まれが十年後だったらツッコミが「Scratch講座かよ〜」になっていたと思う。なんだろねぇ〜、好き！って思ったもの、大体十年以上前に企画展とかグッズ販売が済んでいて、今残っているものはレアアイテムになっていることが多い。出遅れともいえるし、コンテキストが十分に育っているともいえる。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260203</guid>
+      <media:content url="https://nc.poet.blue/20260203" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>二月二日（月）</title>
       <link>https://nikki.poet.blue#20260202</link>
