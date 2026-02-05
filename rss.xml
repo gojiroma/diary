@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Wed, 04 Feb 2026 19:57:24 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 05 Feb 2026 19:34:36 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>二月五日（木）</title>
+      <link>https://nikki.poet.blue#20260205</link>
+      <pubDate>Thu, 05 Feb 2026 19:34:36 +0900</pubDate>
+      <description>優しさと好奇心だけでは、社会で生きていけないなぁ。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260205</guid>
+      <media:content url="https://nc.poet.blue/20260205" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>二月四日（水）</title>
       <link>https://nikki.poet.blue#20260204</link>
