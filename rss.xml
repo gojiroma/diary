@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 07 Feb 2026 09:48:12 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 08 Feb 2026 21:54:41 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>二月八日（日）</title>
+      <link>https://nikki.poet.blue#20260208</link>
+      <pubDate>Sun, 08 Feb 2026 21:54:41 +0900</pubDate>
+      <description>☃雪がやんだ朝、街は輝度を高めていた。下方向から明るいのはとても良い。色んな人が魅力的に見えて危険。🍕。🗣️さて、今日は某所で某講演を聞いてきた。登壇者のトークは当然面白いが、あるテーマで集まる来場者の方が面白い。同時代性と多様性が目の前にある。特定の属性の人々が同じ場所に集まっている事実、奇跡だ。質疑応答が非常に愉快だった。🗺️行きと帰りの電車で、埼玉県内の全市区町村の公式LINEを片っ端から友だち登録していった。ごく一部の自治体だけ、LINEをやっていないことがわかった。自分が埼玉県になって、ボディスキャン瞑想をしている気持ちになれた。サイタマ、ミンナ、トモダチ。アッタカイ。街中のラックにあるチラシをくまなく見たり、自治体のSNSやRSSを片っ端からフォローしていくと、自分の身の周りにこ～んなに社会資源があるんだと思える。豊かな気持ちになりますよ。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260208</guid>
+      <media:content url="https://nc.poet.blue/20260208" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>二月七日（土）</title>
       <link>https://nikki.poet.blue#20260207</link>
