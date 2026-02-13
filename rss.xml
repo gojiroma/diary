@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Thu, 12 Feb 2026 17:50:00 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 13 Feb 2026 21:46:16 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>二月十三日（金）</title>
+      <link>https://nikki.poet.blue#20260213</link>
+      <pubDate>Fri, 13 Feb 2026 21:46:16 +0900</pubDate>
+      <description>ちょっと高くて躊躇していた無線バーコードリーダーを買った。出先で本のバーコードやポスターのQRコードを取得し、家でじっくり確認する、といったユースケースを考えている。特に、専門書の多い図書館では、荷物を全部ロッカーに入れて書架を転々とするということを繰り返すので、通信しない、画面がない、音が出ないデバイスを探していた。新卒の時、IT資産管理で「豆っぴ」を使っていなかったら、今これを買っていなかったと思う。仕事をやめて実質1年が経ち、興味がある分野が次々と出てきた。進学しようかなという気持ちにもなっている。どうしよう</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260213</guid>
+      <media:content url="https://nc.poet.blue/20260213" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>二月十二日（木）</title>
       <link>https://nikki.poet.blue#20260212</link>
