@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 14 Feb 2026 21:03:50 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 15 Feb 2026 16:04:12 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>二月十五日（日）</title>
+      <link>https://nikki.poet.blue#20260215</link>
+      <pubDate>Sun, 15 Feb 2026 16:04:12 +0900</pubDate>
+      <description>外気温・室温ともに二十度くらいで、暖かい日。絶好の外出日和の時ほど引きこもり欲が高まってしまう。メディア論の本を読んだり、追加で買ったりしていた。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260215</guid>
+      <media:content url="https://nc.poet.blue/20260215" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>二月十四日（土）</title>
       <link>https://nikki.poet.blue#20260214</link>
