@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sun, 15 Feb 2026 16:04:12 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 16 Feb 2026 16:30:59 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>二月十六日（月）</title>
+      <link>https://nikki.poet.blue#20260216</link>
+      <pubDate>Mon, 16 Feb 2026 16:30:59 +0900</pubDate>
+      <description>ディック・ブルーナの命日。初めて公式サイトを見た。絵と声で構成されている、絵本のような素敵な空間だった。「ナインチェ」がどうも覚えられない。「ミッフィー」で世界展開したのは正しいと思う。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260216</guid>
+      <media:content url="https://nc.poet.blue/20260216" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>二月十五日（日）</title>
       <link>https://nikki.poet.blue#20260215</link>
