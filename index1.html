@@ -42,8 +42,7 @@
 
         body.fake-mode .date,
         body.fake-mode .content,
-        body.fake-mode .days-ago,
-        body.fake-mode .keyword-nav {
+        body.fake-mode .days-ago {
             color: #fff !important;
         }
 
@@ -174,76 +173,6 @@
             color: #003366;
         }
 
-        .keyword {
-            cursor: pointer;
-            transition: background-color 0.2s, color 0.2s;
-            background-color: rgba(0, 221, 255, 0.1);
-            position: relative;
-        }
-
-        .keyword:hover {
-            background-color: rgba(255, 153, 0, 0.1);
-        }
-
-        .keyword.active {
-            background-color: rgba(255, 255, 0, 0.2);
-            border-radius: 2px;
-        }
-
-        /* キーワードナビゲーション */
-        .keyword-navigation {
-            position: fixed;
-            bottom: 40px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            z-index: 20;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
-        }
-
-        .keyword-navigation.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .keyword-nav-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px 16px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: "Zen Old Mincho", serif;
-            font-size: 14px;
-            transition: background-color 0.2s;
-        }
-
-        .keyword-nav-button:hover {
-            background-color: rgba(255, 153, 0, 0.2);
-        }
-
-        .keyword-nav-info {
-            font-family: "Zen Old Mincho", serif;
-            font-size: 14px;
-            color: #555;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 8px 16px;
-            border-radius: 20px;
-            white-space: nowrap;
-        }
-
-        body.fake-mode .keyword-nav-info {
-            color: #fff;
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-
         /* Timeline */
         .timeline-container {
             position: fixed;
@@ -299,6 +228,8 @@
         .timeline-bar:hover .timeline-bar-inner {
             background-color: #ff9900 !important;
         }
+
+        
     </style>
 </head>
 
@@ -307,13 +238,6 @@
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
     </div>
-
-    <div class="keyword-navigation" id="keywordNavigation">
-        <div class="keyword-nav-button" id="navLeft">← 前へ</div>
-        <div class="keyword-nav-info" id="navInfo">「キーワード」 0/0件</div>
-        <div class="keyword-nav-button" id="navRight">次へ →</div>
-    </div>
-
     <div class="timeline-container">
         <div class="timeline" id="timeline"></div>
     </div>
@@ -403,9 +327,6 @@
         let isFakeMode = false;
         let fakeEntriesCache = null;
         let diaryEntries = [];
-        let currentKeyword = null;
-        let keywordMatches = [];
-        let currentKeywordIndex = -1;
 
         // ===== Constants =====
         const THEMES = [
@@ -419,55 +340,6 @@
             { bg: "#f0e6ff", text: "#800080", border: "#800080" },
             { bg: "#fff0e6", text: "#cd5c5c", border: "#cd5c5c" },
             { bg: "#f0ffe6", text: "#228b22", border: "#228b22" }
-        ];
-        const KEYWORDS = [
-            '文学フリマ', '縦書き', '日記', 'ポッドキャスト', '遊歩道', '軽トラ', '畑', '危険運転',
-            'ビックボーイ', 'カロリー', 'サイクリング', 'スマホ', '筋肉痛', '職安', '認定日',
-            '再就職', 'iPhone', 'バッテリー交換', '修理', '古物商', '道具商', '俺アプリ',
-            '過活動', '散財', '労働', '映画', '美術展', 'チラシ', 'ミュージアム', 'リサイクル',
-            '昆虫標本', '地形', '荒川', '手帳', 'キッズカメラ', '音楽再生', 'イヤホン',
-            '棚ダボ', '本棚', 'プラークマーカー', '歯垢', '空気清浄機', 'デスク', 'ベッド',
-            '修正テープ', '牛', 'ヒヨコ', '散髪', '温泉', '温浴施設', 'BGM', 'クリスマス',
-            'スーパーマーケット', 'クリスマスツリー', '商業空間', 'イオン', 'テック企業',
-            'ホスティングサービス', '暖房費', '入浴剤', '昼寝', '寝具', '積読', 'マグネット',
-            'フック', 'リップクリーム', '吸入薬', 'モニター', 'オランウータン', 'ぬいぐるみ',
-            '買い物', '疲労感', 'アラート', '都内', '博物館', '美術館', '自然公園',
-            '日本橋', 'クルーズ船', '橋', '高層住居', '室外機', '洗濯物', 'コレド', 'チャイ',
-            'カレー', 'クルアンビン', 'TOHOシネマズ', '東京タクシー', 'フランス映画',
-            'パディントン', 'スタンプラリー', 'バーガーキング', '織物', 'フライヤー', '下北沢',
-            '西太子堂', '路面電車', '上町', '平成建設', 'ショールーム', '職人', '鉄骨',
-            'アートギャラリー', 'ガラス作品', 'トイレ', '間接照明', '豪徳寺', 'デニーズ',
-            'バースデーパンケーキ', '珈琲舘', '光回線', 'プロバイダ', 'リテンション',
-            '土手', '焼肉', 'ホームセンター', 'カランコエ', '花', 'ベランダ', '室外機',
-            'ラベルプリンター', 'サマリー', 'マンスリー', 'Gyazo', 'QRコード', 'Kindle',
-            'ブックオフ', '図書館', 'ブックガイド', '選書', 'フィジカル書店', 'ニューチキ',
-            'ピザ', '遊園地', 'セブンティーンアイス', '宇治抹茶', 'プール', '除籍本',
-            '原田宗典', '村上春樹', '卵黄', 'DB', '無料枠', '有料プラン', 'ホスティングサービス',
-            'discord', '鏡餅', 'サトウの鏡餅', '橙', '越後製菓', 'きりたんぽ', '掃除',
-            'ペンライト', '掃除機', '仮面ライダー', '退職', 'アマゾンギフト券', 'クレジットカード',
-            '電子書籍', '転職活動', 'キャリアブレイク', '職業訓練', 'コーチング', '利根川',
-            'コカ・コーラ', 'ドリンクチケット', 'ゼロシュガー', 'Vivaldi', 'LLM', 'マグネットシート',
-            '電動歯ブラシ', 'シェーバー', '毛玉取り', 'モーター', 'シンボリックリンク', 'fitbit',
-            '有酸素運動', 'デジタル・デトックス', '墓参り', '鍋', '東証', '大発会', 'ライブ配信',
-            'YouTube', '大阪取引所', '人形浄瑠璃', 'バーチャル打鐘アプリ', '断熱ボード',
-            '遮光断熱フィルム', 'クーラー', 'ダブルサッシ', 'メンタルヘルスRPG',
-            'プロジェクトマネジメントRPG', 'ライフログ', '太陽', '脈', '銀行アプリ', 'KYC',
-            '指紋認証', 'サポート', '銀行口座', '日記エディタ', 'パーソルミライズ', '面談',
-            'Gemini', '総務', 'コーポレートIT', 'インタビュー記事', 'オーダースーツ',
-            'デスクトップウィジェット', 'シネマ', '賛助会員', '駐輪場', '唐揚げ', '図解',
-            '豆知識', 'タランチュラ', 'WikiHow', '人工湖', '電動アシスト自転車', 'ミカン',
-            'カーテン', '換気', 'お釣り', '集英社', '青春と読書', '武田砂鉄', 'DIY', '皮膚炎',
-            'mineo', '日本通信', 'MNP', '移住', '街歩き', '伊原六花', '交通量', 'ロマ',
-            'さわやか自然百景', '雪山', '猿', 'アカゲラ', 'モネ', '睡蓮', 'アイスクリーム',
-            'グーグルレンズ', 'Fabric', 'OPAC', '県立図書館', 'ワークショップ', 'コイン充電マシン',
-            'ダイドー', 'バスクチーズケーキ', '紅茶マシン', 'アッサム', 'ダージリン', 'アールグレイ',
-            '久喜', 'クッキー', 'メディア論', 'プラネタリウム', 'twilio', 'リカちゃんでんわ',
-            '公衆電話', 'ロカティブ・メディア', 'ポケモンGO', '音声ガイド', 'セカイカメラ',
-            'フィールドレコーディング', 'ラジオ', 'Lifetance EXPO', '満月', 'TOKYO図書館ワンダーランド',
-            '絵本', '江國香織', 'BASIC', 'Scratch', '期日前投票', '高校写真展', '雪', 'LINE',
-            'ボディスキャン瞑想', '社会資源', 'ラーメン', 'キャスター付き収納', 'メジロ',
-            '無線バーコードリーダー', 'IT資産管理', '進学', 'ディック・ブルーナ', 'ナインチェ',
-            'ミッフィー', 'エナジージム', 'リアルゴールド', '惣菜パン', 'ひじき', 'きんぴら'
         ];
 
         // ===== DOM Helpers =====
@@ -556,6 +428,7 @@
                 const container = document.getElementById('diaryContainer');
                 const entries = document.querySelectorAll('.diary-entry');
 
+                // 一旦全ての .days-ago を非表示にする
                 document.querySelectorAll('.days-ago').forEach(el => {
                     el.style.opacity = '0';
                     el.style.filter = 'brightness(1)';
@@ -570,6 +443,7 @@
                         smoothScrollTo(container, entryRight - containerWidth);
                         flashEntry(entry);
 
+                        // 対象の .days-ago を一瞬表示
                         const dateElement = entry.querySelector('.date');
                         if (dateElement) {
                             const daysAgoElement = dateElement.parentNode.querySelector('.days-ago');
@@ -605,12 +479,14 @@
                 }
             });
 
+            // エントリのフラッシュ
             Object.assign(entry.style, {
                 transition: 'filter 0.2s ease, color 0.2s ease',
                 color: isFakeMode ? '#fff' : '#333333',
                 filter: 'brightness(2)'
             });
 
+            // days-ago のフラッシュ
             const daysAgoElement = entry.querySelector('.days-ago');
             if (daysAgoElement) {
                 Object.assign(daysAgoElement.style, {
@@ -664,23 +540,25 @@
                 e.preventDefault();
                 const currentEntry = getCurrentEntry();
                 if (!currentEntry) return;
-
-                if (currentKeyword) {
-                    const direction = e.key === 'ArrowLeft' ? -1 : 1;
-                    navigateKeyword(direction);
-                } else {
-                    const direction = e.key === 'ArrowLeft' ? -1 : 1;
-                    const nextEntry = getAdjacentEntry(currentEntry, direction);
-                    if (nextEntry) {
-                        window.location.hash = nextEntry.id;
-                        scrollToEntryFromHash();
-                    }
+                const direction = e.key === 'ArrowLeft' ? -1 : 1;
+                const nextEntry = getAdjacentEntry(currentEntry, direction);
+                if (nextEntry) {
+                    const nextEntryId = nextEntry.id;
+                    window.location.hash = nextEntryId;
+                    scrollToEntryFromHash();
+                    document.querySelectorAll('.diary-entry').forEach(entry => {
+                        Object.assign(entry.style, {
+                            transition: 'none',
+                            transform: 'scale(1)',
+                            fontWeight: '',
+                            filter: 'brightness(1)'
+                        });
+                    });
                 }
             } else if (e.key === 'Escape') {
                 if (window.location.hash) {
                     window.location.hash = '';
                 }
-                clearKeywordSearch();
             }
         };
 
@@ -784,102 +662,6 @@
             }, { passive: false });
         };
 
-        // ===== Keyword Search =====
-        const highlightKeywords = () => {
-            document.querySelectorAll('.content').forEach(contentElement => {
-                let html = contentElement.innerHTML;
-                KEYWORDS.forEach(keyword => {
-                    const regex = new RegExp(`(${keyword})`, 'g');
-                    html = html.replace(regex, `<span class="keyword" data-keyword="${keyword}">$1</span>`);
-                });
-                contentElement.innerHTML = html;
-            });
-
-            document.querySelectorAll('.keyword').forEach(element => {
-                element.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const keyword = element.dataset.keyword;
-                    searchKeyword(keyword);
-                });
-            });
-        };
-
-        const searchKeyword = (keyword) => {
-            clearKeywordSearch();
-            currentKeyword = keyword;
-            keywordMatches = [];
-
-            document.querySelectorAll('.diary-entry').forEach(entry => {
-                const contentElement = entry.querySelector('.content');
-                if (contentElement.textContent.includes(keyword)) {
-                    keywordMatches.push({
-                        id: entry.id,
-                        yyyymmdd: entry.querySelector('.date').dataset.yyyymmdd,
-                        element: entry
-                    });
-                }
-            });
-
-            if (keywordMatches.length > 0) {
-                currentKeywordIndex = 0;
-                const firstMatch = keywordMatches[0];
-                window.location.hash = firstMatch.id;
-                scrollToEntryFromHash();
-
-                // アクティブなキーワードを強調
-                document.querySelectorAll('.keyword').forEach(el => {
-                    if (el.dataset.keyword === keyword) {
-                        el.classList.add('active');
-                    }
-                });
-
-                // ナビゲーションUIを表示
-                const nav = document.getElementById('keywordNavigation');
-                nav.classList.add('active');
-                updateNavInfo();
-
-                // ナビゲーションイベントを設定
-                document.getElementById('navLeft').addEventListener('click', () => navigateKeyword(-1));
-                document.getElementById('navRight').addEventListener('click', () => navigateKeyword(1));
-            }
-        };
-
-        const navigateKeyword = (direction) => {
-            if (!currentKeyword || keywordMatches.length === 0) return;
-
-            currentKeywordIndex += direction;
-
-            if (currentKeywordIndex < 0) {
-                currentKeywordIndex = keywordMatches.length - 1;
-            } else if (currentKeywordIndex >= keywordMatches.length) {
-                currentKeywordIndex = 0;
-            }
-
-            const match = keywordMatches[currentKeywordIndex];
-            window.location.hash = match.id;
-            scrollToEntryFromHash();
-            updateNavInfo();
-        };
-
-        const updateNavInfo = () => {
-            if (!currentKeyword || keywordMatches.length === 0) return;
-
-            const infoElement = document.getElementById('navInfo');
-            infoElement.textContent = `「${currentKeyword}」 ${currentKeywordIndex + 1}/${keywordMatches.length}件`;
-        };
-
-        const clearKeywordSearch = () => {
-            currentKeyword = null;
-            keywordMatches = [];
-            currentKeywordIndex = -1;
-
-            document.querySelectorAll('.keyword').forEach(el => {
-                el.classList.remove('active');
-            });
-
-            document.getElementById('keywordNavigation').classList.remove('active');
-        };
-
         // ===== Main Functions =====
         const loadDiaryEntries = async (filename = 'entry.md') => {
             try {
@@ -899,7 +681,7 @@
                     const dateObj = formatJapaneseDate(yyyymmdd);
                     const contentLines = contentMatch[1]
                         .split('\n')
-                        .map(line => line.replace(/^\s*[|>]?\s*/, ''))
+                        .map(line => line.replace(/^\s*\|?\s*/, ''))
                         .join('\n')
                         .trim();
 
@@ -925,7 +707,6 @@
 
                 requestAnimationFrame(() => {
                     setupDateClick();
-                    highlightKeywords();
                     scrollToEntryFromHash();
                 });
             } catch (error) {
@@ -979,11 +760,7 @@
                 if (!dateMatch || !contentMatch) return;
                 const yyyymmdd = dateMatch[1].trim();
                 const dateObj = formatJapaneseDate(yyyymmdd);
-                const contentLines = contentMatch[1]
-                    .split('\n')
-                    .map(line => line.replace(/^\s*[|>]?\s*/, ''))
-                    .join('\n')
-                    .trim();
+                const contentLines = contentMatch[1].split('\n').map(line => line.replace(/^\s*\|?\s*/, '')).join('\n').trim();
 
                 const entryElement = document.createElement('div');
                 entryElement.className = 'diary-entry';
@@ -1007,7 +784,6 @@
 
             requestAnimationFrame(() => {
                 setupDateClick();
-                highlightKeywords();
                 scrollToEntryFromHash();
             });
         };
