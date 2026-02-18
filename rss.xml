@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Tue, 17 Feb 2026 18:49:00 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 18 Feb 2026 13:25:57 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>二月十八日（水）</title>
+      <link>https://nikki.poet.blue#20260218</link>
+      <pubDate>Wed, 18 Feb 2026 13:25:57 +0900</pubDate>
+      <description>靴底がすり減ってきた、ミスターミニットに出したい。その前に洗いたい。ちょうど風呂の残り湯がある。そういえばゴミ箱も洗いたかった。最近たまたまミニ洗濯機の動画を見た。↓残り湯を使って、ゴミ箱を洗濯槽にして靴を洗うことにした。残り湯は十分にあり、すすぎ放題。洗剤もいらない。湯を張ったゴミ箱に片足ずつ靴を入れ、激しくひねるだけ。楽。そうしているうちにゴミ箱も綺麗になっている。こういう「一度で何度か美味しい」問題解決をしたのは久々！</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260218</guid>
+      <media:content url="https://nc.poet.blue/20260218" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>二月十七日（火）</title>
       <link>https://nikki.poet.blue#20260217</link>
