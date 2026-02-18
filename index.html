@@ -10,8 +10,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho&display=swap" rel="stylesheet">
     <title>誤字ロマの日記</title>
     <link rel="icon" href="diary-icon.png" type="image/png">
-
     <style>
+        :root {
+            --bg-color: #e6f3ff;
+            --text-color: #003366;
+            --border-color: #003366;
+            --timeline-color: #003366;
+            --highlight-color: #ffeb3b;
+        }
+
         body {
             font-family: "Zen Old Mincho", serif;
             font-weight: 400;
@@ -28,23 +35,17 @@
             position: relative;
             opacity: 0;
             transition: opacity 0.2s ease, background-color 0.2s ease;
-            background-color: #e6f3ff;
+            background-color: var(--bg-color);
         }
 
         body.fake-mode {
-            background-color: #000 !important;
-            color: #fff !important;
-        }
-
-        body.fake-mode .diary-container-wrapper {
-            background-color: #000 !important;
-        }
-
-        body.fake-mode .date,
-        body.fake-mode .content,
-        body.fake-mode .days-ago,
-        body.fake-mode .keyword-nav {
-            color: #fff !important;
+            --bg-color: #000;
+            --text-color: #fff;
+            --border-color: #fff;
+            --timeline-color: #fff;
+            --highlight-color: #ffc107;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
 
         .page-title {
@@ -54,36 +55,56 @@
             font-family: "Zen Old Mincho", serif;
             font-size: 18px;
             font-weight: 700;
-            border: 1px solid #333;
+            border: 1px solid var(--border-color);
             padding: 5px 10px;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.1s, color 0.1s, border-color 0.1s;
+            transition: all 0.1s;
             text-decoration: none;
-            opacity: .6;
+            opacity: 0.6;
             z-index: 10;
             user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
         }
 
         .page-title:hover {
             opacity: 1;
             transform: scale(1.05);
-            transition: transform 0.2s ease;
         }
 
         .page-title.fake-mode {
-            background-color: #000 !important;
-            color: #fff !important;
-            border-color: #fff !important;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border-color: var(--border-color);
         }
 
         .page-title.flash {
             background-color: #000 !important;
             color: #ff0 !important;
             border-color: #ff0 !important;
+        }
+
+        .search-box,
+        input[type="text"] {
+            font-family: "Zen Old Mincho", serif;
+            position: fixed;
+            top: 10px;
+            left: 20px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            font-family: "Zen Old Mincho", serif;
+            font-size: 18px;
+            font-weight: 700;
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.1s;
+            text-decoration: none;
+            opacity: 0.6;
+            z-index: 10;
+            user-select: none;
+            outline: none;
         }
 
         .diary-container-wrapper {
@@ -97,7 +118,7 @@
             box-sizing: border-box;
             margin-top: 20px;
             transition: background-color 0.2s ease;
-            background-color: #e6f3ff;
+            background-color: var(--bg-color);
         }
 
         .diary-container {
@@ -109,7 +130,6 @@
             padding: 0;
             overflow-x: auto;
             scrollbar-width: none;
-            -ms-overflow-style: none;
         }
 
         ::-webkit-scrollbar {
@@ -126,12 +146,20 @@
             overflow: visible;
             scroll-margin-top: 50px;
             padding: 0 10px;
-            transition: background-color 0.3s ease, filter 0.5s ease, color 0.3s ease;
+            transition: all 0.3s ease;
             flex-shrink: 0;
             text-wrap: balance;
             overflow-wrap: break-word;
             background-color: transparent;
             position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .diary-entry {
+                writing-mode: horizontal-tb;
+                text-orientation: initial;
+                width: 90%;
+            }
         }
 
         .date-container {
@@ -146,23 +174,17 @@
             font-family: "Zen Old Mincho", serif;
             font-size: 1.6em;
             cursor: pointer;
-            color: #003366;
+            color: var(--text-color);
             white-space: nowrap;
         }
 
         .days-ago {
             font-family: "Zen Old Mincho", serif;
             font-size: 0.8em;
-            color: inherit;
-            opacity: 0;
-            transition: opacity 0.2s, filter 0.2s, color 0.2s;
+            color: var(--text-color);
             margin-left: 8px;
             white-space: nowrap;
-        }
-
-        .date-container:hover .days-ago,
-        .date-container:focus-within .days-ago {
-            opacity: 1;
+            opacity: 0.7;
         }
 
         .content {
@@ -171,80 +193,17 @@
             white-space: pre-line;
             text-wrap: balance;
             overflow-wrap: break-word;
-            color: #003366;
+            color: var(--text-color);
         }
 
-        .keyword {
-            cursor: pointer;
-            transition: background-color 0.2s, color 0.2s;
-            background-color: rgba(0, 221, 255, 0.1);
-            position: relative;
-        }
-
-        .keyword:hover {
-            background-color: rgba(255, 153, 0, 0.1);
-        }
-
-        .keyword.active {
-            background-color: rgba(255, 255, 0, 0.2);
+        .highlight {
+            background-color: var(--highlight-color);
+            font-weight: bold;
+            padding: 0 2px;
             border-radius: 2px;
+            margin: 0 -2px;
         }
 
-        /* キーワードナビゲーション */
-        .keyword-navigation {
-            position: fixed;
-            bottom: 40px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            z-index: 20;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
-        }
-
-        .keyword-navigation.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .keyword-nav-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px 16px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: "Zen Old Mincho", serif;
-            font-size: 14px;
-            transition: background-color 0.2s;
-        }
-
-        .keyword-nav-button:hover {
-            background-color: rgba(255, 153, 0, 0.2);
-        }
-
-        .keyword-nav-info {
-            font-family: "Zen Old Mincho", serif;
-            font-size: 14px;
-            color: #555;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 8px 16px;
-            border-radius: 20px;
-            white-space: nowrap;
-        }
-
-        body.fake-mode .keyword-nav-info {
-            color: #fff;
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-
-        /* Timeline */
         .timeline-container {
             position: fixed;
             bottom: 0;
@@ -260,6 +219,12 @@
             touch-action: none;
         }
 
+        @media (max-width: 768px) {
+            .timeline-container {
+                height: 20px;
+            }
+        }
+
         .timeline {
             position: relative;
             display: flex;
@@ -268,7 +233,7 @@
             align-items: flex-end;
             height: 100%;
             width: 100%;
-            opacity: .2;
+            opacity: 0.2;
             transition: opacity 0.2s;
         }
 
@@ -288,620 +253,336 @@
 
         .timeline-bar-inner {
             width: 100%;
-            background-color: #003366;
+            background-color: var(--timeline-color);
             transition: background-color 0.2s;
-        }
-
-        body.fake-mode .timeline-bar-inner {
-            background-color: #fff;
         }
 
         .timeline-bar:hover .timeline-bar-inner {
             background-color: #ff9900 !important;
         }
+
+        @keyframes lanternOutline {
+            0% {
+                outline-color: #ff0000;
+            }
+
+            25% {
+                outline-color: #00ff00;
+            }
+
+            50% {
+                outline-color: #0000ff;
+            }
+
+            75% {
+                outline-color: #ffff00;
+            }
+
+            100% {
+                outline-color: #ff00ff;
+            }
+        }
+
+        .search-box.lantern-mode {
+            outline: 2px solid transparent;
+            animation: lanternOutline 4s linear infinite;
+        }
     </style>
 </head>
 
 <body>
+    <input type="text" class="search-box" placeholder="検索or二度押し">
     <div class="page-title" id="pageTitle">誤字ロマの日記</div>
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
     </div>
-
-    <div class="keyword-navigation" id="keywordNavigation">
-        <div class="keyword-nav-button" id="navLeft">← 前へ</div>
-        <div class="keyword-nav-info" id="navInfo">「キーワード」 0/0件</div>
-        <div class="keyword-nav-button" id="navRight">次へ →</div>
-    </div>
-
     <div class="timeline-container">
         <div class="timeline" id="timeline"></div>
     </div>
 
     <script>
         // ===== Utilities =====
-        const toKanjiNumber = (num) => {
-            const kanjiNumbers = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
-            return num.toString().split('').map(digit => kanjiNumbers[digit]).join('');
-        };
-
-        const toKanjiMonth = (month) => {
-            const kanjiMonths = [
-                '一月', '二月', '三月', '四月', '五月', '六月',
-                '七月', '八月', '九月', '十月', '十一月', '十二月'
-            ];
-            return kanjiMonths[month - 1];
-        };
-
-        const toKanjiDay = (day) => {
-            if (day === 10) return '十';
-            if (day === 20) return '二十';
-            if (day === 30) return '三十';
-            if (day === 31) return '三十一';
-            if (day < 10) return toKanjiNumber(day);
-            if (day < 20) return '十' + toKanjiNumber(day - 10);
-            if (day < 30) return '二十' + toKanjiNumber(day - 20);
-            return toKanjiNumber(day);
-        };
-
-        const toJapaneseEra = (year) => {
-            if (year >= 2019) {
-                const eraYear = year - 2018;
-                return `令和${toKanjiNumber(eraYear)}年`;
-            } else if (year >= 1989) {
-                const eraYear = year - 1988;
-                return `平成${toKanjiNumber(eraYear)}年`;
-            } else if (year >= 1926) {
-                const eraYear = year - 1925;
-                return `昭和${toKanjiNumber(eraYear)}年`;
-            } else if (year >= 1912) {
-                const eraYear = year - 1911;
-                return `大正${toKanjiNumber(eraYear)}年`;
-            } else {
-                const eraYear = year - 1867;
-                return `明治${toKanjiNumber(eraYear)}年`;
+        class DiaryUtils {
+            static toKanjiNumber(num) {
+                const kanjiNumbers = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+                return num.toString().split('').map(digit => kanjiNumbers[digit]).join('');
             }
-        };
 
-        const formatJapaneseDate = (yyyymmdd) => {
-            const year = parseInt(yyyymmdd.substring(0, 4), 10);
-            const month = parseInt(yyyymmdd.substring(4, 6), 10);
-            const day = parseInt(yyyymmdd.substring(6, 8), 10);
-            const date = new Date(year, month - 1, day);
-            const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
-            return {
-                short: `${toKanjiMonth(month)}${toKanjiDay(day)}日（${isFakeMode ? '嘘' : dayOfWeek}）`,
-                long: `${toJapaneseEra(year)}${toKanjiMonth(month)}${toKanjiDay(day)}日（${isFakeMode ? '嘘' : dayOfWeek}）`
-            };
-        };
+            static toKanjiMonth(month) {
+                const kanjiMonths = [
+                    '一月', '二月', '三月', '四月', '五月', '六月',
+                    '七月', '八月', '九月', '十月', '十一月', '十二月'
+                ];
+                return kanjiMonths[month - 1];
+            }
 
-        const generateRandomDate = () => {
-            const today = new Date();
-            const randomDaysAgo = Math.floor(Math.random() * 60) + 1;
-            const randomDate = new Date(today);
-            randomDate.setDate(today.getDate() - randomDaysAgo);
-            const year = randomDate.getFullYear();
-            const month = String(randomDate.getMonth() + 1).padStart(2, '0');
-            const day = String(randomDate.getDate()).padStart(2, '0');
-            return `${year}${month}${day}`;
-        };
+            static toKanjiDay(day) {
+                if (day === 10) return '十';
+                if (day === 20) return '二十';
+                if (day === 30) return '三十';
+                if (day === 31) return '三十一';
+                if (day < 10) return this.toKanjiNumber(day);
+                if (day < 20) return '十' + this.toKanjiNumber(day - 10);
+                if (day < 30) return '二十' + this.toKanjiNumber(day - 20);
+                return this.toKanjiNumber(day);
+            }
 
-        const calculateDaysAgo = (yyyymmdd) => {
-            const year = parseInt(yyyymmdd.substring(0, 4), 10);
-            const month = parseInt(yyyymmdd.substring(4, 6), 10) - 1;
-            const day = parseInt(yyyymmdd.substring(6, 8), 10);
-            const entryDate = new Date(year, month, day);
-            const today = new Date();
-            const diffTime = today - entryDate;
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays === 0 ? '今日' : `${diffDays}日前`;
-        };
-
-        // ===== State =====
-        let currentTheme = null;
-        let targetEntry = null;
-        let isFakeMode = false;
-        let fakeEntriesCache = null;
-        let diaryEntries = [];
-        let currentKeyword = null;
-        let keywordMatches = [];
-        let currentKeywordIndex = -1;
-
-        // ===== Constants =====
-        const THEMES = [
-            { bg: "#e6f3ff", text: "#003366", border: "#003366" },
-            { bg: "#fff8e6", text: "#8b4513", border: "#8b4513" },
-            { bg: "#e6ffe6", text: "#2e8b57", border: "#2e8b57" },
-            { bg: "#ffe6f0", text: "#8b008b", border: "#8b008b" },
-            { bg: "#f0f0ff", text: "#4b0082", border: "#4b0082" },
-            { bg: "#ffffe6", text: "#b8860b", border: "#b8860b" },
-            { bg: "#e6ffff", text: "#0066cc", border: "#0066cc" },
-            { bg: "#f0e6ff", text: "#800080", border: "#800080" },
-            { bg: "#fff0e6", text: "#cd5c5c", border: "#cd5c5c" },
-            { bg: "#f0ffe6", text: "#228b22", border: "#228b22" }
-        ];
-        const KEYWORDS = [
-            '文学フリマ', '縦書き', '日記', 'ポッドキャスト', '遊歩道', '軽トラ', '畑', '危険運転',
-            'ビックボーイ', 'カロリー', 'サイクリング', 'スマホ', '筋肉痛', '職安', '認定日',
-            '再就職', 'iPhone', 'バッテリー交換', '修理', '古物商', '道具商', '俺アプリ',
-            '過活動', '散財', '労働', '映画', '美術展', 'チラシ', 'ミュージアム', 'リサイクル',
-            '昆虫標本', '地形', '荒川', '手帳', 'キッズカメラ', '音楽再生', 'イヤホン',
-            '棚ダボ', '本棚', 'プラークマーカー', '歯垢', '空気清浄機', 'デスク', 'ベッド',
-            '修正テープ', '牛', 'ヒヨコ', '散髪', '温泉', '温浴施設', 'BGM', 'クリスマス',
-            'スーパーマーケット', 'クリスマスツリー', '商業空間', 'イオン', 'テック企業',
-            'ホスティングサービス', '暖房費', '入浴剤', '昼寝', '寝具', '積読', 'マグネット',
-            'フック', 'リップクリーム', '吸入薬', 'モニター', 'オランウータン', 'ぬいぐるみ',
-            '買い物', '疲労感', 'アラート', '都内', '博物館', '美術館', '自然公園',
-            '日本橋', 'クルーズ船', '橋', '高層住居', '室外機', '洗濯物', 'コレド', 'チャイ',
-            'カレー', 'クルアンビン', 'TOHOシネマズ', '東京タクシー', 'フランス映画',
-            'パディントン', 'スタンプラリー', 'バーガーキング', '織物', 'フライヤー', '下北沢',
-            '西太子堂', '路面電車', '上町', '平成建設', 'ショールーム', '職人', '鉄骨',
-            'アートギャラリー', 'ガラス作品', 'トイレ', '間接照明', '豪徳寺', 'デニーズ',
-            'バースデーパンケーキ', '珈琲舘', '光回線', 'プロバイダ', 'リテンション',
-            '土手', '焼肉', 'ホームセンター', 'カランコエ', '花', 'ベランダ', '室外機',
-            'ラベルプリンター', 'サマリー', 'マンスリー', 'Gyazo', 'QRコード', 'Kindle',
-            'ブックオフ', '図書館', 'ブックガイド', '選書', 'フィジカル書店', 'ニューチキ',
-            'ピザ', '遊園地', 'セブンティーンアイス', '宇治抹茶', 'プール', '除籍本',
-            '原田宗典', '村上春樹', '卵黄', 'DB', '無料枠', '有料プラン', 'ホスティングサービス',
-            'discord', '鏡餅', 'サトウの鏡餅', '橙', '越後製菓', 'きりたんぽ', '掃除',
-            'ペンライト', '掃除機', '仮面ライダー', '退職', 'アマゾンギフト券', 'クレジットカード',
-            '電子書籍', '転職活動', 'キャリアブレイク', '職業訓練', 'コーチング', '利根川',
-            'コカ・コーラ', 'ドリンクチケット', 'ゼロシュガー', 'Vivaldi', 'LLM', 'マグネットシート',
-            '電動歯ブラシ', 'シェーバー', '毛玉取り', 'モーター', 'シンボリックリンク', 'fitbit',
-            '有酸素運動', 'デジタル・デトックス', '墓参り', '鍋', '東証', '大発会', 'ライブ配信',
-            'YouTube', '大阪取引所', '人形浄瑠璃', 'バーチャル打鐘アプリ', '断熱ボード',
-            '遮光断熱フィルム', 'クーラー', 'ダブルサッシ', 'メンタルヘルスRPG',
-            'プロジェクトマネジメントRPG', 'ライフログ', '太陽', '脈', '銀行アプリ', 'KYC',
-            '指紋認証', 'サポート', '銀行口座', '日記エディタ', 'パーソルミライズ', '面談',
-            'Gemini', '総務', 'コーポレートIT', 'インタビュー記事', 'オーダースーツ',
-            'デスクトップウィジェット', 'シネマ', '賛助会員', '駐輪場', '唐揚げ', '図解',
-            '豆知識', 'タランチュラ', 'WikiHow', '人工湖', '電動アシスト自転車', 'ミカン',
-            'カーテン', '換気', 'お釣り', '集英社', '青春と読書', '武田砂鉄', 'DIY', '皮膚炎',
-            'mineo', '日本通信', 'MNP', '移住', '街歩き', '伊原六花', '交通量', 'ロマ',
-            'さわやか自然百景', '雪山', '猿', 'アカゲラ', 'モネ', '睡蓮', 'アイスクリーム',
-            'グーグルレンズ', 'Fabric', 'OPAC', '県立図書館', 'ワークショップ', 'コイン充電マシン',
-            'ダイドー', 'バスクチーズケーキ', '紅茶マシン', 'アッサム', 'ダージリン', 'アールグレイ',
-            '久喜', 'クッキー', 'メディア論', 'プラネタリウム', 'twilio', 'リカちゃんでんわ',
-            '公衆電話', 'ロカティブ・メディア', 'ポケモンGO', '音声ガイド', 'セカイカメラ',
-            'フィールドレコーディング', 'ラジオ', 'Lifetance EXPO', '満月', 'TOKYO図書館ワンダーランド',
-            '絵本', '江國香織', 'BASIC', 'Scratch', '期日前投票', '高校写真展', '雪', 'LINE',
-            'ボディスキャン瞑想', '社会資源', 'ラーメン', 'キャスター付き収納', 'メジロ',
-            '無線バーコードリーダー', 'IT資産管理', '進学', 'ディック・ブルーナ', 'ナインチェ',
-            'ミッフィー', 'エナジージム', 'リアルゴールド', '惣菜パン', 'ひじき', 'きんぴら'
-        ];
-
-        // ===== DOM Helpers =====
-        const applyRandomTheme = () => {
-            const randomTheme = THEMES[Math.floor(Math.random() * THEMES.length)];
-            currentTheme = randomTheme;
-            document.body.style.backgroundColor = randomTheme.bg;
-            document.querySelector('.diary-container-wrapper').style.backgroundColor = randomTheme.bg;
-            const title = document.querySelector('.page-title');
-            title.style.backgroundColor = randomTheme.bg;
-            title.style.borderColor = randomTheme.border;
-            title.style.color = randomTheme.text;
-            document.querySelectorAll('.date, .content').forEach(el => {
-                el.style.color = randomTheme.text;
-            });
-        };
-
-        // ===== Mode Switch =====
-        const toggleFakeMode = () => {
-            const title = document.querySelector('.page-title');
-            const body = document.body;
-            if (isFakeMode) {
-                title.textContent = '誤字ロマの日記';
-                title.classList.remove('fake-mode');
-                body.classList.remove('fake-mode');
-                loadDiaryEntries('entry.md');
-            } else {
-                title.textContent = '誤字ロマの嘘日記';
-                title.classList.add('fake-mode');
-                body.classList.add('fake-mode');
-                if (fakeEntriesCache) {
-                    loadFakeEntriesFromCache();
+            static toJapaneseEra(year) {
+                if (year >= 2019) {
+                    const eraYear = year - 2018;
+                    return `令和${this.toKanjiNumber(eraYear)}年`;
+                } else if (year >= 1989) {
+                    const eraYear = year - 1988;
+                    return `平成${this.toKanjiNumber(eraYear)}年`;
+                } else if (year >= 1926) {
+                    const eraYear = year - 1925;
+                    return `昭和${this.toKanjiNumber(eraYear)}年`;
+                } else if (year >= 1912) {
+                    const eraYear = year - 1911;
+                    return `大正${this.toKanjiNumber(eraYear)}年`;
                 } else {
-                    loadDiaryEntries('fake.md');
+                    const eraYear = year - 1867;
+                    return `明治${this.toKanjiNumber(eraYear)}年`;
                 }
             }
-            isFakeMode = !isFakeMode;
-        };
 
-        const setupDateClick = () => {
-            document.querySelectorAll('.date-container').forEach(container => {
-                const dateElement = container.querySelector('.date');
-                const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
-                const daysAgo = calculateDaysAgo(yyyymmdd);
-                const daysAgoElement = container.querySelector('.days-ago');
-                if (daysAgoElement) {
-                    daysAgoElement.textContent = daysAgo;
-                } else {
-                    const newDaysAgoElement = document.createElement('div');
-                    newDaysAgoElement.className = 'days-ago';
-                    newDaysAgoElement.textContent = daysAgo;
-                    container.appendChild(newDaysAgoElement);
-                }
-
-                dateElement.addEventListener('click', () => {
-                    const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
-                    window.location.hash = yyyymmdd;
-                    const entry = document.getElementById(yyyymmdd);
-                    if (entry) {
-                        flashEntry(entry);
-                    }
-                });
-            });
-        };
-
-        const smoothScrollTo = (element, targetPosition, duration = 50) => {
-            const startPosition = element.scrollLeft;
-            const startTime = performance.now();
-
-            const animateScroll = (currentTime) => {
-                const elapsedTime = currentTime - startTime;
-                const progress = Math.min(elapsedTime / duration, 1);
-                element.scrollLeft = startPosition + (targetPosition - startPosition) * progress;
-
-                if (progress < 1) {
-                    requestAnimationFrame(animateScroll);
-                }
-            };
-
-            requestAnimationFrame(animateScroll);
-        };
-
-        const scrollToEntryFromHash = () => {
-            requestAnimationFrame(() => {
-                const hash = window.location.hash.substring(1);
-                const container = document.getElementById('diaryContainer');
-                const entries = document.querySelectorAll('.diary-entry');
-
-                document.querySelectorAll('.days-ago').forEach(el => {
-                    el.style.opacity = '0';
-                    el.style.filter = 'brightness(1)';
-                });
-
-                if (hash && hash.match(/^\d{8}$/)) {
-                    const entry = document.getElementById(hash);
-                    if (entry) {
-                        targetEntry = entry;
-                        const entryRight = entry.offsetLeft + entry.clientWidth;
-                        const containerWidth = container.clientWidth;
-                        smoothScrollTo(container, entryRight - containerWidth);
-                        flashEntry(entry);
-
-                        const dateElement = entry.querySelector('.date');
-                        if (dateElement) {
-                            const daysAgoElement = dateElement.parentNode.querySelector('.days-ago');
-                            if (daysAgoElement) {
-                                daysAgoElement.style.opacity = '1';
-                                daysAgoElement.style.filter = 'brightness(2)';
-                                setTimeout(() => {
-                                    daysAgoElement.style.opacity = '0';
-                                    daysAgoElement.style.filter = 'brightness(1)';
-                                }, 1000);
-                            }
-                        }
-                    }
-                } else if (entries.length > 0) {
-                    const latestEntry = entries[0];
-                    const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
-                    const containerWidth = container.clientWidth;
-                    smoothScrollTo(container, entryRight - containerWidth);
-                }
-            });
-        };
-
-        // ===== Flash Entry =====
-        const flashEntry = (entry) => {
-            document.querySelectorAll('.diary-entry').forEach(el => {
-                if (el !== entry) {
-                    Object.assign(el.style, {
-                        transition: 'none',
-                        fontWeight: '',
-                        filter: 'brightness(1)',
-                        color: ''
-                    });
-                }
-            });
-
-            Object.assign(entry.style, {
-                transition: 'filter 0.2s ease, color 0.2s ease',
-                color: isFakeMode ? '#fff' : '#333333',
-                filter: 'brightness(2)'
-            });
-
-            const daysAgoElement = entry.querySelector('.days-ago');
-            if (daysAgoElement) {
-                Object.assign(daysAgoElement.style, {
-                    transition: 'filter 0.2s ease, color 0.2s ease',
-                    color: isFakeMode ? '#fff' : '#333333',
-                    filter: 'brightness(2)'
-                });
+            static formatJapaneseDate(yyyymmdd) {
+                const year = parseInt(yyyymmdd.substring(0, 4), 10);
+                const month = parseInt(yyyymmdd.substring(4, 6), 10);
+                const day = parseInt(yyyymmdd.substring(6, 8), 10);
+                const date = new Date(year, month - 1, day);
+                const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+                return {
+                    short: `${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '嘘' : dayOfWeek}）`,
+                    long: `${this.toJapaneseEra(year)}${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '嘘' : dayOfWeek}）`
+                };
             }
 
-            setTimeout(() => {
-                Object.assign(entry.style, {
-                    color: isFakeMode ? '#fff' : currentTheme.text,
-                    filter: 'brightness(1)'
-                });
-
-                if (daysAgoElement) {
-                    Object.assign(daysAgoElement.style, {
-                        color: isFakeMode ? '#fff' : currentTheme.text,
-                        filter: 'brightness(1)'
-                    });
-                }
-            }, 1200);
-        };
-
-        // ===== Navigation =====
-        const getCurrentEntry = () => {
-            const hash = window.location.hash.substring(1);
-            if (hash && hash.match(/^\d{8}$/)) {
-                return document.getElementById(hash);
-            }
-            const entries = document.querySelectorAll('.diary-entry');
-            if (entries.length > 0) {
-                return entries[0];
-            }
-            return null;
-        };
-
-        const getAdjacentEntry = (currentEntry, direction) => {
-            const entries = document.querySelectorAll('.diary-entry');
-            const currentIndex = Array.from(entries).indexOf(currentEntry);
-            if (currentIndex === -1) return null;
-
-            const nextIndex = currentIndex + direction;
-            if (nextIndex < 0 || nextIndex >= entries.length) return null;
-
-            return entries[nextIndex];
-        };
-
-        const handleKeyDown = (e) => {
-            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-                e.preventDefault();
-                const currentEntry = getCurrentEntry();
-                if (!currentEntry) return;
-
-                if (currentKeyword) {
-                    const direction = e.key === 'ArrowLeft' ? -1 : 1;
-                    navigateKeyword(direction);
-                } else {
-                    const direction = e.key === 'ArrowLeft' ? -1 : 1;
-                    const nextEntry = getAdjacentEntry(currentEntry, direction);
-                    if (nextEntry) {
-                        window.location.hash = nextEntry.id;
-                        scrollToEntryFromHash();
-                    }
-                }
-            } else if (e.key === 'Escape') {
-                if (window.location.hash) {
-                    window.location.hash = '';
-                }
-                clearKeywordSearch();
-            }
-        };
-
-        // ===== Download Function =====
-        const downloadDiaryAsText = () => {
-            if (diaryEntries.length === 0) {
-                alert('ダウンロードする日記がありません。');
-                return;
-            }
-
-            const sortedEntries = [...diaryEntries].sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
-            const oldestDate = sortedEntries[0].yyyymmdd;
-            const newestDate = sortedEntries[sortedEntries.length - 1].yyyymmdd;
-
-            const formatDateForFilename = (yyyymmdd) => {
-                const year = yyyymmdd.substring(2, 4);
-                const month = yyyymmdd.substring(4, 6);
-                const day = yyyymmdd.substring(6, 8);
+            static generateRandomDate() {
+                const today = new Date();
+                const randomDaysAgo = Math.floor(Math.random() * 60) + 1;
+                const randomDate = new Date(today);
+                randomDate.setDate(today.getDate() - randomDaysAgo);
+                const year = randomDate.getFullYear();
+                const month = String(randomDate.getMonth() + 1).padStart(2, '0');
+                const day = String(randomDate.getDate()).padStart(2, '0');
                 return `${year}${month}${day}`;
-            };
+            }
 
-            const modePrefix = isFakeMode ? '嘘日記_' : '';
-            const filename = `${modePrefix}誤字ロマの日記 ${formatDateForFilename(oldestDate)}-${formatDateForFilename(newestDate)}.txt`;
+            static calculateDaysAgo(yyyymmdd) {
+                const year = parseInt(yyyymmdd.substring(0, 4), 10);
+                const month = parseInt(yyyymmdd.substring(4, 6), 10) - 1;
+                const day = parseInt(yyyymmdd.substring(6, 8), 10);
+                const entryDate = new Date(year, month, day);
+                const today = new Date();
+                const diffTime = today - entryDate;
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                return diffDays === 0 ? '今日' : `${diffDays}日前`;
+            }
 
-            let content = '';
-            sortedEntries.forEach(entry => {
-                const dateObj = formatJapaneseDate(entry.yyyymmdd);
-                content += `${dateObj.long}\n${entry.content}\n\n`;
-            });
+            static escapeRegExp(string) {
+                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            }
 
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        };
+            static highlightText(text, keyword) {
+                if (!keyword.trim()) return text;
+                const regex = new RegExp(this.escapeRegExp(keyword), 'gi');
+                return text.replace(regex, match => `<span class="highlight">${match}</span>`);
+            }
+        }
 
-        // ===== Timeline =====
-        const renderTimeline = () => {
-            const timeline = document.getElementById('timeline');
-            timeline.innerHTML = '';
+        // ===== App Class =====
+        class DiaryApp {
+            static THEMES = [
+                { bg: "#e6f3ff", text: "#003366", border: "#003366" },
+                { bg: "#fff8e6", text: "#8b4513", border: "#8b4513" },
+                { bg: "#e6ffe6", text: "#2e8b57", border: "#2e8b57" },
+                { bg: "#ffe6f0", text: "#8b008b", border: "#8b008b" },
+                { bg: "#f0f0ff", text: "#4b0082", border: "#4b0082" },
+                { bg: "#ffffe6", text: "#b8860b", border: "#b8860b" },
+                { bg: "#e6ffff", text: "#0066cc", border: "#0066cc" },
+                { bg: "#f0e6ff", text: "#800080", border: "#800080" },
+                { bg: "#fff0e6", text: "#cd5c5c", border: "#cd5c5c" },
+                { bg: "#f0ffe6", text: "#228b22", border: "#228b22" }
+            ];
 
-            if (diaryEntries.length === 0) return;
+            static currentTheme = null;
+            static isFakeMode = false;
+            static fakeEntriesCache = null;
+            static diaryEntries = [];
+            static eventListeners = [];
+            static currentSearchKeyword = '';
 
-            const sortedEntries = [...diaryEntries].sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
-            const contentLengths = sortedEntries.map(entry => entry.content.length);
+            static init() {
+                this.applyRandomTheme();
+                this.loadDiaryEntries();
+                this.preloadFakeEntries();
+                this.setupEventListeners();
+                document.body.style.opacity = 1;
+            }
 
-            const percentile95 = (arr) => {
-                const sorted = [...arr].sort((a, b) => a - b);
-                const index = Math.floor(sorted.length * 0.95);
-                return sorted[index];
-            };
-            const maxContentLength = Math.min(percentile95(contentLengths), 500);
+            static applyRandomTheme() {
+                const randomTheme = this.THEMES[Math.floor(Math.random() * this.THEMES.length)];
+                this.currentTheme = randomTheme;
+                document.documentElement.style.setProperty('--bg-color', randomTheme.bg);
+                document.documentElement.style.setProperty('--text-color', randomTheme.text);
+                document.documentElement.style.setProperty('--border-color', randomTheme.border);
+            }
+            // ===== 走馬灯モード関連 =====
+            static lanternModeInterval = null;
+            static isLanternMode = false;
 
-            const baseHeight = 5;
-            const heightRatio = 45 / maxContentLength;
 
-            sortedEntries.forEach((entry, index) => {
-                const container = document.createElement('div');
-                container.className = 'timeline-bar';
-                container.dataset.yyyymmdd = entry.yyyymmdd;
+            static executeLanternSearch() {
+                if (this.diaryEntries.length === 0) return;
 
-                const innerBar = document.createElement('div');
-                innerBar.className = 'timeline-bar-inner';
+                // ランダムなエントリを選択
+                const randomEntry = this.diaryEntries[Math.floor(Math.random() * this.diaryEntries.length)];
+                const content = randomEntry.content;
 
-                const contentLength = Math.min(entry.content.length, maxContentLength);
-                const height = Math.max(baseHeight, contentLength * heightRatio);
-                innerBar.style.height = `${height}px`;
+                // 本文から2〜3文字をランダムにピックアップ
+                if (content.length < 2) return;
+                const startIndex = Math.floor(Math.random() * (content.length - 2));
+                const keywordLength = 2 + Math.floor(Math.random() * 2); // 2または3文字
+                let keyword = content.substring(startIndex, startIndex + keywordLength);
 
-                container.addEventListener('mouseover', () => {
-                    window.location.hash = entry.yyyymmdd;
-                    scrollToEntryFromHash();
-                });
+                // キーワードを検索ボックスに設定
+                const searchBox = document.querySelector('.search-box');
+                searchBox.value = keyword;
+                this.handleSearch(keyword);
+            }
+            static startLanternMode() {
+                if (this.isLanternMode) return;
+                this.isLanternMode = true;
 
-                container.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    window.location.hash = entry.yyyymmdd;
-                    scrollToEntryFromHash();
-                });
+                const searchBox = document.querySelector('.search-box');
+                searchBox.blur(); // フォーカスを外す
+                searchBox.classList.add('lantern-mode'); // アニメーションクラスを追加
 
-                container.appendChild(innerBar);
-                timeline.appendChild(container);
-            });
+                // すぐに初回実行
+                this.executeLanternSearch();
 
-            timeline.addEventListener('touchmove', (e) => {
-                e.preventDefault();
-                const touch = e.touches[0];
-                const rect = timeline.getBoundingClientRect();
-                const x = touch.clientX - rect.left;
-                const percent = x / rect.width;
-                const index = Math.floor((1 - percent) * sortedEntries.length);
-                if (index >= 0 && index < sortedEntries.length) {
-                    const yyyymmdd = sortedEntries[index].yyyymmdd;
-                    window.location.hash = yyyymmdd;
-                    scrollToEntryFromHash();
+                // 4秒ごとに実行
+                this.lanternModeInterval = setInterval(() => {
+                    this.executeLanternSearch();
+                }, 4000);
+            }
+
+            static stopLanternMode() {
+                if (!this.isLanternMode) return;
+                this.isLanternMode = false;
+
+                if (this.lanternModeInterval) {
+                    clearInterval(this.lanternModeInterval);
+                    this.lanternModeInterval = null;
                 }
-            }, { passive: false });
-        };
 
-        // ===== Keyword Search =====
-        const highlightKeywords = () => {
-            document.querySelectorAll('.content').forEach(contentElement => {
-                let html = contentElement.innerHTML;
-                KEYWORDS.forEach(keyword => {
-                    const regex = new RegExp(`(${keyword})`, 'g');
-                    html = html.replace(regex, `<span class="keyword" data-keyword="${keyword}">$1</span>`);
+                // 検索ボックスをクリア
+                const searchBox = document.querySelector('.search-box');
+                searchBox.value = '';
+                this.handleSearch('');
+                searchBox.classList.remove('lantern-mode'); // アニメーションクラスを削除
+            }
+
+
+
+            static executeLanternSearch() {
+                if (this.diaryEntries.length === 0) return;
+
+                // ランダムなエントリを選択
+                const randomEntry = this.diaryEntries[Math.floor(Math.random() * this.diaryEntries.length)];
+                const content = randomEntry.content;
+
+                // 本文から2〜3文字をランダムにピックアップ
+                if (content.length < 2) return;
+                const startIndex = Math.floor(Math.random() * (content.length - 2));
+                const keywordLength = 2 + Math.floor(Math.random() * 2); // 2または3文字
+                let keyword = content.substring(startIndex, startIndex + keywordLength);
+
+                // キーワードを検索ボックスに設定
+                const searchBox = document.querySelector('.search-box');
+                searchBox.value = keyword;
+                this.handleSearch(keyword);
+            }
+
+            static setupEventListeners() {
+                const pageTitle = document.getElementById('pageTitle');
+                const searchBox = document.querySelector('.search-box');
+
+                // Title click for fake mode toggle
+                pageTitle.addEventListener('click', () => this.toggleFakeMode());
+
+                // Long press for download
+                let pressTimer;
+                pageTitle.addEventListener('mousedown', () => {
+                    pressTimer = setTimeout(() => this.downloadDiaryAsText(), 1000);
                 });
-                contentElement.innerHTML = html;
-            });
+                pageTitle.addEventListener('mouseup', () => clearTimeout(pressTimer));
+                pageTitle.addEventListener('mouseleave', () => clearTimeout(pressTimer));
 
-            document.querySelectorAll('.keyword').forEach(element => {
-                element.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const keyword = element.dataset.keyword;
-                    searchKeyword(keyword);
+                // Search functionality
+                searchBox.addEventListener('input', (e) => this.handleSearch(e.target.value));
+
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => this.handleKeyDown(e));
+
+                // Hash change
+                window.addEventListener('hashchange', () => this.scrollToEntryFromHash());
+
+                // Initial scroll
+                window.addEventListener('load', () => this.scrollToEntryFromHash());
+                // ダブルクリックで走馬灯モード開始
+                searchBox.addEventListener('dblclick', () => {
+                    this.startLanternMode();
                 });
-            });
-        };
 
-        const searchKeyword = (keyword) => {
-            clearKeywordSearch();
-            currentKeyword = keyword;
-            keywordMatches = [];
+                // クリックまたはフォーカスで走馬灯モード終了
+                searchBox.addEventListener('click', () => {
+                    this.stopLanternMode();
+                });
 
-            document.querySelectorAll('.diary-entry').forEach(entry => {
-                const contentElement = entry.querySelector('.content');
-                if (contentElement.textContent.includes(keyword)) {
-                    keywordMatches.push({
-                        id: entry.id,
-                        yyyymmdd: entry.querySelector('.date').dataset.yyyymmdd,
-                        element: entry
-                    });
-                }
-            });
+                searchBox.addEventListener('focus', () => {
+                    this.stopLanternMode();
+                });
+            }
 
-            if (keywordMatches.length > 0) {
-                currentKeywordIndex = 0;
-                const firstMatch = keywordMatches[0];
-                window.location.hash = firstMatch.id;
-                scrollToEntryFromHash();
-
-                // アクティブなキーワードを強調
-                document.querySelectorAll('.keyword').forEach(el => {
-                    if (el.dataset.keyword === keyword) {
-                        el.classList.add('active');
+            static async loadDiaryEntries(filename = 'entry.md') {
+                try {
+                    const response = await fetch(filename);
+                    if (!response.ok) {
+                        console.error(`Failed to load ${filename}: ${response.status} ${response.statusText}`);
+                        return;
                     }
-                });
-
-                // ナビゲーションUIを表示
-                const nav = document.getElementById('keywordNavigation');
-                nav.classList.add('active');
-                updateNavInfo();
-
-                // ナビゲーションイベントを設定
-                document.getElementById('navLeft').addEventListener('click', () => navigateKeyword(-1));
-                document.getElementById('navRight').addEventListener('click', () => navigateKeyword(1));
-            }
-        };
-
-        const navigateKeyword = (direction) => {
-            if (!currentKeyword || keywordMatches.length === 0) return;
-
-            currentKeywordIndex += direction;
-
-            if (currentKeywordIndex < 0) {
-                currentKeywordIndex = keywordMatches.length - 1;
-            } else if (currentKeywordIndex >= keywordMatches.length) {
-                currentKeywordIndex = 0;
+                    const text = await response.text();
+                    this.renderEntries(text);
+                } catch (error) {
+                    console.error(`Error loading ${filename}:`, error);
+                }
             }
 
-            const match = keywordMatches[currentKeywordIndex];
-            window.location.hash = match.id;
-            scrollToEntryFromHash();
-            updateNavInfo();
-        };
-
-        const updateNavInfo = () => {
-            if (!currentKeyword || keywordMatches.length === 0) return;
-
-            const infoElement = document.getElementById('navInfo');
-            infoElement.textContent = `「${currentKeyword}」 ${currentKeywordIndex + 1}/${keywordMatches.length}件`;
-        };
-
-        const clearKeywordSearch = () => {
-            currentKeyword = null;
-            keywordMatches = [];
-            currentKeywordIndex = -1;
-
-            document.querySelectorAll('.keyword').forEach(el => {
-                el.classList.remove('active');
-            });
-
-            document.getElementById('keywordNavigation').classList.remove('active');
-        };
-
-        // ===== Main Functions =====
-        const loadDiaryEntries = async (filename = 'entry.md') => {
-            try {
-                const response = await fetch(filename);
-                if (!response.ok) throw new Error('Failed to load entries');
-                const text = await response.text();
-                const entries = text.split('---').filter(entry => entry.trim());
+            static renderEntries(text) {
                 const container = document.getElementById('diaryContainer');
                 container.innerHTML = '';
-                diaryEntries = [];
+                this.diaryEntries = [];
 
+                const entries = text.split('---').filter(entry => entry.trim());
                 entries.reverse().forEach(entry => {
                     const dateMatch = entry.match(/date:\s*(.*)/);
                     const contentMatch = entry.match(/content:\s*\|\n([\s\S]*?)(?=\n---|\n$)/m);
                     if (!dateMatch || !contentMatch) return;
+
                     const yyyymmdd = dateMatch[1].trim();
-                    const dateObj = formatJapaneseDate(yyyymmdd);
-                    const contentLines = contentMatch[1]
+                    const dateObj = DiaryUtils.formatJapaneseDate(yyyymmdd);
+                    let contentLines = contentMatch[1]
                         .split('\n')
-                        .map(line => line.replace(/^\s*[|>]?\s*/, ''))
+                        .map(line => line.replace(/^\s*\|?\s*/, ''))
                         .join('\n')
                         .trim();
+
+                    // Apply current search highlight if exists
+                    if (this.currentSearchKeyword) {
+                        contentLines = DiaryUtils.highlightText(contentLines, this.currentSearchKeyword);
+                    }
 
                     const entryElement = document.createElement('div');
                     entryElement.className = 'diary-entry';
@@ -909,149 +590,285 @@
                     entryElement.innerHTML = `
                         <div class="date-container">
                             <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
+                            <div class="days-ago">${DiaryUtils.calculateDaysAgo(yyyymmdd)}</div>
                         </div>
                         <div class="content">${contentLines}</div>
                     `;
                     container.appendChild(entryElement);
 
-                    diaryEntries.push({
-                        yyyymmdd: yyyymmdd,
-                        content: contentLines
+                    this.diaryEntries.push({ yyyymmdd, content: contentMatch[1].split('\n').map(line => line.replace(/^\s*\|?\s*/, '')).join('\n').trim() });
+                });
+
+                this.setupDateClick();
+                this.renderTimeline();
+                this.updatePageTitle(entries.length);
+                this.scrollToEntryFromHash();
+            }
+
+            static setupDateClick() {
+                document.querySelectorAll('.date').forEach(dateElement => {
+                    dateElement.addEventListener('click', () => {
+                        const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
+                        window.location.hash = yyyymmdd;
+                        this.flashEntry(document.getElementById(yyyymmdd));
                     });
                 });
+            }
 
-                renderTimeline();
-                updatePageTitle(entries.length);
+            static renderTimeline() {
+                const timeline = document.getElementById('timeline');
+                timeline.innerHTML = '';
 
+                if (this.diaryEntries.length === 0) return;
+
+                const sortedEntries = [...this.diaryEntries].sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
+                const contentLengths = sortedEntries.map(entry => entry.content.length);
+                const maxContentLength = Math.min(this.percentile95(contentLengths), 500);
+                const baseHeight = 5;
+                const heightRatio = 45 / maxContentLength;
+
+                sortedEntries.forEach(entry => {
+                    const container = document.createElement('div');
+                    container.className = 'timeline-bar';
+                    container.dataset.yyyymmdd = entry.yyyymmdd;
+
+                    const innerBar = document.createElement('div');
+                    innerBar.className = 'timeline-bar-inner';
+                    const contentLength = Math.min(entry.content.length, maxContentLength);
+                    const height = Math.max(baseHeight, contentLength * heightRatio);
+                    innerBar.style.height = `${height}px`;
+
+                    container.addEventListener('mouseover', () => {
+                        window.location.hash = entry.yyyymmdd;
+                        this.scrollToEntryFromHash();
+                    });
+
+                    container.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        window.location.hash = entry.yyyymmdd;
+                        this.scrollToEntryFromHash();
+                    });
+
+                    container.appendChild(innerBar);
+                    timeline.appendChild(container);
+                });
+
+                timeline.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const rect = timeline.getBoundingClientRect();
+                    const x = touch.clientX - rect.left;
+                    const percent = x / rect.width;
+                    const index = Math.floor((1 - percent) * sortedEntries.length);
+                    if (index >= 0 && index < sortedEntries.length) {
+                        window.location.hash = sortedEntries[index].yyyymmdd;
+                        this.scrollToEntryFromHash();
+                    }
+                }, { passive: false });
+            }
+
+            static percentile95(arr) {
+                const sorted = [...arr].sort((a, b) => a - b);
+                const index = Math.floor(sorted.length * 0.95);
+                return sorted[index];
+            }
+
+            static toggleFakeMode() {
+                const title = document.querySelector('.page-title');
+                const body = document.body;
+
+                this.isFakeMode = !this.isFakeMode;
+                title.textContent = this.isFakeMode ? '誤字ロマの嘘日記' : '誤字ロマの日記';
+                title.classList.toggle('fake-mode', this.isFakeMode);
+                body.classList.toggle('fake-mode', this.isFakeMode);
+
+                if (this.isFakeMode) {
+                    if (this.fakeEntriesCache) {
+                        this.renderEntries(this.fakeEntriesCache);
+                    } else {
+                        this.loadDiaryEntries('fake.md');
+                    }
+                } else {
+                    this.loadDiaryEntries('entry.md');
+                }
+            }
+
+            static async preloadFakeEntries() {
+                try {
+                    const response = await fetch('fake.md');
+                    if (response.ok) {
+                        this.fakeEntriesCache = await response.text();
+                    } else {
+                        console.error(`Failed to preload fake.md: ${response.status} ${response.statusText}`);
+                    }
+                } catch (error) {
+                    console.error('Error preloading fake entries:', error);
+                }
+            }
+
+            static scrollToEntryFromHash() {
                 requestAnimationFrame(() => {
-                    setupDateClick();
-                    highlightKeywords();
-                    scrollToEntryFromHash();
+                    const hash = window.location.hash.substring(1);
+                    const container = document.getElementById('diaryContainer');
+                    const entries = document.querySelectorAll('.diary-entry');
+
+                    if (hash && hash.match(/^\d{8}$/)) {
+                        const entry = document.getElementById(hash);
+                        if (entry) {
+                            const entryRight = entry.offsetLeft + entry.clientWidth;
+                            const containerWidth = container.clientWidth;
+                            this.smoothScrollTo(container, entryRight - containerWidth);
+                            this.flashEntry(entry);
+                        }
+                    } else if (entries.length > 0) {
+                        const latestEntry = entries[0];
+                        const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
+                        const containerWidth = container.clientWidth;
+                        this.smoothScrollTo(container, entryRight - containerWidth);
+                    }
                 });
-            } catch (error) {
-                console.error('Error loading diary entries:', error);
-                showErrorEntry();
             }
-        };
 
-        const showErrorEntry = () => {
-            const container = document.getElementById('diaryContainer');
-            container.innerHTML = '';
-            const randomDate = generateRandomDate();
-            const dateObj = formatJapaneseDate(randomDate);
-            const entryElement = document.createElement('div');
-            entryElement.className = 'diary-entry';
-            entryElement.id = randomDate;
-            entryElement.innerHTML = `
-                <div class="date-container">
-                    <div class="date" data-yyyymmdd="${randomDate}">${dateObj.short}</div>
-                </div>
-                <div class="content">残念ながら、作者の不手際かインフラの障害が起きているようだ。日記データを取得できないでいる。</div>
-            `;
-            container.appendChild(entryElement);
+            static smoothScrollTo(element, targetPosition, duration = 50) {
+                const startPosition = element.scrollLeft;
+                const startTime = performance.now();
 
-            requestAnimationFrame(() => {
-                setupDateClick();
-                scrollToEntryFromHash();
-            });
-        };
+                const animateScroll = (currentTime) => {
+                    const elapsedTime = currentTime - startTime;
+                    const progress = Math.min(elapsedTime / duration, 1);
+                    element.scrollLeft = startPosition + (targetPosition - startPosition) * progress;
 
-        const preloadFakeEntries = async () => {
-            try {
-                const response = await fetch('fake.md');
-                if (!response.ok) throw new Error('Failed to preload fake entries');
-                fakeEntriesCache = await response.text();
-            } catch (error) {
-                console.error('Error preloading fake entries:', error);
+                    if (progress < 1) {
+                        requestAnimationFrame(animateScroll);
+                    }
+                };
+
+                requestAnimationFrame(animateScroll);
             }
-        };
 
-        const loadFakeEntriesFromCache = () => {
-            if (!fakeEntriesCache) return;
-            const entries = fakeEntriesCache.split('---').filter(entry => entry.trim());
-            const container = document.getElementById('diaryContainer');
-            container.innerHTML = '';
-            diaryEntries = [];
-
-            entries.reverse().forEach(entry => {
-                const dateMatch = entry.match(/date:\s*(.*)/);
-                const contentMatch = entry.match(/content:\s*\|\n([\s\S]*?)(?=\n---|\n$)/m);
-                if (!dateMatch || !contentMatch) return;
-                const yyyymmdd = dateMatch[1].trim();
-                const dateObj = formatJapaneseDate(yyyymmdd);
-                const contentLines = contentMatch[1]
-                    .split('\n')
-                    .map(line => line.replace(/^\s*[|>]?\s*/, ''))
-                    .join('\n')
-                    .trim();
-
-                const entryElement = document.createElement('div');
-                entryElement.className = 'diary-entry';
-                entryElement.id = yyyymmdd;
-                entryElement.innerHTML = `
-                    <div class="date-container">
-                        <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
-                    </div>
-                    <div class="content">${contentLines}</div>
-                `;
-                container.appendChild(entryElement);
-
-                diaryEntries.push({
-                    yyyymmdd: yyyymmdd,
-                    content: contentLines
+            static flashEntry(entry) {
+                document.querySelectorAll('.diary-entry').forEach(el => {
+                    if (el !== entry) {
+                        Object.assign(el.style, {
+                            transition: 'none',
+                            fontWeight: '',
+                            filter: 'brightness(1)',
+                            color: ''
+                        });
+                    }
                 });
-            });
 
-            renderTimeline();
-            updatePageTitle(entries.length);
+                Object.assign(entry.style, {
+                    transition: 'filter 0.2s ease, color 0.2s ease',
+                    color: this.isFakeMode ? '#fff' : '#333333',
+                    filter: 'brightness(2)'
+                });
 
-            requestAnimationFrame(() => {
-                setupDateClick();
-                highlightKeywords();
-                scrollToEntryFromHash();
-            });
-        };
-
-        const updatePageTitle = (count) => {
-            const pageTitle = document.getElementById('pageTitle');
-            pageTitle.textContent = `誤字ロマの${count}日間`;
-        };
-
-        // ===== Event Listeners =====
-        let pressTimer;
-        document.querySelector('.page-title').addEventListener('mousedown', () => {
-            pressTimer = setTimeout(() => {
-                downloadDiaryAsText();
-            }, 1000);
-        });
-
-        document.querySelector('.page-title').addEventListener('mouseup', () => {
-            clearTimeout(pressTimer);
-        });
-
-        document.querySelector('.page-title').addEventListener('mouseleave', () => {
-            clearTimeout(pressTimer);
-        });
-
-        document.querySelector('.page-title').addEventListener('click', (e) => {
-            if (!e.defaultPrevented) {
-                toggleFakeMode();
+                setTimeout(() => {
+                    Object.assign(entry.style, {
+                        color: this.isFakeMode ? '#fff' : this.currentTheme.text,
+                        filter: 'brightness(1)'
+                    });
+                }, 1200);
             }
-        });
 
-        window.addEventListener('load', () => {
-            document.body.style.opacity = 1;
-            if (!(location.host === "nikki.poet.blue" || location.host === "poet.blue")) {
-                document.title = "DEV - 誤字ロマの日記";
+            static handleKeyDown(e) {
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    const currentEntry = this.getCurrentEntry();
+                    if (!currentEntry) return;
+
+                    const direction = e.key === 'ArrowLeft' ? -1 : 1;
+                    const nextEntry = this.getAdjacentEntry(currentEntry, direction);
+                    if (nextEntry) {
+                        window.location.hash = nextEntry.id;
+                        this.scrollToEntryFromHash();
+                    }
+                } else if (e.key === 'Escape') {
+                    if (window.location.hash) {
+                        window.location.hash = '';
+                    }
+                }
             }
-            applyRandomTheme();
-            loadDiaryEntries();
-            preloadFakeEntries();
-            scrollToEntryFromHash();
-            document.addEventListener('keydown', handleKeyDown);
-        });
 
-        window.addEventListener('hashchange', scrollToEntryFromHash);
+            static getCurrentEntry() {
+                const hash = window.location.hash.substring(1);
+                if (hash && hash.match(/^\d{8}$/)) {
+                    return document.getElementById(hash);
+                }
+                const entries = document.querySelectorAll('.diary-entry');
+                return entries.length > 0 ? entries[0] : null;
+            }
+
+            static getAdjacentEntry(currentEntry, direction) {
+                const entries = document.querySelectorAll('.diary-entry');
+                const currentIndex = Array.from(entries).indexOf(currentEntry);
+                if (currentIndex === -1) return null;
+
+                const nextIndex = currentIndex + direction;
+                if (nextIndex < 0 || nextIndex >= entries.length) return null;
+                return entries[nextIndex];
+            }
+
+            static handleSearch(keyword) {
+                this.currentSearchKeyword = keyword;
+                const keywordLower = keyword.toLowerCase();
+
+                document.querySelectorAll('.diary-entry').forEach(entry => {
+                    const contentElement = entry.querySelector('.content');
+                    const originalContent = this.diaryEntries.find(e => e.yyyymmdd === entry.id)?.content || '';
+                    const contentLower = originalContent.toLowerCase();
+
+                    if (contentLower.includes(keywordLower)) {
+                        entry.style.display = 'block';
+                        if (keyword) {
+                            contentElement.innerHTML = DiaryUtils.highlightText(originalContent, keyword);
+                        } else {
+                            contentElement.textContent = originalContent;
+                        }
+                    } else {
+                        entry.style.display = 'none';
+                    }
+                });
+            }
+
+            static downloadDiaryAsText() {
+                if (this.diaryEntries.length === 0) {
+                    alert('ダウンロードする日記がありません。');
+                    return;
+                }
+
+                const sortedEntries = [...this.diaryEntries].sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
+                const oldestDate = sortedEntries[0].yyyymmdd;
+                const newestDate = sortedEntries[sortedEntries.length - 1].yyyymmdd;
+                const modePrefix = this.isFakeMode ? '嘘日記_' : '';
+                const filename = `${modePrefix}誤字ロマの日記 ${oldestDate}-${newestDate}.txt`;
+
+                let content = '';
+                sortedEntries.forEach(entry => {
+                    const dateObj = DiaryUtils.formatJapaneseDate(entry.yyyymmdd);
+                    content += `${dateObj.long}\n${entry.content}\n\n`;
+                });
+
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            static updatePageTitle(count) {
+                const pageTitle = document.getElementById('pageTitle');
+                pageTitle.textContent = `誤字ロマの${count}日間`;
+            }
+        }
+
+        // Initialize the app
+        DiaryApp.init();
     </script>
 </body>
 
