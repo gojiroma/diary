@@ -584,21 +584,7 @@
                 searchBox.value = keyword;
                 this.handleSearch(keyword);
             }
-            static startLanternMode() {
-                if (this.isLanternMode) return;
-                this.isLanternMode = true;
 
-
-                const searchBox = document.querySelector('.search-box');
-                searchBox.blur();
-                searchBox.classList.add('lantern-mode');
-
-
-                this.executeLanternSearch();
-                this.lanternModeInterval = setInterval(() => {
-                    this.executeLanternSearch();
-                }, 4000);
-            }
 
 
             static stopLanternMode() {
@@ -630,28 +616,8 @@
                 this.executeLanternSearch();
                 this.lanternModeInterval = setInterval(() => {
                     this.executeLanternSearch();
-                }, 4000);
+                }, 3000);
             }
-
-
-            static stopLanternMode() {
-                if (!this.isLanternMode) return;
-                this.isLanternMode = false;
-
-
-                if (this.lanternModeInterval) {
-                    clearInterval(this.lanternModeInterval);
-                    this.lanternModeInterval = null;
-                }
-
-
-                const searchBox = document.querySelector('.search-box');
-                searchBox.value = '';
-                this.handleSearch('');
-                searchBox.classList.remove('lantern-mode');
-            }
-
-
 
 
 
