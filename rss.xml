@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Wed, 18 Feb 2026 18:08:24 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 19 Feb 2026 15:00:04 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>二月十九日（木）</title>
+      <link>https://nikki.poet.blue#20260219</link>
+      <pubDate>Thu, 19 Feb 2026 15:00:04 +0900</pubDate>
+      <description>強風で外出したくない気分だったが、どうやら徒歩圏内に新しい日用品店がオープンしたらしいので行ってきた。年に一度の神社の祭りくらい人が来ていて、ああ、この地域って過疎地域じゃないんだなと再確認した。他店から寄せ集めたセール品が潤沢にあり、Amazonのセールより安いものがたくさんあった。電動歯ブラシをゲットした。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260219</guid>
+      <media:content url="https://nc.poet.blue/20260219" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>二月十八日（水）</title>
       <link>https://nikki.poet.blue#20260218</link>
