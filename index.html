@@ -361,12 +361,18 @@
             align-items: center;
             cursor: pointer;
             position: relative;
-            transition: transform 0.1s;
+            transition: transform 0.1s, background-color 0.2s, filter 0.2s;
+            border-radius: 4px;
         }
 
         .icon:hover {
             transform: scale(1.1);
             z-index: 20;
+        }
+
+        .icon.highlight {
+            background-color: var(--highlight-color);
+            filter: brightness(0.85);
         }
 
         .icon img {
@@ -578,7 +584,7 @@
                 });
             }
 
-            static getIconsForDate(dateForIcons) {
+            static getIconsForDate(dateForIcons, keyword = '') {
                 const icons = this.iconsData.filter(icon => icon.date === dateForIcons);
                 if (icons.length === 0) return '';
 
@@ -589,7 +595,8 @@
                         : `<span class="icon-emoji">${icon.icon}</span>`;
                     const tooltip = icon.title ? `<div class="tooltip">${icon.title}</div>` : '';
                     const url = icon.url ? `onclick="window.open('${icon.url}', '_blank')" style="cursor: pointer;"` : '';
-                    return `<div class="icon" ${url}>${iconContent}${tooltip}</div>`;
+                    const highlightClass = keyword && icon.title.toLowerCase().includes(keyword.toLowerCase()) ? 'highlight' : '';
+                    return `<div class="icon ${highlightClass}" ${url}>${iconContent}${tooltip}</div>`;
                 }).join('');
             }
 
@@ -714,7 +721,7 @@
                     entryElement.id = yyyymmdd;
 
                     const dateForIcons = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
-                    const iconsHTML = this.getIconsForDate(dateForIcons);
+                    const iconsHTML = this.getIconsForDate(dateForIcons, this.currentSearchKeyword);
 
                     entryElement.innerHTML = `
                         <div class="date-container">
@@ -950,6 +957,7 @@
 
                 document.querySelectorAll('.diary-entry').forEach(entry => {
                     const contentElement = entry.querySelector('.content');
+                    const dateContainer = entry.querySelector('.date-container');
                     const entryData = this.diaryEntries.find(e => e.yyyymmdd === entry.id);
                     if (!entryData) return;
 
@@ -965,6 +973,19 @@
                         entry.style.display = 'block';
                         if (keyword) {
                             contentElement.innerHTML = DiaryUtils.highlightText(originalContent, keyword);
+
+                            // アイコンのハイライトを更新
+                            const yyyymmdd = entry.id;
+                            const dateForIcons = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
+                            const iconsHTML = this.getIconsForDate(dateForIcons, keyword);
+                            const newDateContainer = document.createElement('div');
+                            newDateContainer.className = 'date-container';
+                            newDateContainer.innerHTML = `
+                                <div class="date" data-yyyymmdd="${yyyymmdd}">${dateContainer.querySelector('.date').textContent}</div>
+                                <div class="days-ago">${dateContainer.querySelector('.days-ago').textContent}</div>
+                                ${iconsHTML}
+                            `;
+                            dateContainer.replaceWith(newDateContainer);
                         } else {
                             contentElement.textContent = originalContent;
                         }
