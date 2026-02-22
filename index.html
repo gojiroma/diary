@@ -67,7 +67,7 @@
             z-index: 10;
             user-select: none;
         }
-        
+
         #page-title-inmodal {
             color: var(--text-color);
             font-family: "Zen Old Mincho", serif;
@@ -576,10 +576,11 @@
         .modal-content img {
             display: block;
             margin: 15px auto;
-                        transform: skewY(-3deg);
+            transform: skewY(-3deg);
 
         }
-        .qr{
+
+        .qr {
             max-width: 150px;
         }
 
@@ -654,7 +655,8 @@
 
                 <h2>なんだ、この日記は？</h2>
                 <p>このインターネット日記は、北関東の某所で生きるひとりの人間が、その日の出来事や思ったことを気軽に、かつ無責任に書き続けているものです。</p>
-                <p>画面右上の<span id="page-title-inmodal" >誤字ロマの日記</span>をクリックすると画面が暗転し、「嘘日記」に切り替わります。ここに書かれている固有名詞は、実在するものと全く関係がありませんのでご留意ください。再度クリックすると「本当日記」の表示に戻ります。ただし、本当の日記も必ずしも事実が書かれている保証はありません。筆者の認識がゆがんでいる可能性もあります。すべて、あくまで娯楽としてお楽しみください。
+                <p>画面右上の<span
+                        id="page-title-inmodal">誤字ロマの日記</span>をクリックすると画面が暗転し、「嘘日記」に切り替わります。ここに書かれている固有名詞は、実在するものと全く関係がありませんのでご留意ください。再度クリックすると「本当日記」の表示に戻ります。ただし、本当の日記も必ずしも事実が書かれている保証はありません。筆者の認識がゆがんでいる可能性もあります。すべて、あくまで娯楽としてお楽しみください。
                 </p>
                 <p>画面左上の箱には、好きな言葉を入れていただくと、日記の内容を絞り込んで表示することができます。箱を二度押しすると、適当な言葉を入れ替えながら表示します。</p>
 
@@ -686,6 +688,34 @@
     </div>
 
     <script>
+        // グローバル変数
+        let audioContext = null;
+
+        // ビープ音を再生する関数
+        async function playBeep(frequency = 440, duration = 0.1) {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                // ユーザー操作後に再生できるようにする
+                await audioContext.resume();
+            } else if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+            }
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.type = 'sine';
+            oscillator.frequency.value = frequency;
+            gainNode.gain.value = 0.1;
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + duration);
+
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
         // ===== Utilities =====
         class DiaryUtils {
             static toKanjiNumber(num) {
@@ -909,9 +939,13 @@
             static setupEventListeners() {
                 const pageTitle = document.getElementById('pageTitle');
                 const searchBox = document.querySelector('.search-box');
+                const infoButton = document.getElementById('infoButton');
 
-                pageTitle.addEventListener('click', () => this.toggleFakeMode());
 
+                pageTitle.addEventListener('click', () => {
+                    playBeep(220, 0.1); // 低い音
+                    this.toggleFakeMode();
+                });
                 let pressTimer;
                 pageTitle.addEventListener('mousedown', () => {
                     pressTimer = setTimeout(() => this.downloadDiaryAsText(), 1000);
@@ -932,12 +966,14 @@
                 });
 
                 searchBox.addEventListener('click', () => {
+                    playBeep(850, 0.1); // 中くらいの音
                     if (searchBox.value) {
                         searchBox.value = '';
                         this.handleSearch('');
                     }
                     this.stopLanternMode();
                 });
+
 
                 searchBox.addEventListener('focus', () => {
                     if (searchBox.value) {
@@ -946,6 +982,10 @@
                     }
                     this.stopLanternMode();
                 });
+                infoButton.addEventListener('click', () => {
+                    playBeep(770, 0.1); // 高い音
+                });
+
             }
 
             static setupModal() {
@@ -1174,6 +1214,7 @@
             }
 
             static scrollToEntryFromHash() {
+                playBeep(340, 0.1);
                 requestAnimationFrame(() => {
                     const hash = window.location.hash.substring(1);
                     const container = document.getElementById('diaryContainer');
