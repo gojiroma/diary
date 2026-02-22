@@ -387,6 +387,7 @@
             filter: grayscale(84%);
             opacity: 0.4;
         }
+
         span.icon-emoji,
         img.icon-img:hover {
             filter: grayscale(0%);
@@ -676,10 +677,18 @@
                 });
 
                 searchBox.addEventListener('click', () => {
+                    if (searchBox.value) {
+                        searchBox.value = '';
+                        this.handleSearch('');
+                    }
                     this.stopLanternMode();
                 });
 
                 searchBox.addEventListener('focus', () => {
+                    if (searchBox.value) {
+                        searchBox.value = '';
+                        this.handleSearch('');
+                    }
                     this.stopLanternMode();
                 });
             }
