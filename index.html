@@ -1015,7 +1015,7 @@
                 });
 
                 sendMailButton.addEventListener('click', () => {
-                    const subject = document.getElementById('mailSubject').value || '無題';
+                    const subject = document.getElementById('mailSubject').value || 'somebody';
                     const body = document.getElementById('mailBody').value || '本文なし';
                     const mailtoLink = `mailto:${subject}@poet.blue?subject=誤字ロマの日記を読みました&body=${encodeURIComponent(body)}`;
                     window.location.href = mailtoLink;
@@ -1025,7 +1025,6 @@
                     if (navigator.share) {
                         navigator.share({
                             title: '誤字ロマの日記',
-                            text: '誤字ロマの日記',
                             url: 'https://nikki.poet.blue'
                         }).catch(err => {
                             console.log('共有に失敗しました:', err);
