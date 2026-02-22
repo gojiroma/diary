@@ -592,7 +592,7 @@
                 return icons.map(icon => {
                     const isUrl = icon.icon && (icon.icon.startsWith('http://') || icon.icon.startsWith('https://'));
                     const iconContent = isUrl
-                        ? `<img src="${icon.icon}" alt="${icon.title}" class="icon-img">`
+                        ? `<img src="${icon.icon}" alt="${icon.title}" class="icon-img" loading="lazy">`
                         : `<span class="icon-emoji">${icon.icon}</span>`;
                     const tooltip = icon.title ? `<div class="tooltip">${icon.title}</div>` : '';
                     const url = icon.url ? `onclick="window.open('${icon.url}', '_blank')" style="cursor: pointer;"` : '';
