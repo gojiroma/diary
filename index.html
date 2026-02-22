@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho&display=swap" rel="stylesheet">
+
     <title>誤字ロマの日記</title>
     <link rel="icon" href="diary-icon.png" type="image/png">
     <style>
@@ -65,6 +66,24 @@
             opacity: 0.6;
             z-index: 10;
             user-select: none;
+        }
+        
+        #page-title-inmodal {
+            color: var(--text-color);
+            font-family: "Zen Old Mincho", serif;
+            display: inline-block;
+            font-size: 18px;
+            font-weight: 700;
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.1s;
+            text-decoration: none;
+            opacity: 0.6;
+            z-index: 10;
+            user-select: none;
+            width: fit-content;
         }
 
         .page-title:hover {
@@ -270,8 +289,10 @@
             transition: background-color 0.2s;
         }
 
-        .timeline-bar:hover .timeline-bar-inner {
-            background-color: #ff9900 !important;
+        .timeline-bar:hover .timeline-bar-inner,
+        .timeline-bar.selected .timeline-bar-inner {
+            background-color: #00bc84 !important;
+            opacity: 1 !important;
         }
 
         @keyframes lanternOutline {
@@ -419,6 +440,199 @@
         .icon:hover .tooltip {
             opacity: 1;
         }
+
+        /* モーダル用スタイル */
+        .info-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 18px;
+            transition: all 0.2s;
+            user-select: none;
+            opacity: 0.3;
+        }
+
+        .info-button:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: skewY(-3deg);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+        }
+
+        /* モーダルアニメーション用 */
+        .modal-overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            visibility: hidden;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            transform: skewY(-3deg) translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: skewY(-3deg) translateY(0);
+            opacity: 1;
+        }
+
+        .modal-inner {
+            transform: skewY(3deg);
+        }
+
+        .modal-content h1 {
+            font-size: 1.8em;
+            margin-top: 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            transform: skewY(-3deg);
+
+        }
+
+        .modal-content h2 {
+            font-size: 1.3em;
+            margin-top: 20px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+            transform: skewY(-3deg);
+
+        }
+
+        .modal-content p {
+            line-height: 1.6;
+            margin: 10px 0;
+            transform: skewY(-3deg);
+        }
+
+        .modal-content input[type="text"] {
+            position: static;
+            width: 150px;
+            margin: 0 5px;
+            opacity: 1;
+            border: none;
+            border-bottom: 1px solid var(--border-color);
+            background-color: transparent;
+            font-size: 1em;
+            padding: 5px;
+        }
+
+        .modal-content textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 3px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            font-family: "Zen Old Mincho", serif;
+            resize: vertical;
+            transform: skewY(-3deg);
+
+        }
+
+        .modal-content img {
+            display: block;
+            margin: 15px auto;
+                        transform: skewY(-3deg);
+
+        }
+        .qr{
+            max-width: 150px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            transform: skewY(-3deg);
+        }
+
+        .modal-button {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            margin: 0 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-button:hover {
+            opacity: 0.8;
+        }
+
+        .share-button {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 15px auto;
+            display: block;
+            transition: all 0.2s;
+            transform: skewY(-3deg);
+
+        }
+
+        .share-button:hover {
+            opacity: 0.8;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: var(--text-color);
+        }
     </style>
 </head>
 
@@ -430,6 +644,45 @@
     </div>
     <div class="timeline-container">
         <div class="timeline" id="timeline"></div>
+    </div>
+    <div class="info-button" id="infoButton">i</div>
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <button class="close-button" id="closeButton">&times;</button>
+            <div class="modal-inner">
+                <h1>誤字ロマの日記</h1>
+
+                <h2>なんだ、この日記は？</h2>
+                <p>このインターネット日記は、北関東の某所で生きるひとりの人間が、その日の出来事や思ったことを気軽に、かつ無責任に書き続けているものです。</p>
+                <p>画面右上の<span id="page-title-inmodal" >誤字ロマの日記</span>をクリックすると画面が暗転し、「嘘日記」に切り替わります。ここに書かれている固有名詞は、実在するものと全く関係がありませんのでご留意ください。再度クリックすると「本当日記」の表示に戻ります。ただし、本当の日記も必ずしも事実が書かれている保証はありません。筆者の認識がゆがんでいる可能性もあります。すべて、あくまで娯楽としてお楽しみください。
+                </p>
+                <p>画面左上の箱には、好きな言葉を入れていただくと、日記の内容を絞り込んで表示することができます。箱を二度押しすると、適当な言葉を入れ替えながら表示します。</p>
+
+                <h2>おたより</h2>
+                <p>日記の感想、自分語り、尿漏れのお悩みなど、<input type="text" id="mailSubject"
+                        placeholder="お好きな英数字">@poet.blueまで、気軽にお送りください。なお、メールへの返信は気分次第です。ご了承ください。場合によっては日記の日付下部に「📮」アイコンを設置し、お返事ページの掲載をもってリアクションとする場合もあります。
+                </p>
+                <textarea id="mailBody" placeholder="例:○月×日の『〇〇』という部分を読んで、△△を思い出しました。"></textarea>
+                <div class="modal-buttons">
+                    <button class="modal-button" id="sendMailButton">送る一歩手前</button>
+                </div>
+
+                <h2>知人に知らせる</h2>
+                <p>気分がふさがっている、暇を持て余している、何か無料で読みたいという方がいらっしゃいましたら、この日記をご紹介ください。</p>
+                <img src="https://i.imgur.com/BxnlTB4.png" alt="QRコード" class="qr">
+                <center>
+                    <p>https://nikki.poet.blue</p>
+                </center>
+                <button class="share-button" id="shareButton">共有する</button>
+
+                <h2>Buy me a pen</h2>
+                <p>今日は珍しく面白かった！とか、なんか機嫌が良かった、という日にぜひ！
+                </p>
+                <a href="https://www.buymeacoffee.com/gojiroma" target="_blank" class="noskew"><img
+                        src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee"
+                        style="height: 60px !important;width: 217px !important;"></a>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -554,6 +807,7 @@
                 this.loadDiaryEntries();
                 this.preloadFakeEntries();
                 this.setupEventListeners();
+                this.setupModal();
                 document.body.style.opacity = 1;
             }
 
@@ -694,6 +948,54 @@
                 });
             }
 
+            static setupModal() {
+                const infoButton = document.getElementById('infoButton');
+                const modalOverlay = document.getElementById('modalOverlay');
+                const closeButton = document.getElementById('closeButton');
+                const sendMailButton = document.getElementById('sendMailButton');
+                const shareButton = document.getElementById('shareButton');
+
+                // モーダル表示時のアニメーション
+                infoButton.addEventListener('click', () => {
+                    modalOverlay.style.display = 'flex';
+                    setTimeout(() => modalOverlay.classList.add('show'), 10);
+                });
+
+                // モーダル非表示時のアニメーション
+                closeButton.addEventListener('click', () => {
+                    modalOverlay.classList.remove('show');
+                    setTimeout(() => modalOverlay.style.display = 'none', 300);
+                });
+
+                modalOverlay.addEventListener('click', (e) => {
+                    if (e.target === modalOverlay) {
+                        modalOverlay.classList.remove('show');
+                        setTimeout(() => modalOverlay.style.display = 'none', 300);
+                    }
+                });
+
+                sendMailButton.addEventListener('click', () => {
+                    const subject = document.getElementById('mailSubject').value || '無題';
+                    const body = document.getElementById('mailBody').value || '本文なし';
+                    const mailtoLink = `mailto:${subject}@poet.blue?subject=誤字ロマの日記を読みました&body=${encodeURIComponent(body)}`;
+                    window.location.href = mailtoLink;
+                });
+
+                shareButton.addEventListener('click', () => {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: '誤字ロマの日記',
+                            text: '誤字ロマの日記',
+                            url: 'https://nikki.poet.blue'
+                        }).catch(err => {
+                            console.log('共有に失敗しました:', err);
+                        });
+                    } else {
+                        alert('このブラウザでは共有機能が使えません。URLをコピーしてください: https://nikki.poet.blue');
+                    }
+                });
+            }
+
             static async loadDiaryEntries(filename = 'entry.md') {
                 try {
                     const response = await fetch(filename);
@@ -809,6 +1111,15 @@
                     timeline.appendChild(container);
                 });
 
+                // 初期表示時にhashが設定されている場合、selectedクラスを追加
+                const hash = window.location.hash.substring(1);
+                if (hash && hash.match(/^\d{8}$/)) {
+                    const selectedBar = document.querySelector(`.timeline-bar[data-yyyymmdd="${hash}"]`);
+                    if (selectedBar) {
+                        selectedBar.classList.add('selected');
+                    }
+                }
+
                 timeline.addEventListener('touchmove', (e) => {
                     e.preventDefault();
                     const touch = e.touches[0];
@@ -867,6 +1178,10 @@
                     const hash = window.location.hash.substring(1);
                     const container = document.getElementById('diaryContainer');
                     const entries = document.querySelectorAll('.diary-entry');
+                    const timelineBars = document.querySelectorAll('.timeline-bar');
+
+                    // 既存のselectedクラスを削除
+                    timelineBars.forEach(bar => bar.classList.remove('selected'));
 
                     if (hash && hash.match(/^\d{8}$/)) {
                         const entry = document.getElementById(hash);
@@ -875,6 +1190,12 @@
                             const containerWidth = container.clientWidth;
                             this.smoothScrollTo(container, entryRight - containerWidth);
                             this.flashEntry(entry);
+
+                            // 選択されているtimeline-barにselectedクラスを追加
+                            const selectedBar = document.querySelector(`.timeline-bar[data-yyyymmdd="${hash}"]`);
+                            if (selectedBar) {
+                                selectedBar.classList.add('selected');
+                            }
                         }
                     } else if (entries.length > 0) {
                         const latestEntry = entries[0];
@@ -1041,7 +1362,9 @@
 
             static updatePageTitle(count) {
                 const pageTitle = document.getElementById('pageTitle');
+                const pageInModalTitle = document.getElementById('page-title-inmodal');
                 pageTitle.textContent = `誤字ロマの${count}日間`;
+                pageInModalTitle.textContent = `誤字ロマの${count}日間`;
             }
         }
 
