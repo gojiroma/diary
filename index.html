@@ -830,7 +830,6 @@
             static iconsData = [];
             static isLanternMode = false;
             static lanternModeInterval = null;
-            static lastHashProcessed = '';
 
             static init() {
                 this.applyRandomTheme();
@@ -1214,47 +1213,38 @@
             }
 
             static scrollToEntryFromHash() {
-    const currentHash = window.location.hash.substring(1);
-    
-    // ハッシュが実際に変更された場合のみ処理
-    if (currentHash === this.lastHashProcessed) {
-        return;
-    }
-    
-    this.lastHashProcessed = currentHash;
-    
-    playBeep(340, 0.1);
-    requestAnimationFrame(() => {
-        const hash = window.location.hash.substring(1);
-        const container = document.getElementById('diaryContainer');
-        const entries = document.querySelectorAll('.diary-entry');
-        const timelineBars = document.querySelectorAll('.timeline-bar');
+                playBeep(340, 0.1);
+                requestAnimationFrame(() => {
+                    const hash = window.location.hash.substring(1);
+                    const container = document.getElementById('diaryContainer');
+                    const entries = document.querySelectorAll('.diary-entry');
+                    const timelineBars = document.querySelectorAll('.timeline-bar');
 
-        // 既存のselectedクラスを削除
-        timelineBars.forEach(bar => bar.classList.remove('selected'));
+                    // 既存のselectedクラスを削除
+                    timelineBars.forEach(bar => bar.classList.remove('selected'));
 
-        if (hash && hash.match(/^\d{8}$/)) {
-            const entry = document.getElementById(hash);
-            if (entry) {
-                const entryRight = entry.offsetLeft + entry.clientWidth;
-                const containerWidth = container.clientWidth;
-                this.smoothScrollTo(container, entryRight - containerWidth);
-                this.flashEntry(entry);
+                    if (hash && hash.match(/^\d{8}$/)) {
+                        const entry = document.getElementById(hash);
+                        if (entry) {
+                            const entryRight = entry.offsetLeft + entry.clientWidth;
+                            const containerWidth = container.clientWidth;
+                            this.smoothScrollTo(container, entryRight - containerWidth);
+                            this.flashEntry(entry);
 
-                // 選択されているtimeline-barにselectedクラスを追加
-                const selectedBar = document.querySelector(`.timeline-bar[data-yyyymmdd="${hash}"]`);
-                if (selectedBar) {
-                    selectedBar.classList.add('selected');
-                }
+                            // 選択されているtimeline-barにselectedクラスを追加
+                            const selectedBar = document.querySelector(`.timeline-bar[data-yyyymmdd="${hash}"]`);
+                            if (selectedBar) {
+                                selectedBar.classList.add('selected');
+                            }
+                        }
+                    } else if (entries.length > 0) {
+                        const latestEntry = entries[0];
+                        const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
+                        const containerWidth = container.clientWidth;
+                        this.smoothScrollTo(container, entryRight - containerWidth);
+                    }
+                });
             }
-        } else if (entries.length > 0) {
-            const latestEntry = entries[0];
-            const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
-            const containerWidth = container.clientWidth;
-            this.smoothScrollTo(container, entryRight - containerWidth);
-        }
-    });
-}}
 
             static smoothScrollTo(element, targetPosition, duration = 50) {
                 const startPosition = element.scrollLeft;
