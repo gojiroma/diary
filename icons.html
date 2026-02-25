@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>icons.csv エディタ（重複排除、日付なし）</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+      background-color: #f4f7f6;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #eee;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .controls {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"],
+    input[type="file"] {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 8px 15px;
+      cursor: pointer;
+      border-radius: 4px;
+      border: none;
+      transition: 0.2s;
+    }
+
+    .btn-copy {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .btn-add {
+      background-color: #2196F3;
+      color: white;
+    }
+
+    .btn-download {
+      background-color: #333;
+      color: white;
+      margin-top: 20px;
+    }
+
+    .btn-delete {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .btn-load {
+      background-color: #9b59b6;
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.8;
+    }
+
+    .icon-preview {
+      width: 24px;
+      height: 24px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>icons.csv エディタ（重複排除、日付なし）</h1>
+
+  <div class="controls">
+    <h3>CSVファイル操作</h3>
+    <input type="file" id="fileInput" accept=".csv">
+    <button class="btn-load" onclick="loadCSV()">CSVを読み込む</button>
+    <button class="btn-download" onclick="downloadCSV()">CSVをダウンロード</button>
+  </div>
+
+  <div class="controls">
+    <h3>新規追加</h3>
+    <input type="text" id="newTitle" placeholder="タイトル">
+    <input type="text" id="newIcon" placeholder="アイコン(絵文字orURL)">
+    <input type="text" id="newUrl" placeholder="URL">
+    <button class="btn-add" onclick="addRow()">追加</button>
+  </div>
+
+  <table id="csvTable">
+    <thead>
+      <tr>
+        <th>タイトル</th>
+        <th>アイコン</th>
+        <th>URL</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    let data = [];
+    let uniqueData = [];
+
+    // CSVファイルを読み込む
+    function loadCSV() {
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
+      if (!file) {
+        alert("ファイルを選択してください");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const csv = e.target.result;
+        data = parseCSV(csv);
+        updateUniqueData();
+        renderTable();
+        alert("CSVを読み込みました");
+      };
+      reader.readAsText(file);
+    }
+
+    // CSVをパース
+    function parseCSV(csv) {
+      const lines = csv.split("\n");
+      return lines.slice(1).map(line => {
+        if (!line.trim()) return null; // 空行を無視
+        const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, ''));
+        return {
+          title: values[1],
+          icon: values[2],
+          url: values[3]
+        };
+      }).filter(Boolean); // nullを除外
+    }
+
+    // 重複を排除してユニークなデータを更新
+    function updateUniqueData() {
+      const seen = new Set();
+      uniqueData = data.filter(item => {
+        const key = `${item.title}|${item.icon}`;
+        if (seen.has(key)) {
+          return false;
+        } else {
+          seen.add(key);
+          return true;
+        }
+      });
+    }
+
+    // テーブルを描画
+    function renderTable() {
+      const tbody = document.querySelector("#csvTable tbody");
+      tbody.innerHTML = "";
+      uniqueData.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        const iconDisplay = item.icon.startsWith("http") ? `<img src="${item.icon}" class="icon-preview">` : item.icon;
+        tr.innerHTML = `
+                    <td>${item.title}</td>
+                    <td>${iconDisplay}</td>
+                    <td><a href="${item.url}" target="_blank">Link</a></td>
+                    <td>
+                        <button class="btn-delete" onclick="deleteRow(${index})">削除</button>
+                    </td>
+                `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 新規追加
+    function addRow() {
+      const newEntry = {
+        title: document.getElementById("newTitle").value,
+        icon: document.getElementById("newIcon").value,
+        url: document.getElementById("newUrl").value
+      };
+      data.push(newEntry);
+      updateUniqueData();
+      renderTable();
+      document.getElementById("newTitle").value = "";
+      document.getElementById("newIcon").value = "";
+      document.getElementById("newUrl").value = "";
+    }
+
+    // 行を削除
+    function deleteRow(index) {
+      if (confirm("削除しますか？")) {
+        const deletedItem = uniqueData[index];
+        data = data.filter(item => !(item.title === deletedItem.title && item.icon === deletedItem.icon));
+        updateUniqueData();
+        renderTable();
+      }
+    }
+
+    // CSVとしてダウンロード
+    function downloadCSV() {
+      let csvContent = "date,title,icon,url\n";
+      // ダウンロード時は元のデータを使用（日付はダミーで追加）
+      const today = new Date().toISOString().split('T')[0].replace(/-/g, '/');
+      data.forEach(item => {
+        csvContent += `${today},"${item.title.replace(/"/g, '""')}","${item.icon}","${item.url}"\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "icons.csv");
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+
+</html>
