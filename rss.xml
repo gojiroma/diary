@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Wed, 25 Feb 2026 20:52:41 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 26 Feb 2026 18:04:53 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>二月二十六日（木）</title>
+      <link>https://nikki.poet.blue#20260226</link>
+      <pubDate>Thu, 26 Feb 2026 18:04:53 +0900</pubDate>
+      <description>年に二十回は通っている、赤い自販機が散歩ルートにある。今日も、飲んで帰ろうと思い「手ぶら」で出かけた。電子マネーが使えるからスマホも財布も持たない。たどり着いてみると、なんということだろう。決済手段を選ぶパネルが、赤い板で覆われていた。決済端末の維持が難しくなったのだろうか。その代わりというわけではないが「ここにゴミを捨てないでください」の看板が増えていた。ならば少し歩いたところに自販機が三台並んでいるはずだ、と思って足を進めると、自販機どころか、隣接する民家がなくなっていた。隣家には元あった家の影（日焼けしていない部分）が残っていた。カリンは若葉をつけ、桜の木は樹液を豊かにたくわえている。街が生きているのを感じた。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260226</guid>
+      <media:content url="https://nc.poet.blue/20260226" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>二月二十五日（水）</title>
       <link>https://nikki.poet.blue#20260225</link>
