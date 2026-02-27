@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Thu, 26 Feb 2026 18:04:53 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 27 Feb 2026 21:31:56 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>二月二十七日（金）</title>
+      <link>https://nikki.poet.blue#20260227</link>
+      <pubDate>Fri, 27 Feb 2026 21:31:56 +0900</pubDate>
+      <description>散歩。昨日買えなかった自販機でリベンジ。コークオンは問題なく使えた。飲んで自宅に引き返すのがもったいなかったので、自販機よりも先のほうまで歩いてみた。ある病院が式年遷宮を終えているのを見た。野良猫小屋がある公園では、くしゃみをしながらすり寄ってくる猫に遭遇。満足して自販機に戻り、缶をリサイクルに出した。近くの室外機には、以前居座っていた猫と全然違う、大柄で目がぱっちりな猫が静止していた。本当に生きているのか気になって、しゃがんでみたり、横に移動したりして首が回ることを確認した。おとなしいなぁ。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260227</guid>
+      <media:content url="https://nc.poet.blue/20260227" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>二月二十六日（木）</title>
       <link>https://nikki.poet.blue#20260226</link>
