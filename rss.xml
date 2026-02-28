@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 28 Feb 2026 21:38:59 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 28 Feb 2026 21:42:13 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>二月二十八日（土）</title>
+      <link>https://nikki.poet.blue#20260228</link>
+      <pubDate>Sat, 28 Feb 2026 21:42:13 +0900</pubDate>
+      <description>最近イワタニの「炙りやⅡ」を買っていた。今日は初稼働。ウ〜ン、家庭用のホットプレートや業務用の網焼き器と違い、パワーがそこまで強くない。迫力がないので、満腹感はあるのに物足りない。焼けるまで時間がかかる。バナメイエビのむき身・とうもろこし・玉ねぎ・焼き鳥・ソーセージ・フライドポテトは美味しく焼けた。ヒイカはかなり待たないと焼けてこない。袋の中の水分が垂れてしまう。ハマグリは焼けたが、殻の一部が破裂してしまった。これ、相性のいい食材があるのかもしれない。動画サイトでぱっと見た感じ、かなり知見が集まっているようだ。美味い食材でリベンジしたり、鉄板を検討してみよう。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260228</guid>
+      <media:content url="https://nc.poet.blue/20260228" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>二月二十七日（金）</title>
       <link>https://nikki.poet.blue#20260227</link>
