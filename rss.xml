@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 28 Feb 2026 21:42:13 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 01 Mar 2026 17:42:10 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>三月一日（日）</title>
+      <link>https://nikki.poet.blue#20260301</link>
+      <pubDate>Sun, 01 Mar 2026 17:42:10 +0900</pubDate>
+      <description>バケツリストに入っていた「フェイシャルケアを学ぶ」をコンプリートしてきた。今まで顔をテキトー（つまり不適切）に洗っていたことがよ〜くわかってしまった。え？洗顔の前にクレンジング？すらも知らなかった。とりあえず良さそうなケア・リキッド（単行本が7冊くらい買えてしまう！）は買ったので、小物をダイソーで物色した。毛抜き・泡立てネットはすぐに見つかったが、アイブロウブラシを目視で見つけるのがかなり難しかった。ツクシみたいなやつはたくさんある・・・チャコペンみたいなものが見当たらない。同店舗のTHREEPPYには、かなり視認しやすい場所にあったが、ラメの入ったスケルトンボディーで、使わないブラシが2本。つまり3本セットで330円なのだが、これを買うのは負けた気がした。もう一度コスメコーナーをくまなく見て、1本売りのものを見つけた。いや〜、慣れないジャンルの棚から商品を探すのは難しい。同時に、ご婦人や少女たちがメインターゲットの棚の中を物色するのは、ちょっと居づらい。一旦今日のミッションはコンプリートだ。今度は服とか靴かなぁ。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260301</guid>
+      <media:content url="https://nc.poet.blue/20260301" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>二月二十八日（土）</title>
       <link>https://nikki.poet.blue#20260228</link>
