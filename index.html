@@ -963,11 +963,7 @@
 
             static updatePageTitle(count) {
                 const pageTitle = document.getElementById('pageTitle');
-                const pageInModalTitle = document.getElementById('page-title-inmodal');
                 pageTitle.textContent = `誤字ロマの${count}日間`;
-                if (pageInModalTitle){
-                    pageInModalTitle.textContent = `誤字ロマの${count}日間`;
-                }
             }
 
             static async playBeep(frequency = 440, duration = 0.1) {
