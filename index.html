@@ -496,14 +496,14 @@
 </head>
 
 <body>
-    <div class="page-title" id="pageTitle"></div>
+    <div class="page-title btn" id="pageTitle"></div>
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
     </div>
     <div class="timeline-container">
         <div class="timeline" id="timeline"></div>
     </div>
-    <div class="info-button" id="infoButton">i</div>
+    <div class="info-button btn" id="infoButton">i</div>
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-content">
             <button class="close-button" id="closeButton">&times;</button>
@@ -1010,15 +1010,20 @@
             wrapCharsForFalling();
             const chars = document.querySelectorAll('.char');
             const dates = document.querySelectorAll('.date');
+            const icons = document.querySelectorAll('.icon');
+            const btns = document.querySelectorAll('.btn');
+            const bars = document.querySelectorAll('.timeline-bar');
+            const daysagos = document.querySelectorAll('.days-ago');
 
             const animateFalling = (element, rect) => {
-                const delay = Math.random() * 3100;
+                const delay = Math.random() * 1000; // 0〜1000msのランダムな遅延
                 const randomXOffset = (Math.random() - 0.5) * window.innerWidth * 0.6;
-                const randomYOffset = Math.random() * -window.innerHeight * 0.83;
+                const randomYOffset = Math.random() * -window.innerHeight * 0.89;
                 const startTop = window.innerHeight + randomYOffset;
                 const startLeft = rect.left + randomXOffset;
                 const angle = (Math.random() * 63) - 34;
-                const duration = 1 + Math.random() * 72;
+
+                const duration = 1 + Math.random() * 100;
                 const landingPosition = window.innerHeight * 0.9 + Math.random() * 1200;
 
                 setTimeout(() => {
@@ -1026,7 +1031,16 @@
                     element.style.left = `${startLeft}px`;
                     element.style.top = `${startTop}px`;
                     element.style.transform = `rotate(${angle}deg)`;
-                    element.style.opacity = '1';
+                    element.style.opacity = Math.random() * 0.5 + 0.5;
+                    const r = Math.floor(Math.random() * 256);
+                    const g = Math.floor(Math.random() * 256);
+                    const b = Math.floor(Math.random() * 256);
+                    element.style.color = `rgb(${r}, ${g}, ${b})`;
+                    const minSize = 12; // 最小サイズ
+                    const maxSize = 60; // 最大サイズ
+                    const randomSize = Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize;
+                    element.style.fontSize = `${randomSize}px`;
+
                     element.classList.add('falling');
 
                     setTimeout(() => {
@@ -1035,15 +1049,11 @@
                     }, 10);
                 }, delay);
             };
-
-            chars.forEach(char => {
-                const rect = char.getBoundingClientRect();
-                animateFalling(char, rect);
-            });
-
-            dates.forEach(date => {
-                const rect = date.getBoundingClientRect();
-                animateFalling(date, rect);
+            [chars, dates, icons, daysagos, btns, bars].forEach(elements => {
+                elements.forEach(element => {
+                    const rect = element.getBoundingClientRect();
+                    animateFalling(element, rect);
+                });
             });
         };
     </script>
