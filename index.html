@@ -254,7 +254,7 @@
             align-items: center;
             cursor: pointer;
             position: relative;
-            left:6px;
+            left: 6px;
             transition: transform 0.1s, background-color var(--transition), filter var(--transition);
             border-radius: 4px;
 
@@ -809,6 +809,8 @@
                     if (selectedBar) selectedBar.classList.add('selected');
                 }
 
+                let lastHash = window.location.hash;
+
                 timeline.addEventListener('touchmove', e => {
                     e.preventDefault();
                     const touch = e.touches[0];
@@ -816,11 +818,17 @@
                     const x = touch.clientX - rect.left;
                     const percent = x / rect.width;
                     const index = Math.floor((1 - percent) * sortedEntries.length);
+
                     if (index >= 0 && index < sortedEntries.length) {
-                        window.location.hash = sortedEntries[index].yyyymmdd;
-                        this.scrollToEntryFromHash();
+                        const newHash = sortedEntries[index].yyyymmdd;
+                        if (lastHash !== `#${newHash}`) {
+                            window.location.hash = newHash;
+                            lastHash = `#${newHash}`;
+                            this.scrollToEntryFromHash();
+                        }
                     }
-                }, { passive: false });
+                });
+
             }
 
             static percentile95(arr) {
