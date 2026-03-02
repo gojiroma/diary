@@ -22,7 +22,7 @@
             --modal-bg: rgba(0, 0, 0, 0.5);
             --transition: 0.2s ease;
         }
-    
+
         body {
             font-family: "Zen Old Mincho", serif;
             display: flex;
@@ -39,12 +39,12 @@
             background-color: var(--bg-color);
             color: var(--text-color);
         }
-    
+
         body.fake-mode {
             --bg-color: #121212;
             --text-color: #e0e0e0;
         }
-    
+
         .page-title,
         #page-title-inmodal,
         input[type="text"] {
@@ -58,7 +58,7 @@
             user-select: none;
             z-index: 10;
         }
-    
+
         .page-title,
         #page-title-inmodal {
             color: var(--text-color);
@@ -66,30 +66,30 @@
             padding: 5px 10px;
             opacity: 0.1;
         }
-    
+
         .page-title:hover,
         #page-title-inmodal:hover,
         input[type="text"]:hover {
             opacity: 1;
         }
-    
+
         .page-title {
             position: fixed;
             top: 10px;
             right: 20px;
         }
-    
+
         .page-title.fake-mode {
             background-color: var(--bg-color);
             color: var(--text-color);
         }
-    
+
         .page-title.flash {
             background-color: #000 !important;
             color: #ff0 !important;
             border-color: #ff0 !important;
         }
-    
+
         input[type="text"] {
             color: var(--text-color) !important;
             position: fixed;
@@ -101,9 +101,9 @@
             opacity: .1;
             outline: none;
         }
-    
 
-    
+
+
         .diary-container-wrapper {
             width: 100%;
             max-width: 90%;
@@ -116,7 +116,7 @@
             margin-top: 20px;
             transition: background-color var(--transition);
         }
-    
+
         .diary-container {
             display: flex;
             flex-direction: row;
@@ -127,11 +127,11 @@
             overflow-x: auto;
             scrollbar-width: none;
         }
-    
+
         .diary-container::-webkit-scrollbar {
             display: none;
         }
-    
+
         .diary-entry {
             writing-mode: vertical-rl;
             text-orientation: upright;
@@ -149,7 +149,7 @@
             background-color: transparent;
             position: relative;
         }
-    
+
         .date-container {
             display: flex;
             flex-direction: row;
@@ -158,27 +158,27 @@
             flex-wrap: wrap;
             gap: 5px;
         }
-    
+
         .date {
             font-size: 1.6em;
             cursor: pointer;
             white-space: nowrap;
         }
-    
+
         .days-ago {
             font-size: 0.8em;
             margin-left: 8px;
             white-space: nowrap;
             opacity: 0.2;
         }
-    
+
         .content {
             font-size: 1.3em;
             white-space: pre-line;
             text-wrap: balance;
             overflow-wrap: break-word;
         }
-    
+
         .highlight {
             background-color: var(--highlight-color);
             font-weight: bold;
@@ -186,7 +186,7 @@
             border-radius: 2px;
             margin: 0 -2px;
         }
-    
+
         .timeline-container {
             position: fixed;
             bottom: 0;
@@ -201,13 +201,13 @@
             box-sizing: border-box;
             touch-action: none;
         }
-    
+
         @media (max-width: 768px) {
             .timeline-container {
                 height: 20px;
             }
         }
-    
+
         .timeline {
             position: relative;
             display: flex;
@@ -219,11 +219,11 @@
             opacity: 0.1;
             transition: opacity var(--transition);
         }
-    
+
         .timeline:hover {
             opacity: 1;
         }
-    
+
         .timeline-bar {
             width: 6px;
             height: 100%;
@@ -233,19 +233,19 @@
             display: flex;
             align-items: flex-end;
         }
-    
+
         .timeline-bar-inner {
             width: 100%;
             background-color: var(--text-color);
             transition: background-color var(--transition);
         }
-    
+
         .timeline-bar:hover .timeline-bar-inner,
         .timeline-bar.selected .timeline-bar-inner {
             background-color: #00bc84 !important;
             opacity: 1 !important;
         }
-    
+
         .icon {
             width: var(--icon-size);
             height: var(--icon-size);
@@ -257,17 +257,17 @@
             transition: transform 0.1s, background-color var(--transition), filter var(--transition);
             border-radius: 4px;
         }
-    
+
         .icon:hover {
             transform: scale(1.1);
             z-index: 20;
         }
-    
+
         .icon.highlight {
             background-color: var(--highlight-color);
             filter: brightness(0.85);
         }
-    
+
         .icon img,
         .icon-emoji {
             max-width: 100%;
@@ -277,13 +277,13 @@
             filter: grayscale(100%);
             opacity: 0.7;
         }
-    
+
         .icon:hover img,
         .icon:hover .icon-emoji {
             filter: grayscale(0%);
             opacity: 1;
         }
-    
+
         .tooltip {
             position: absolute;
             top: -50%;
@@ -303,11 +303,11 @@
             margin-bottom: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-    
+
         .icon:hover .tooltip {
             opacity: 1;
         }
-    
+
         .info-button {
             position: fixed;
             bottom: 20px;
@@ -329,12 +329,12 @@
             user-select: none;
             opacity: 0.2;
         }
-    
+
         .info-button:hover {
             transform: scale(1.1);
             opacity: 0.8;
         }
-    
+
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -350,12 +350,12 @@
             transition: opacity 0.3s ease, visibility 0.3s ease;
             visibility: hidden;
         }
-    
+
         .modal-overlay.show {
             opacity: 1;
             visibility: visible;
         }
-    
+
         .modal-content {
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -371,23 +371,23 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border: 1px solid var(--border-color);
         }
-    
+
         .modal-overlay.show .modal-content {
             transform: skewY(-3deg) translateY(0);
             opacity: 1;
         }
-    
+
         .modal-inner {
             transform: skewY(3deg);
         }
-    
+
         .modal-content h1,
         .modal-content h2,
         .modal-content p,
         .modal-content textarea {
             transform: skewY(-3deg);
         }
-    
+
         .modal-content h1 {
             font-size: 1.8em;
             margin-top: 0;
@@ -395,19 +395,19 @@
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
         }
-    
+
         .modal-content h2 {
             font-size: 1.3em;
             margin-top: 20px;
             border-bottom: 1px dashed var(--border-color);
             padding-bottom: 5px;
         }
-    
+
         .modal-content p {
             line-height: 1.6;
             margin: 10px 0;
         }
-    
+
         .modal-content input[type="text"] {
             position: static;
             width: 150px;
@@ -419,7 +419,7 @@
             font-size: 1em;
             padding: 5px;
         }
-    
+
         .modal-content textarea {
             width: 100%;
             height: 100px;
@@ -430,22 +430,22 @@
             background-color: rgba(255, 255, 255, 0.1);
             resize: vertical;
         }
-    
+
         .modal-content img {
             display: block;
             margin: 15px auto;
         }
-    
+
         .qr {
             max-width: 150px;
         }
-    
+
         .modal-buttons {
             display: flex;
             justify-content: center;
             margin-top: 20px;
         }
-    
+
         .modal-button,
         .share-button {
             background-color: var(--bg-color);
@@ -456,21 +456,21 @@
             cursor: pointer;
             transition: all var(--transition);
         }
-    
+
         .modal-button:hover,
         .share-button:hover {
             opacity: 0.8;
         }
-    
+
         .modal-button {
             margin: 0 10px;
         }
-    
+
         .share-button {
             margin: 15px auto;
             display: block;
         }
-    
+
         .close-button {
             position: absolute;
             top: 10px;
@@ -480,8 +480,17 @@
             font-size: 1.5em;
             cursor: pointer;
         }
+
+        .char.falling,
+        .date.falling {
+            position: fixed;
+            transition: transform 2s ease-in, opacity 2s ease-out;
+            will-change: transform, opacity;
+            z-index: 100;
+            pointer-events: none;
+        }
     </style>
-        
+
 </head>
 
 <body>
@@ -605,6 +614,7 @@
                 this.setupEventListeners();
                 this.setupModal();
                 document.body.style.opacity = 1;
+                setTimeout(startFallingAnimation, 180000); // 3分後に実行
             }
 
             static async loadIconsData() {
@@ -985,7 +995,60 @@
 
         DiaryApp.init();
     </script>
-        
+    <script>
+        const wrapCharsForFalling = () => {
+            document.querySelectorAll('.content').forEach(content => {
+                const text = content.textContent;
+                let wrapped = '';
+                for (let i = 0; i < text.length; i++) {
+                    wrapped += `<span class="char">${text[i]}</span>`;
+                }
+                content.innerHTML = wrapped;
+            });
+        };
+
+        const startFallingAnimation = () => {
+            wrapCharsForFalling();
+            const chars = document.querySelectorAll('.char');
+            const dates = document.querySelectorAll('.date');
+
+            const animateFalling = (element, rect) => {
+                const delay = Math.random() * 3100;
+                const randomXOffset = (Math.random() - 0.5) * window.innerWidth * 0.6;
+                const randomYOffset = Math.random() * -window.innerHeight * 0.83;
+                const startTop = window.innerHeight + randomYOffset;
+                const startLeft = rect.left + randomXOffset;
+                const angle = (Math.random() * 63) - 34;
+                const duration = 1 + Math.random() * 72;
+                const landingPosition = window.innerHeight * 0.9 + Math.random() * 1200;
+
+                setTimeout(() => {
+                    element.style.position = 'fixed';
+                    element.style.left = `${startLeft}px`;
+                    element.style.top = `${startTop}px`;
+                    element.style.transform = `rotate(${angle}deg)`;
+                    element.style.opacity = '1';
+                    element.classList.add('falling');
+
+                    setTimeout(() => {
+                        element.style.transition = `transform ${duration}s cubic-bezier(0.4, 0, 0.2, 1)`;
+                        element.style.transform = `rotate(${angle + (Math.random() * 20 - 10)}deg) translateY(${landingPosition - startTop}px)`;
+                    }, 10);
+                }, delay);
+            };
+
+            chars.forEach(char => {
+                const rect = char.getBoundingClientRect();
+                animateFalling(char, rect);
+            });
+
+            dates.forEach(date => {
+                const rect = date.getBoundingClientRect();
+                animateFalling(date, rect);
+            });
+        };
+    </script>
+
 </body>
 
 </html>

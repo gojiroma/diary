@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho&display=swap" rel="stylesheet">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="rss.xml">
+    <title>誤字ロマの日記</title>
+    <link rel="icon" href="diary-icon.png" type="image/png">
+
+    <style>
+        body {
+            font-family: "Zen Old Mincho", serif;
+            font-weight: 400;
+            font-style: normal;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: 100svh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        body.disable-select * {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .page-title {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+            font-family: "Zen Old Mincho", serif;
+            font-size: 18px;
+            font-weight: 700;
+            border: 1px solid #333;
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.1s, color 0.1s, border-color 0.1s;
+            text-decoration: none;
+            opacity: .6;
+            z-index: 10;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .page-title:hover {
+            opacity: 1;
+            transform: scale(1.05);
+            transition: transform 0.2s ease;
+        }
+
+        .page-title.fake-mode {
+            background-color: #000 !important;
+            color: #fff !important;
+            border-color: #000 !important;
+        }
+
+        .page-title.flash {
+            background-color: #000 !important;
+            color: #ff0 !important;
+            border-color: #ff0 !important;
+        }
+
+        .page-title.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .diary-container-wrapper {
+            width: 100%;
+            max-width: 90%;
+            height: 75vh;
+            height: 75svh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            box-sizing: border-box;
+            margin-top: 20px;
+        }
+
+        .diary-container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .diary-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .diary-entry {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            line-height: 2;
+            letter-spacing: 0.1em;
+            width: auto;
+            white-space: normal;
+            overflow: visible;
+            scroll-margin-top: 50px;
+            padding: 0 10px;
+            transition: background-color 0.3s ease, filter 0.5s ease, color 0.3s ease;
+            flex-shrink: 0;
+            text-wrap: balance;
+            overflow-wrap: break-word;
+        }
+
+        .date {
+            font-family: "Zen Old Mincho", serif;
+            font-size: 1.6em;
+            margin-right: 20px;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+
+        .content {
+            font-family: "Zen Old Mincho", serif;
+            font-size: 1.3em;
+            white-space: pre-line;
+            text-wrap: balance;
+            overflow-wrap: break-word;
+        }
+
+        .rss-button {
+            position: fixed;
+            bottom: 20px;
+            bottom: calc(20px + env(safe-area-inset-bottom));
+            right: 20px;
+            font-family: "Zen Old Mincho", serif;
+            font-size: 18px;
+            font-weight: 700;
+            border: 1px solid #ff9966;
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.1s, color 0.1s, border-color 0.1s;
+            color: #ff6600;
+            text-decoration: none;
+            opacity: .2;
+            z-index: 10;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .rss-button:hover {
+            opacity: 1;
+            background-color: rgba(255, 153, 102, 0.4);
+        }
+
+        .highlight {
+            background-color: yellow;
+            cursor: pointer;
+        }
+
+        .thin-blue-button {
+            position: fixed;
+            bottom: 20px;
+            bottom: calc(20px + env(safe-area-inset-bottom));
+            left: 20px;
+            padding: 8px 16px;
+            border: 1px solid #1E90FF;
+            background-color: transparent;
+            color: #1E90FF;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .thin-blue-button:hover {
+            opacity: 1;
+            color: #1E90FF;
+            background-color: #1E90FF11;
+        }
+
+        .github-button {
+            position: fixed;
+            top: 10px;
+            left: 20px;
+            font-family: "Zen Old Mincho", serif;
+            font-size: 18px;
+            font-weight: 700;
+            border: 1px solid #999;
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.1s, color 0.1s, border-color 0.1s;
+            text-decoration: none;
+            color: #666;
+            opacity: .1;
+            z-index: 10;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .github-button:hover {
+            opacity: 1;
+            background-color: rgba(150, 150, 150, 0.2);
+            color: #333;
+        }
+
+        .char.falling,
+        .date.falling {
+            position: fixed;
+            transition: transform 2s ease-in, opacity 2s ease-out;
+            will-change: transform, opacity;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .entry-count {
+            position: fixed;
+            bottom: 20px;
+            bottom: calc(20px + env(safe-area-inset-bottom));
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: "Zen Old Mincho", serif;
+            font-size: 14px;
+            color: #999;
+            opacity: 0.3;
+            transition: opacity 0.2s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-style: italic;
+            background-color: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .entry-count:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-title">誤字ロマの日記</div>
+    <div class="diary-container-wrapper">
+        <div class="diary-container" id="diaryContainer"></div>
+    </div>
+    <a href="rss.xml" class="rss-button">RSS</a>
+    <a href="https://kakuka.poet.blue" target="_blank" rel="noopener noreferrer" class="thin-blue-button"
+        data-count="0">書くか</a>
+    <div class="entry-count" id="entryCount"></div>
+    <a href="https://github.com/gojiroma/diary" target="_blank" rel="noopener noreferrer"
+        class="github-button">GitHub</a>
+
+    <script>
+        // ===== Constants =====
+        const THEMES = [
+            { bg: "#e6f3ff", text: "#003366", border: "#003366" },
+            { bg: "#fff8e6", text: "#8b4513", border: "#8b4513" },
+            { bg: "#e6ffe6", text: "#2e8b57", border: "#2e8b57" },
+            { bg: "#ffe6f0", text: "#8b008b", border: "#8b008b" },
+            { bg: "#f0f0ff", text: "#4b0082", border: "#4b0082" },
+            { bg: "#ffffe6", text: "#b8860b", border: "#b8860b" },
+            { bg: "#e6ffff", text: "#0066cc", border: "#0066cc" },
+            { bg: "#f0e6ff", text: "#800080", border: "#800080" },
+            { bg: "#fff0e6", text: "#cd5c5c", border: "#cd5c5c" },
+            { bg: "#f0ffe6", text: "#228b22", border: "#228b22" }
+        ];
+
+        // ===== State =====
+        let currentTheme = null;
+        let targetEntry = null;
+        let clickCount = 0;
+        let isFakeMode = false;
+        let clickTimer = null;
+        let disableTimer = null;
+        let fakeEntriesCache = null;
+
+        // ===== Utilities =====
+        const toKanjiNumber = (num) => {
+            const kanjiNumbers = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+            return num.toString().split('').map(digit => kanjiNumbers[digit]).join('');
+        };
+
+        const toKanjiMonth = (month) => {
+            const kanjiMonths = [
+                '一月', '二月', '三月', '四月', '五月', '六月',
+                '七月', '八月', '九月', '十月', '十一月', '十二月'
+            ];
+            return kanjiMonths[month - 1];
+        };
+
+        const toKanjiDay = (day) => {
+            if (day === 10) return '十';
+            if (day === 20) return '二十';
+            if (day === 30) return '三十';
+            if (day === 31) return '三十一';
+            if (day < 10) return toKanjiNumber(day);
+            if (day < 20) return '十' + toKanjiNumber(day - 10);
+            if (day < 30) return '二十' + toKanjiNumber(day - 20);
+            return toKanjiNumber(day);
+        };
+
+        const formatJapaneseDate = (yyyymmdd) => {
+            const year = parseInt(yyyymmdd.substring(0, 4), 10);
+            const month = parseInt(yyyymmdd.substring(4, 6), 10);
+            const day = parseInt(yyyymmdd.substring(6, 8), 10);
+            const date = new Date(year, month - 1, day);
+            const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+            return {
+                short: `${toKanjiMonth(month)}${toKanjiDay(day)}日（${isFakeMode ? '嘘' : dayOfWeek}）`,
+                long: `${toKanjiNumber(year)}年${toKanjiMonth(month)}${toKanjiDay(day)}日（${isFakeMode ? '嘘' : dayOfWeek}）`
+            };
+        };
+
+        const generateRandomDate = () => {
+            const today = new Date();
+            const randomDaysAgo = Math.floor(Math.random() * 60) + 1;
+            const randomDate = new Date(today);
+            randomDate.setDate(today.getDate() - randomDaysAgo);
+            const year = randomDate.getFullYear();
+            const month = String(randomDate.getMonth() + 1).padStart(2, '0');
+            const day = String(randomDate.getDate()).padStart(2, '0');
+            return `${year}${month}${day}`;
+        };
+
+        // ===== DOM Helpers =====
+        const applyRandomTheme = () => {
+            const randomTheme = THEMES[Math.floor(Math.random() * THEMES.length)];
+            currentTheme = randomTheme;
+            document.body.style.backgroundColor = randomTheme.bg;
+            document.querySelector('.diary-container-wrapper').style.backgroundColor = randomTheme.bg;
+            const title = document.querySelector('.page-title');
+            title.style.backgroundColor = randomTheme.bg;
+            title.style.borderColor = randomTheme.border;
+            title.style.color = randomTheme.text;
+            document.querySelectorAll('.date, .content, .rss-button, .github-button, .entry-count').forEach(el => {
+                el.style.color = randomTheme.text;
+            });
+        };
+
+        const flashTitle = () => {
+            const title = document.querySelector('.page-title');
+            title.classList.add('flash');
+            setTimeout(() => {
+                title.classList.remove('flash');
+                setTimeout(() => {
+                    title.classList.add('flash');
+                    setTimeout(() => {
+                        title.classList.remove('flash');
+                        if (currentTheme) {
+                            title.style.backgroundColor = currentTheme.bg;
+                            title.style.color = currentTheme.text;
+                            title.style.borderColor = currentTheme.border;
+                        }
+                    }, 100);
+                }, 100);
+            }, 100);
+        };
+
+        // ===== Highlight Management =====
+        const saveHighlights = () => {
+            const highlights = [];
+            document.querySelectorAll('.highlight').forEach(el => {
+                const content = el.closest('.content');
+                const date = content.previousElementSibling.getAttribute('data-yyyymmdd');
+                const text = content.textContent;
+                const start = content.textContent.indexOf(el.textContent);
+                const length = el.textContent.length;
+                highlights.push({ date, start, length, text: el.textContent });
+            });
+            localStorage.setItem('diaryHighlights', JSON.stringify(highlights));
+        };
+
+        const restoreHighlights = () => {
+            const highlights = JSON.parse(localStorage.getItem('diaryHighlights') || '[]');
+            highlights.forEach(h => {
+                const dateElement = document.querySelector(`.date[data-yyyymmdd="${h.date}"]`);
+                if (!dateElement) return;
+                const content = dateElement.nextElementSibling;
+                const text = content.textContent;
+                const start = text.indexOf(h.text);
+                if (start === -1) return;
+                const before = text.substring(0, start);
+                const middle = text.substring(start, start + h.length);
+                const after = text.substring(start + h.length);
+                content.innerHTML = `${before}<span class="highlight">${middle}</span>${after}`;
+            });
+            setupHighlightRemoval();
+        };
+
+        const setupHighlightRemoval = () => {
+            document.querySelectorAll('.highlight').forEach(el => {
+                el.addEventListener('click', () => {
+                    const text = el.textContent;
+                    el.replaceWith(text);
+                    saveHighlights();
+                });
+            });
+        };
+
+        const setupTextSelection = () => {
+            document.addEventListener('mouseup', () => {
+                const selection = window.getSelection();
+                if (selection.toString().trim() === '') return;
+                const range = selection.getRangeAt(0);
+                let content = range.startContainer;
+                while (content && !content.classList) {
+                    content = content.parentNode;
+                }
+                if (!content || !content.classList.contains('content')) return;
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.appendChild(range.extractContents());
+                range.insertNode(span);
+                saveHighlights();
+                setupHighlightRemoval();
+            });
+        };
+
+        // ===== Flash Entry =====
+        const flashEntry = (entry) => {
+            document.querySelectorAll('.diary-entry').forEach(el => {
+                if (el !== entry) {
+                    Object.assign(el.style, {
+                        transition: 'none',
+                        fontWeight: '',
+                        filter: 'brightness(1)',
+                        color: ''
+                    });
+                }
+            });
+
+            Object.assign(entry.style, {
+                transition: 'filter 0.5s ease, color 0.5s ease',
+                color: '#333333',
+                filter: 'brightness(2)'
+            });
+            setTimeout(() => {
+                Object.assign(entry.style, {
+                    color: isFakeMode ? '#ff6600' : currentTheme.text,
+                    filter: 'brightness(1)'
+                });
+            }, 1200);
+        };
+
+        // ===== Mode Switch =====
+        const toggleFakeMode = () => {
+            const title = document.querySelector('.page-title');
+            const body = document.body;
+            if (isFakeMode) {
+                title.textContent = '誤字ロマの日記';
+                title.classList.remove('fake-mode');
+                loadDiaryEntries('entry.md');
+                body.classList.remove('disable-select');
+            } else {
+                title.textContent = '誤字ロマの嘘日記';
+                title.classList.add('fake-mode');
+                if (fakeEntriesCache) {
+                    loadFakeEntriesFromCache();
+                } else {
+                    loadDiaryEntries('fake.md');
+                }
+                body.classList.add('disable-select');
+                setTimeout(() => {
+                    body.classList.remove('disable-select');
+                }, 5000);
+            }
+            isFakeMode = !isFakeMode;
+            clickCount = 0;
+            document.querySelectorAll('.date').forEach(dateElement => {
+                const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
+                const dateObj = formatJapaneseDate(yyyymmdd);
+                dateElement.textContent = dateObj.short;
+                dateElement.style.color = isFakeMode ? '#ff6600' : currentTheme.text;
+            });
+            document.querySelectorAll('.content').forEach(content => {
+                content.style.color = isFakeMode ? '#ff6600' : currentTheme.text;
+            });
+        };
+
+        const setupDateClick = () => {
+            document.querySelectorAll('.date').forEach(dateElement => {
+                dateElement.addEventListener('click', () => {
+                    const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
+                    window.location.hash = yyyymmdd;
+                    const entry = document.getElementById(yyyymmdd);
+                    if (entry) {
+                        flashEntry(entry);
+                    }
+                });
+            });
+        };
+
+        const scrollToEntryFromHash = () => {
+            requestAnimationFrame(() => {
+                const hash = window.location.hash.substring(1);
+                const container = document.getElementById('diaryContainer');
+                const entries = document.querySelectorAll('.diary-entry');
+
+                if (hash && hash.match(/^\d{8}$/)) {
+                    const entry = document.getElementById(hash);
+                    if (entry) {
+                        targetEntry = entry;
+                        const entryRight = entry.offsetLeft + entry.clientWidth;
+                        const containerWidth = container.clientWidth;
+                        container.scrollLeft = entryRight - containerWidth;
+                        flashEntry(entry);
+                    }
+                } else if (entries.length > 0) {
+                    const latestEntry = entries[0];
+                    const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
+                    const containerWidth = container.clientWidth;
+                    container.scrollLeft = entryRight - containerWidth;
+                }
+            });
+        };
+
+        // ===== Navigation =====
+        const getCurrentEntry = () => {
+            const hash = window.location.hash.substring(1);
+            if (hash && hash.match(/^\d{8}$/)) {
+                return document.getElementById(hash);
+            }
+            const entries = document.querySelectorAll('.diary-entry');
+            if (entries.length > 0) {
+                return entries[0];
+            }
+            return null;
+        };
+
+        const getAdjacentEntry = (currentEntry, direction) => {
+            const entries = document.querySelectorAll('.diary-entry');
+            const currentIndex = Array.from(entries).indexOf(currentEntry);
+            if (currentIndex === -1) return null;
+
+            const nextIndex = currentIndex + direction;
+            if (nextIndex < 0 || nextIndex >= entries.length) return null;
+
+            return entries[nextIndex];
+        };
+
+        const handleKeyDown = (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                e.preventDefault();
+                const currentEntry = getCurrentEntry();
+                if (!currentEntry) return;
+                const direction = e.key === 'ArrowLeft' ? -1 : 1;
+                const nextEntry = getAdjacentEntry(currentEntry, direction);
+                if (nextEntry) {
+                    const nextEntryId = nextEntry.id;
+                    window.location.hash = nextEntryId;
+                    scrollToEntryFromHash();
+                    document.querySelectorAll('.diary-entry').forEach(entry => {
+                        Object.assign(entry.style, {
+                            transition: 'none',
+                            transform: 'scale(1)',
+                            fontWeight: '',
+                            filter: 'brightness(1)'
+                        });
+                    });
+                }
+            } else if (e.key === 'Escape') {
+                if (window.location.hash) {
+                    window.location.hash = '';
+                }
+            }
+        };
+
+        // ===== Falling Animation =====
+        const wrapCharsForFalling = () => {
+            document.querySelectorAll('.content').forEach(content => {
+                const text = content.textContent;
+                let wrapped = '';
+                for (let i = 0; i < text.length; i++) {
+                    wrapped += `<span class="char">${text[i]}</span>`;
+                }
+                content.innerHTML = wrapped;
+            });
+        };
+        const startFallingAnimation = () => {
+            wrapCharsForFalling();
+            const chars = document.querySelectorAll('.char');
+            const dates = document.querySelectorAll('.date');
+
+            const animateFalling = (element, rect) => {
+                const delay = Math.random() * 3100;
+                const randomXOffset = (Math.random() - 0.5) * window.innerWidth * 0.6;
+                const randomYOffset = Math.random() * -window.innerHeight * 0.83
+                const startTop = window.innerHeight + randomYOffset;
+                const startLeft = rect.left + randomXOffset;
+                const angle = (Math.random() * 63) - 34;
+                const duration = 1 + Math.random() * 72;
+                const landingPosition = window.innerHeight * 0.9 + Math.random() * 1200; // 着地位置を画面下部から30%上に設定
+
+                setTimeout(() => {
+                    element.style.position = 'fixed';
+                    element.style.left = `${startLeft}px`;
+                    element.style.top = `${startTop}px`;
+                    element.style.transform = `rotate(${angle}deg)`;
+                    element.style.opacity = '1';
+                    element.classList.add('falling');
+
+                    setTimeout(() => {
+                        element.style.transition = `transform ${duration}s cubic-bezier(0.4, 0, 0.2, 1)`;
+                        element.style.transform = `rotate(${angle + (Math.random() * 20 - 10)}deg) translateY(${landingPosition - startTop}px)`;
+                    }, 10);
+                }, delay);
+            };
+
+            chars.forEach(char => {
+                const rect = char.getBoundingClientRect();
+                animateFalling(char, rect);
+            });
+
+            dates.forEach(date => {
+                const rect = date.getBoundingClientRect();
+                animateFalling(date, rect);
+            });
+        };
+
+
+
+        const updateEntryCount = (count) => {
+            const entryCountElement = document.getElementById('entryCount');
+            if (entryCountElement) {
+                entryCountElement.textContent = `${count}日分の生きた証`;
+            }
+        };
+
+        // ===== Date Picker =====
+        const setupDatePicker = () => {
+            const entryCountElement = document.getElementById('entryCount');
+            entryCountElement.addEventListener('click', () => {
+                const dateInput = document.createElement('input');
+                dateInput.type = 'date';
+                dateInput.style.position = 'fixed';
+                dateInput.style.top = '50%';
+                dateInput.style.left = '50%';
+                dateInput.style.transform = 'translate(-50%, -50%)';
+                dateInput.style.zIndex = '1000';
+                dateInput.style.padding = '10px';
+                dateInput.style.fontSize = '16px';
+                dateInput.style.borderRadius = '8px';
+                dateInput.style.border = '1px solid #ccc';
+                dateInput.style.backgroundColor = 'white';
+                dateInput.style.opacity = '0.9';
+                document.body.appendChild(dateInput);
+
+                dateInput.focus();
+
+                dateInput.addEventListener('change', (e) => {
+                    const selectedDate = e.target.value.replace(/-/g, '');
+                    const entry = document.getElementById(selectedDate);
+                    if (entry) {
+                        window.location.hash = selectedDate;
+                        scrollToEntryFromHash();
+                    } else {
+                        alert('その日の記録は存在しない');
+                    }
+                    dateInput.remove();
+                });
+
+                dateInput.addEventListener('blur', () => {
+                    dateInput.remove();
+                });
+            });
+        };
+
+        // ===== Main Functions =====
+        const loadDiaryEntries = async (filename = 'entry.md') => {
+            try {
+                const response = await fetch(filename);
+                if (!response.ok) throw new Error('Failed to load entries');
+                const text = await response.text();
+                const entries = text.split('---').filter(entry => entry.trim());
+                const container = document.getElementById('diaryContainer');
+                container.innerHTML = '';
+                entries.reverse().forEach(entry => {
+                    const dateMatch = entry.match(/date:\s*(.*)/);
+                    const contentMatch = entry.match(/content:\s*\|\n([\s\S]*?)(?=\n---|\n$)/m);
+                    if (!dateMatch || !contentMatch) return;
+                    const yyyymmdd = dateMatch[1].trim();
+                    const dateObj = formatJapaneseDate(yyyymmdd);
+                    const contentLines = contentMatch[1]
+                        .split('\n')
+                        .map(line => line.replace(/^\s*\|?\s*/, ''))
+                        .join('\n')
+                        .trim();
+                    const entryElement = document.createElement('div');
+                    entryElement.className = 'diary-entry';
+                    entryElement.id = yyyymmdd;
+                    entryElement.innerHTML = `
+                        <div class="date" data-yyyymmdd="${yyyymmdd}" style="color: ${isFakeMode ? '#ff6600' : currentTheme.text}">${dateObj.short}</div>
+                        <div class="content" style="color: ${isFakeMode ? '#ff6600' : currentTheme.text}">${contentLines}</div>
+                    `;
+                    container.appendChild(entryElement);
+                });
+                updateEntryCount(entries.length);
+
+                requestAnimationFrame(() => {
+                    setupDateClick();
+                    setupTextSelection();
+                    restoreHighlights();
+                    scrollToEntryFromHash();
+                    setTimeout(startFallingAnimation, 120000);
+                });
+            } catch (error) {
+                console.error('Error loading diary entries:', error);
+                showErrorEntry();
+            }
+        };
+
+        const showErrorEntry = () => {
+            const container = document.getElementById('diaryContainer');
+            container.innerHTML = '';
+            const randomDate = generateRandomDate();
+            const dateObj = formatJapaneseDate(randomDate);
+            const entryElement = document.createElement('div');
+            entryElement.className = 'diary-entry';
+            entryElement.id = randomDate;
+            entryElement.innerHTML = `
+                <div class="date" data-yyyymmdd="${randomDate}" style="color: ${currentTheme.text}">${dateObj.short}</div>
+                <div class="content" style="color: ${currentTheme.text}">残念ながら、作者の不手際かインフラの障害が起きているようだ。日記データを取得できないでいる。</div>
+            `;
+            container.appendChild(entryElement);
+
+            requestAnimationFrame(() => {
+                setupDateClick();
+                setupTextSelection();
+                scrollToEntryFromHash();
+                setTimeout(startFallingAnimation, 120000);
+            });
+        };
+
+        const preloadFakeEntries = async () => {
+            try {
+                const response = await fetch('fake.md');
+                if (!response.ok) throw new Error('Failed to preload fake entries');
+                fakeEntriesCache = await response.text();
+            } catch (error) {
+                console.error('Error preloading fake entries:', error);
+            }
+        };
+
+        const loadFakeEntriesFromCache = () => {
+            if (!fakeEntriesCache) return;
+            const entries = fakeEntriesCache.split('---').filter(entry => entry.trim());
+            const container = document.getElementById('diaryContainer');
+            container.innerHTML = '';
+            entries.reverse().forEach(entry => {
+                const dateMatch = entry.match(/date:\s*(.*)/);
+                const contentMatch = entry.match(/content:\s*\|\n([\s\S]*?)(?=\n---|\n$)/m);
+                if (!dateMatch || !contentMatch) return;
+                const yyyymmdd = dateMatch[1].trim();
+                const dateObj = formatJapaneseDate(yyyymmdd);
+                const contentLines = contentMatch[1].split('\n').map(line => line.replace(/^\s*\|?\s*/, '')).join('\n').trim();
+                const entryElement = document.createElement('div');
+                entryElement.className = 'diary-entry';
+                entryElement.id = yyyymmdd;
+                entryElement.innerHTML = `
+                    <div class="date" data-yyyymmdd="${yyyymmdd}" style="color: #ff6600">${dateObj.short}</div>
+                    <div class="content" style="color: #ff6600">${contentLines}</div>
+                `;
+                container.appendChild(entryElement);
+            });
+            requestAnimationFrame(() => {
+                setupDateClick();
+                setupTextSelection();
+                restoreHighlights();
+                scrollToEntryFromHash();
+                setTimeout(startFallingAnimation, 120000);
+            });
+        };
+
+        // ===== Event Listeners =====
+        document.querySelector('.page-title').addEventListener('click', () => {
+            if (isFakeMode) {
+                toggleFakeMode();
+                return;
+            }
+            if (document.querySelector('.page-title').classList.contains('disabled')) {
+                return;
+            }
+            clickCount++;
+            if (clickCount >= 4) {
+                toggleFakeMode();
+                clickCount = 0;
+                const title = document.querySelector('.page-title');
+                title.classList.add('disabled');
+                if (disableTimer) clearTimeout(disableTimer);
+                disableTimer = setTimeout(() => {
+                    title.classList.remove('disabled');
+                }, 5000);
+                if (clickTimer) clearTimeout(clickTimer);
+                return;
+            }
+            if (clickTimer) clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => {
+                clickCount = 0;
+            }, 1000);
+            applyRandomTheme();
+            flashTitle();
+        });
+
+        window.addEventListener('load', () => {
+            document.body.style.opacity = 1;
+            if (location.host !== "nikki.poet.blue") {
+                document.title = "DEV - 誤字ロマの日記";
+            }
+            applyRandomTheme();
+            loadDiaryEntries();
+            preloadFakeEntries();
+            scrollToEntryFromHash();
+            document.addEventListener('keydown', handleKeyDown);
+            setupDatePicker();
+        });
+
+        window.addEventListener('hashchange', scrollToEntryFromHash);
+    </script>
+</body>
+
+</html>
