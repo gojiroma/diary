@@ -867,6 +867,7 @@
 
             static scrollToEntryFromHash() {
                 this.playBeep(340, 0.1);
+                navigator.vibrate(10);
                 requestAnimationFrame(() => {
                     const hash = window.location.hash.substring(1);
                     const container = document.getElementById('diaryContainer');
@@ -880,7 +881,7 @@
                         if (entry) {
                             const entryRight = entry.offsetLeft + entry.clientWidth;
                             const containerWidth = container.clientWidth;
-                            this.smoothScrollTo(container, entryRight - containerWidth);
+                            this.scrollTo(container, entryRight - containerWidth);
 
                             const selectedBar = document.querySelector(`.timeline-bar[data-yyyymmdd="${hash}"]`);
                             if (selectedBar) selectedBar.classList.add('selected');
@@ -889,12 +890,12 @@
                         const latestEntry = entries[0];
                         const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
                         const containerWidth = container.clientWidth;
-                        this.smoothScrollTo(container, entryRight - containerWidth);
+                        this.scrollTo(container, entryRight - containerWidth);
                     }
                 });
             }
 
-            static smoothScrollTo(element, targetPosition, duration = 50) {
+            static scrollTo(element, targetPosition, duration = 50) {
                 const startPosition = element.scrollLeft;
                 const startTime = performance.now();
 
