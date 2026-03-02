@@ -496,7 +496,7 @@
 </head>
 
 <body>
-    <div class="page-title" id="pageTitle">誤字ロマの日記</div>
+    <div class="page-title" id="pageTitle"></div>
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
     </div>
@@ -512,9 +512,6 @@
 
                 <h2>なんだ、この日記は？</h2>
                 <p>このインターネット日記は、北関東の某所で生きるひとりの人間が、その日の出来事や思ったことを気軽に、かつ無責任に書き続けているものです。</p>
-                <p>画面右上の<span
-                        id="page-title-inmodal">誤字ロマの日記</span>をクリックすると画面が暗転し、「嘘日記」に切り替わります。ここに書かれている固有名詞は、実在するものと全く関係がありませんのでご留意ください。再度クリックすると「本当日記」の表示に戻ります。ただし、本当の日記も必ずしも事実が書かれている保証はありません。筆者の認識がゆがんでいる可能性もあります。すべて、あくまで娯楽としてお楽しみください。
-                </p>
 
                 <h2>おたより</h2>
                 <p>日記の感想、自分語り、尿漏れのお悩みなど、<input type="text" id="mailSubject"
@@ -579,8 +576,8 @@
                 const date = new Date(year, month - 1, day);
                 const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
                 return {
-                    short: `${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '嘘' : dayOfWeek}）`,
-                    long: `${this.toJapaneseEra(year)}${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '嘘' : dayOfWeek}）`
+                    short: `${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '裏' : dayOfWeek}）`,
+                    long: `${this.toJapaneseEra(year)}${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '裏' : dayOfWeek}）`
                 };
             }
 
@@ -836,7 +833,7 @@
                 const title = document.querySelector('.page-title');
                 const body = document.body;
 
-                title.textContent = this.isFakeMode ? '誤字ロマの嘘日記' : '誤字ロマの日記';
+                title.textContent = this.isFakeMode ? '誤字ロマの裏日記' : '誤字ロマの日記';
                 title.classList.toggle('fake-mode', this.isFakeMode);
                 body.classList.toggle('fake-mode', this.isFakeMode);
 
@@ -944,7 +941,7 @@
                 const sortedEntries = [...this.diaryEntries].sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
                 const oldestDate = sortedEntries[0].yyyymmdd;
                 const newestDate = sortedEntries[sortedEntries.length - 1].yyyymmdd;
-                const modePrefix = this.isFakeMode ? '嘘日記_' : '';
+                const modePrefix = this.isFakeMode ? '裏日記_' : '';
                 const filename = `${modePrefix}誤字ロマの日記 ${oldestDate}-${newestDate}.txt`;
 
                 let content = '';
