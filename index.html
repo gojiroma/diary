@@ -867,7 +867,7 @@
 
             static scrollToEntryFromHash() {
                 this.playBeep(340, 0.1);
-                navigator.vibrate(10);
+                navigator.vibrate(5);
                 requestAnimationFrame(() => {
                     const hash = window.location.hash.substring(1);
                     const container = document.getElementById('diaryContainer');
