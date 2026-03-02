@@ -13,140 +13,97 @@
     <link rel="icon" href="diary-icon.png" type="image/png">
     <style>
         :root {
-            --bg-color: #e6f3ff;
-            --text-color: #003366;
-            --border-color: #003366;
-            --timeline-color: #003366;
-            --highlight-color: #ffeb3b;
+            --bg-color: #f5f5f5;
+            --text-color: #333333;
+            --border-color: #666666;
+            --timeline-color: #666666;
+            --highlight-color: #cccccc;
+            --icon-size: 34px;
+            --modal-bg: rgba(0, 0, 0, 0.5);
+            --transition: 0.2s ease;
         }
-
+    
         body {
             font-family: "Zen Old Mincho", serif;
-            font-weight: 400;
-            font-style: normal;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             min-height: 100svh;
             margin: 0;
             padding: 0;
             overflow: hidden;
             position: relative;
             opacity: 0;
-            transition: opacity 0.2s ease, background-color 0.2s ease;
+            transition: opacity var(--transition), background-color var(--transition);
             background-color: var(--bg-color);
+            color: var(--text-color);
         }
-
+    
         body.fake-mode {
-            --bg-color: #000;
-            --text-color: #dadada;
-            --border-color: #fff;
-            --timeline-color: #fff;
-            --highlight-color: #ffc107;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
         }
-
-        .page-title {
+    
+        .page-title,
+        #page-title-inmodal,
+        input[type="text"] {
+            font-family: "Zen Old Mincho", serif;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.1s;
+            text-decoration: none;
+            user-select: none;
+            z-index: 10;
+        }
+    
+        .page-title,
+        #page-title-inmodal {
             color: var(--text-color);
+            background-color: #6363632f;
+            padding: 5px 10px;
+            opacity: 0.1;
+        }
+    
+        .page-title:hover,
+        #page-title-inmodal:hover,
+        input[type="text"]:hover {
+            opacity: 1;
+        }
+    
+        .page-title {
             position: fixed;
             top: 10px;
             right: 20px;
-            font-family: "Zen Old Mincho", serif;
-            font-size: 18px;
-            font-weight: 700;
-            border: 1px solid var(--border-color);
-            padding: 5px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.1s;
-            text-decoration: none;
-            opacity: 0.2;
-            z-index: 10;
-            user-select: none;
         }
-
-        #page-title-inmodal {
-            color: var(--text-color);
-            font-family: "Zen Old Mincho", serif;
-            display: inline-block;
-            font-size: 18px;
-            font-weight: 700;
-            border: 1px solid var(--border-color);
-            padding: 5px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.1s;
-            text-decoration: none;
-            z-index: 10;
-            user-select: none;
-            width: fit-content;
-        }
-
-        .page-title:hover {
-            opacity: 1;
-            transform: scale(1.05);
-        }
-
+    
         .page-title.fake-mode {
             background-color: var(--bg-color);
             color: var(--text-color);
-            border-color: var(--border-color);
         }
-
+    
         .page-title.flash {
             background-color: #000 !important;
             color: #ff0 !important;
             border-color: #ff0 !important;
         }
-
+    
         input[type="text"] {
             color: var(--text-color) !important;
-            font-family: "Zen Old Mincho", serif;
             position: fixed;
             top: 10px;
             left: 20px;
             padding: 5px 10px;
-            border-radius: 8px;
-            width: 7ic;
-            background-color: var(--bg-color);
-            font-family: "Zen Old Mincho", serif;
-            font-size: 18px;
-            font-weight: 700;
             border: 1px solid var(--border-color);
-            padding: 5px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.1s;
-            text-decoration: none;
+            width: 7ic;
             opacity: .1;
-            z-index: 10;
-            user-select: none;
             outline: none;
         }
-        input[type="text"]:hover {
-            opacity: 1;
-        }
+    
 
-        ::placeholder {
-            color: var(--text-color);
-            opacity: .7;
-        }
-
-        .fake-mode ::placeholder {
-            color: var(--text-color);
-            opacity: .7;
-        }
-
-        .fake-mode .search-box,
-        .fake-mode input[type="text"] {
-            color: var(--text-color);
-            background-color: var(--bg-color);
-            border-color: var(--border-color);
-        }
-
+    
         .diary-container-wrapper {
             width: 100%;
             max-width: 90%;
@@ -157,10 +114,9 @@
             padding: 0;
             box-sizing: border-box;
             margin-top: 20px;
-            transition: background-color 0.2s ease;
-            background-color: var(--bg-color);
+            transition: background-color var(--transition);
         }
-
+    
         .diary-container {
             display: flex;
             flex-direction: row;
@@ -171,11 +127,11 @@
             overflow-x: auto;
             scrollbar-width: none;
         }
-
-        ::-webkit-scrollbar {
+    
+        .diary-container::-webkit-scrollbar {
             display: none;
         }
-
+    
         .diary-entry {
             writing-mode: vertical-rl;
             text-orientation: upright;
@@ -193,43 +149,36 @@
             background-color: transparent;
             position: relative;
         }
-
+    
         .date-container {
             display: flex;
             flex-direction: row;
             align-items: center;
-            margin-right: 20px;
-            margin-left: 20px;
+            margin: 0 20px;
             flex-wrap: wrap;
             gap: 5px;
         }
-
+    
         .date {
-            font-family: "Zen Old Mincho", serif;
             font-size: 1.6em;
             cursor: pointer;
-            color: var(--text-color);
             white-space: nowrap;
         }
-
+    
         .days-ago {
-            font-family: "Zen Old Mincho", serif;
             font-size: 0.8em;
-            color: var(--text-color);
             margin-left: 8px;
             white-space: nowrap;
-            opacity: 0.3;
+            opacity: 0.2;
         }
-
+    
         .content {
-            font-family: "Zen Old Mincho", serif;
             font-size: 1.3em;
             white-space: pre-line;
             text-wrap: balance;
             overflow-wrap: break-word;
-            color: var(--text-color);
         }
-
+    
         .highlight {
             background-color: var(--highlight-color);
             font-weight: bold;
@@ -237,7 +186,7 @@
             border-radius: 2px;
             margin: 0 -2px;
         }
-
+    
         .timeline-container {
             position: fixed;
             bottom: 0;
@@ -252,13 +201,13 @@
             box-sizing: border-box;
             touch-action: none;
         }
-
+    
         @media (max-width: 768px) {
             .timeline-container {
                 height: 20px;
             }
         }
-
+    
         .timeline {
             position: relative;
             display: flex;
@@ -268,13 +217,13 @@
             height: 100%;
             width: 100%;
             opacity: 0.1;
-            transition: opacity 0.2s;
+            transition: opacity var(--transition);
         }
-
+    
         .timeline:hover {
             opacity: 1;
         }
-
+    
         .timeline-bar {
             width: 6px;
             height: 100%;
@@ -284,140 +233,57 @@
             display: flex;
             align-items: flex-end;
         }
-
+    
         .timeline-bar-inner {
             width: 100%;
             background-color: var(--text-color);
-            transition: background-color 0.2s;
+            transition: background-color var(--transition);
         }
-
+    
         .timeline-bar:hover .timeline-bar-inner,
         .timeline-bar.selected .timeline-bar-inner {
             background-color: #00bc84 !important;
             opacity: 1 !important;
         }
-
-        @keyframes lanternOutline {
-            0% {
-                outline-color: #ff0000;
-            }
-
-            25% {
-                outline-color: #00ff00;
-            }
-
-            50% {
-                outline-color: #0000ff;
-            }
-
-            75% {
-                outline-color: #ffff00;
-            }
-
-            100% {
-                outline-color: #ff00ff;
-            }
-        }
-
-        .search-box.lantern-mode {
-            outline: 2px solid transparent;
-            animation: lanternOutline 4s linear infinite;
-        }
-
-        @keyframes lanternBackground {
-            0% {
-                background-color: rgba(255, 0, 0, 0.2);
-            }
-
-            25% {
-                background-color: rgba(0, 255, 0, 0.2);
-            }
-
-            50% {
-                background-color: rgba(0, 0, 255, 0.2);
-            }
-
-            75% {
-                background-color: rgba(255, 255, 0, 0.2);
-            }
-
-            100% {
-                background-color: rgba(255, 0, 255, 0.2);
-            }
-        }
-
-        @keyframes lanternText {
-            0% {
-                color: #ff0000;
-            }
-
-            25% {
-                color: #00ff00;
-            }
-
-            50% {
-                color: #0000ff;
-            }
-
-            75% {
-                color: #ffff00;
-            }
-
-            100% {
-                color: #ff00ff;
-            }
-        }
-
-        .search-box.lantern-mode {
-            outline: 2px solid transparent;
-            animation: lanternOutline 4s linear infinite, lanternBackground 4s linear infinite, lanternText 4s linear infinite;
-            font-weight: bold;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
-        }
-
-        /* アイコン用スタイル */
+    
         .icon {
-            width: 34px;
-            height: 34px;
+            width: var(--icon-size);
+            height: var(--icon-size);
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             position: relative;
-            transition: transform 0.1s, background-color 0.2s, filter 0.2s;
+            transition: transform 0.1s, background-color var(--transition), filter var(--transition);
             border-radius: 4px;
         }
-
+    
         .icon:hover {
             transform: scale(1.1);
             z-index: 20;
         }
-
+    
         .icon.highlight {
             background-color: var(--highlight-color);
             filter: brightness(0.85);
         }
-
-        .icon img {
+    
+        .icon img,
+        .icon-emoji {
             max-width: 100%;
             max-height: 100%;
             border-radius: 4px;
-        }
-
-        span.icon-emoji,
-        img.icon-img {
             font-size: x-large;
-            filter: grayscale(84%);
-            opacity: 0.4;
+            filter: grayscale(100%);
+            opacity: 0.7;
         }
-
-        span.icon-emoji:hover,
-        img.icon-img:hover {
+    
+        .icon:hover img,
+        .icon:hover .icon-emoji {
             filter: grayscale(0%);
             opacity: 1;
         }
-
-        /* ツールチップ用スタイル */
+    
         .tooltip {
             position: absolute;
             top: -50%;
@@ -432,18 +298,16 @@
             border: 1px solid var(--border-color);
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.2s;
+            transition: opacity var(--transition);
             z-index: 30;
             margin-bottom: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-family: "Zen Old Mincho", serif;
         }
-
+    
         .icon:hover .tooltip {
             opacity: 1;
         }
-
-        /* モーダル用スタイル */
+    
         .info-button {
             position: fixed;
             bottom: 20px;
@@ -452,7 +316,8 @@
             height: 40px;
             background-color: var(--bg-color);
             color: var(--text-color);
-            border: 1px solid var(--border-color);
+            border: none;
+            background-color: #6363632f;
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -460,29 +325,37 @@
             cursor: pointer;
             z-index: 100;
             font-size: 18px;
-            transition: all 0.2s;
+            transition: all var(--transition);
             user-select: none;
-            opacity: 0.3;
+            opacity: 0.2;
         }
-
+    
         .info-button:hover {
             transform: scale(1.1);
             opacity: 0.8;
         }
-
+    
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: var(--modal-bg);
             z-index: 1000;
             display: none;
             justify-content: center;
             align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            visibility: hidden;
         }
-
+    
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    
         .modal-content {
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -492,63 +365,49 @@
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            transform: skewY(-3deg);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border-color);
-        }
-
-        /* モーダルアニメーション用 */
-        .modal-overlay {
-            opacity: 0;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            visibility: hidden;
-        }
-
-        .modal-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
             transform: skewY(-3deg) translateY(20px);
             opacity: 0;
             transition: transform 0.3s ease, opacity 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
         }
-
+    
         .modal-overlay.show .modal-content {
             transform: skewY(-3deg) translateY(0);
             opacity: 1;
         }
-
+    
         .modal-inner {
             transform: skewY(3deg);
         }
-
+    
+        .modal-content h1,
+        .modal-content h2,
+        .modal-content p,
+        .modal-content textarea {
+            transform: skewY(-3deg);
+        }
+    
         .modal-content h1 {
             font-size: 1.8em;
             margin-top: 0;
             text-align: center;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
-            transform: skewY(-3deg);
-
         }
-
+    
         .modal-content h2 {
             font-size: 1.3em;
             margin-top: 20px;
             border-bottom: 1px dashed var(--border-color);
             padding-bottom: 5px;
-            transform: skewY(-3deg);
-
         }
-
+    
         .modal-content p {
             line-height: 1.6;
             margin: 10px 0;
-            transform: skewY(-3deg);
         }
-
+    
         .modal-content input[type="text"] {
             position: static;
             width: 150px;
@@ -560,7 +419,7 @@
             font-size: 1em;
             padding: 5px;
         }
-
+    
         .modal-content textarea {
             width: 100%;
             height: 100px;
@@ -569,45 +428,25 @@
             border: 1px solid var(--border-color);
             border-radius: 4px;
             background-color: rgba(255, 255, 255, 0.1);
-            font-family: "Zen Old Mincho", serif;
             resize: vertical;
-            transform: skewY(-3deg);
-
         }
-
+    
         .modal-content img {
             display: block;
             margin: 15px auto;
-            transform: skewY(-3deg);
-
         }
-
+    
         .qr {
             max-width: 150px;
         }
-
+    
         .modal-buttons {
             display: flex;
             justify-content: center;
             margin-top: 20px;
-            transform: skewY(-3deg);
         }
-
-        .modal-button {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            margin: 0 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .modal-button:hover {
-            opacity: 0.8;
-        }
-
+    
+        .modal-button,
         .share-button {
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -615,17 +454,23 @@
             padding: 8px 16px;
             border-radius: 4px;
             cursor: pointer;
-            margin: 15px auto;
-            display: block;
-            transition: all 0.2s;
-            transform: skewY(-3deg);
-
+            transition: all var(--transition);
         }
-
+    
+        .modal-button:hover,
         .share-button:hover {
             opacity: 0.8;
         }
-
+    
+        .modal-button {
+            margin: 0 10px;
+        }
+    
+        .share-button {
+            margin: 15px auto;
+            display: block;
+        }
+    
         .close-button {
             position: absolute;
             top: 10px;
@@ -634,13 +479,12 @@
             border: none;
             font-size: 1.5em;
             cursor: pointer;
-            color: var(--text-color);
         }
     </style>
+        
 </head>
 
 <body>
-    <input type="text" class="search-box" placeholder="検索or二度押し">
     <div class="page-title" id="pageTitle">誤字ロマの日記</div>
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
@@ -660,7 +504,6 @@
                 <p>画面右上の<span
                         id="page-title-inmodal">誤字ロマの日記</span>をクリックすると画面が暗転し、「嘘日記」に切り替わります。ここに書かれている固有名詞は、実在するものと全く関係がありませんのでご留意ください。再度クリックすると「本当日記」の表示に戻ります。ただし、本当の日記も必ずしも事実が書かれている保証はありません。筆者の認識がゆがんでいる可能性もあります。すべて、あくまで娯楽としてお楽しみください。
                 </p>
-                <p>画面左上の箱には、好きな言葉を入れていただくと、日記の内容を絞り込んで表示することができます。箱を二度押しすると、適当な言葉を入れ替えながら表示します。</p>
 
                 <h2>おたより</h2>
                 <p>日記の感想、自分語り、尿漏れのお悩みなど、<input type="text" id="mailSubject"
@@ -688,37 +531,7 @@
             </div>
         </div>
     </div>
-
     <script>
-        // グローバル変数
-        let audioContext = null;
-
-        // ビープ音を再生する関数
-        async function playBeep(frequency = 440, duration = 0.1) {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                // ユーザー操作後に再生できるようにする
-                await audioContext.resume();
-            } else if (audioContext.state === 'suspended') {
-                await audioContext.resume();
-            }
-
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-
-            oscillator.type = 'sine';
-            oscillator.frequency.value = frequency;
-            gainNode.gain.value = 0.1;
-            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + duration);
-
-            oscillator.start();
-            oscillator.stop(audioContext.currentTime + duration);
-        }
-
-        // ===== Utilities =====
         class DiaryUtils {
             static toKanjiNumber(num) {
                 const kanjiNumbers = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
@@ -726,41 +539,26 @@
             }
 
             static toKanjiMonth(month) {
-                const kanjiMonths = [
-                    '一月', '二月', '三月', '四月', '五月', '六月',
-                    '七月', '八月', '九月', '十月', '十一月', '十二月'
-                ];
+                const kanjiMonths = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
                 return kanjiMonths[month - 1];
             }
 
             static toKanjiDay(day) {
-                if (day === 10) return '十';
-                if (day === 20) return '二十';
-                if (day === 30) return '三十';
-                if (day === 31) return '三十一';
-                if (day < 10) return this.toKanjiNumber(day);
-                if (day < 20) return '十' + this.toKanjiNumber(day - 10);
-                if (day < 30) return '二十' + this.toKanjiNumber(day - 20);
-                return this.toKanjiNumber(day);
+                const days = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十', '二十一', '二十二', '二十三', '二十四', '二十五', '二十六', '二十七', '二十八', '二十九', '三十', '三十一'];
+                return days[day];
             }
 
             static toJapaneseEra(year) {
-                if (year >= 2019) {
-                    const eraYear = year - 2018;
-                    return `令和${this.toKanjiNumber(eraYear)}年`;
-                } else if (year >= 1989) {
-                    const eraYear = year - 1988;
-                    return `平成${this.toKanjiNumber(eraYear)}年`;
-                } else if (year >= 1926) {
-                    const eraYear = year - 1925;
-                    return `昭和${this.toKanjiNumber(eraYear)}年`;
-                } else if (year >= 1912) {
-                    const eraYear = year - 1911;
-                    return `大正${this.toKanjiNumber(eraYear)}年`;
-                } else {
-                    const eraYear = year - 1867;
-                    return `明治${this.toKanjiNumber(eraYear)}年`;
-                }
+                const eras = [
+                    { name: '令和', start: 2019, offset: 2018 },
+                    { name: '平成', start: 1989, offset: 1988 },
+                    { name: '昭和', start: 1926, offset: 1925 },
+                    { name: '大正', start: 1912, offset: 1911 },
+                    { name: '明治', start: 1868, offset: 1867 }
+                ];
+                const era = eras.find(e => year >= e.start);
+                const eraYear = year - era.offset;
+                return `${era.name}${this.toKanjiNumber(eraYear)}年`;
             }
 
             static formatJapaneseDate(yyyymmdd) {
@@ -775,22 +573,12 @@
                 };
             }
 
-            static generateRandomDate() {
-                const today = new Date();
-                const randomDaysAgo = Math.floor(Math.random() * 60) + 1;
-                const randomDate = new Date(today);
-                randomDate.setDate(today.getDate() - randomDaysAgo);
-                const year = randomDate.getFullYear();
-                const month = String(randomDate.getMonth() + 1).padStart(2, '0');
-                const day = String(randomDate.getDate()).padStart(2, '0');
-                return `${year}${month}${day}`;
-            }
-
             static calculateDaysAgo(yyyymmdd) {
-                const year = parseInt(yyyymmdd.substring(0, 4), 10);
-                const month = parseInt(yyyymmdd.substring(4, 6), 10) - 1;
-                const day = parseInt(yyyymmdd.substring(6, 8), 10);
-                const entryDate = new Date(year, month, day);
+                const entryDate = new Date(
+                    parseInt(yyyymmdd.substring(0, 4), 10),
+                    parseInt(yyyymmdd.substring(4, 6), 10) - 1,
+                    parseInt(yyyymmdd.substring(6, 8), 10)
+                );
                 const today = new Date();
                 const diffTime = today - entryDate;
                 const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
@@ -801,63 +589,28 @@
                 return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             }
 
-            static highlightText(text, keyword) {
-                if (!keyword.trim()) return text;
-                const regex = new RegExp(this.escapeRegExp(keyword), 'gi');
-                return text.replace(regex, match => `<span class="highlight">${match}</span>`);
-            }
         }
 
-        // ===== App Class =====
         class DiaryApp {
-            static THEMES = [
-                { bg: "#e6f3ff", text: "#003366", border: "#003366" },
-                { bg: "#fff8e6", text: "#8b4513", border: "#8b4513" },
-                { bg: "#e6ffe6", text: "#2e8b57", border: "#2e8b57" },
-                { bg: "#ffe6f0", text: "#8b008b", border: "#8b008b" },
-                { bg: "#f0f0ff", text: "#4b0082", border: "#4b0082" },
-                { bg: "#ffffe6", text: "#b8860b", border: "#b8860b" },
-                { bg: "#e6ffff", text: "#0066cc", border: "#0066cc" },
-                { bg: "#f0e6ff", text: "#800080", border: "#800080" },
-                { bg: "#fff0e6", text: "#cd5c5c", border: "#cd5c5c" },
-                { bg: "#f0ffe6", text: "#228b22", border: "#228b22" }
-            ];
-
-            static currentTheme = null;
             static isFakeMode = false;
             static fakeEntriesCache = null;
             static diaryEntries = [];
-            static eventListeners = [];
-            static currentSearchKeyword = '';
             static iconsData = [];
-            static isLanternMode = false;
-            static lanternModeInterval = null;
+            static audioContext = null;
 
-            static init() {
-                this.applyRandomTheme();
-                this.loadIconsData();
-                this.loadDiaryEntries();
+            static async init() {
+                await this.loadIconsData();
+                await this.loadDiaryEntries();
                 this.preloadFakeEntries();
                 this.setupEventListeners();
                 this.setupModal();
                 document.body.style.opacity = 1;
             }
 
-            static applyRandomTheme() {
-                const randomTheme = this.THEMES[Math.floor(Math.random() * this.THEMES.length)];
-                this.currentTheme = randomTheme;
-                document.documentElement.style.setProperty('--bg-color', randomTheme.bg);
-                document.documentElement.style.setProperty('--text-color', randomTheme.text);
-                document.documentElement.style.setProperty('--border-color', randomTheme.border);
-            }
-
             static async loadIconsData() {
                 try {
                     const response = await fetch('icons.csv');
-                    if (!response.ok) {
-                        console.error(`Failed to load icons.csv: ${response.status} ${response.statusText}`);
-                        return;
-                    }
+                    if (!response.ok) throw new Error(`Failed to load icons.csv: ${response.status}`);
                     const csv = await response.text();
                     this.iconsData = this.parseCSV(csv);
                 } catch (error) {
@@ -867,13 +620,9 @@
 
             static parseCSV(csv) {
                 const lines = csv.split('\n').filter(line => line.trim());
-                const headers = ['date', 'title', 'icon', 'url'];
                 return lines.slice(1).map(line => {
-                    const values = line.split(',').map(v => v.trim());
-                    return headers.reduce((obj, header, i) => {
-                        obj[header] = values[i] || '';
-                        return obj;
-                    }, {});
+                    const [date, title, icon, url] = line.split(',').map(v => v.trim());
+                    return { date, title, icon, url };
                 });
             }
 
@@ -887,107 +636,24 @@
                         ? `<img src="${icon.icon}" alt="${icon.title}" class="icon-img" loading="lazy">`
                         : `<span class="icon-emoji">${icon.icon}</span>`;
                     const tooltip = icon.title ? `<div class="tooltip">${icon.title}</div>` : '';
-                    const url = icon.url ? `onclick="window.open('${icon.url}', '_blank')" style="cursor: pointer;"` : '';
+                    const urlAttr = icon.url ? `onclick="window.open('${icon.url}', '_blank')" style="cursor: pointer;"` : '';
                     const highlightClass = keyword && icon.title.toLowerCase().includes(keyword.toLowerCase()) ? 'highlight' : '';
-                    return `<div class="icon ${highlightClass}" ${url}>${iconContent}${tooltip}</div>`;
+                    return `<div class="icon ${highlightClass}" ${urlAttr}>${iconContent}${tooltip}</div>`;
                 }).join('');
-            }
-
-            static executeLanternSearch() {
-                if (this.diaryEntries.length === 0) return;
-
-                const randomEntry = this.diaryEntries[Math.floor(Math.random() * this.diaryEntries.length)];
-                const content = randomEntry.content;
-
-                if (content.length < 2) return;
-                const startIndex = Math.floor(Math.random() * (content.length - 2));
-                const keywordLength = 2 + Math.floor(Math.random() * 2);
-                let keyword = content.substring(startIndex, startIndex + keywordLength);
-
-                const searchBox = document.querySelector('.search-box');
-                searchBox.value = keyword;
-                this.handleSearch(keyword);
-            }
-
-            static stopLanternMode() {
-                if (!this.isLanternMode) return;
-                this.isLanternMode = false;
-
-                if (this.lanternModeInterval) {
-                    clearInterval(this.lanternModeInterval);
-                    this.lanternModeInterval = null;
-                }
-
-                const searchBox = document.querySelector('.search-box');
-                searchBox.value = '';
-                this.handleSearch('');
-                searchBox.classList.remove('lantern-mode');
-            }
-
-            static startLanternMode() {
-                if (this.isLanternMode) return;
-                this.isLanternMode = true;
-
-                const searchBox = document.querySelector('.search-box');
-                searchBox.blur();
-                searchBox.classList.add('lantern-mode');
-
-                this.executeLanternSearch();
-                this.lanternModeInterval = setInterval(() => {
-                    this.executeLanternSearch();
-                }, 3000);
             }
 
             static setupEventListeners() {
                 const pageTitle = document.getElementById('pageTitle');
-                const searchBox = document.querySelector('.search-box');
-                const infoButton = document.getElementById('infoButton');
+                pageTitle.addEventListener('click', () => this.toggleFakeMode());
 
-
-                pageTitle.addEventListener('click', () => {
-                    playBeep(220, 0.1); // 低い音
-                    this.toggleFakeMode();
-                });
                 let pressTimer;
-                pageTitle.addEventListener('mousedown', () => {
-                    pressTimer = setTimeout(() => this.downloadDiaryAsText(), 1000);
-                });
+                pageTitle.addEventListener('mousedown', () => pressTimer = setTimeout(() => this.downloadDiaryAsText(), 1000));
                 pageTitle.addEventListener('mouseup', () => clearTimeout(pressTimer));
                 pageTitle.addEventListener('mouseleave', () => clearTimeout(pressTimer));
 
-                searchBox.addEventListener('input', (e) => this.handleSearch(e.target.value));
-
-                document.addEventListener('keydown', (e) => this.handleKeyDown(e));
-
+                document.addEventListener('keydown', e => this.handleKeyDown(e));
                 window.addEventListener('hashchange', () => this.scrollToEntryFromHash());
-
                 window.addEventListener('load', () => this.scrollToEntryFromHash());
-
-                searchBox.addEventListener('dblclick', () => {
-                    this.startLanternMode();
-                });
-
-                searchBox.addEventListener('click', () => {
-                    playBeep(850, 0.1); // 中くらいの音
-                    if (searchBox.value) {
-                        searchBox.value = '';
-                        this.handleSearch('');
-                    }
-                    this.stopLanternMode();
-                });
-
-
-                searchBox.addEventListener('focus', () => {
-                    if (searchBox.value) {
-                        searchBox.value = '';
-                        this.handleSearch('');
-                    }
-                    this.stopLanternMode();
-                });
-                infoButton.addEventListener('click', () => {
-                    playBeep(770, 0.1); // 高い音
-                });
-
             }
 
             static setupModal() {
@@ -997,19 +663,17 @@
                 const sendMailButton = document.getElementById('sendMailButton');
                 const shareButton = document.getElementById('shareButton');
 
-                // モーダル表示時のアニメーション
                 infoButton.addEventListener('click', () => {
                     modalOverlay.style.display = 'flex';
                     setTimeout(() => modalOverlay.classList.add('show'), 10);
                 });
 
-                // モーダル非表示時のアニメーション
                 closeButton.addEventListener('click', () => {
                     modalOverlay.classList.remove('show');
                     setTimeout(() => modalOverlay.style.display = 'none', 300);
                 });
 
-                modalOverlay.addEventListener('click', (e) => {
+                modalOverlay.addEventListener('click', e => {
                     if (e.target === modalOverlay) {
                         modalOverlay.classList.remove('show');
                         setTimeout(() => modalOverlay.style.display = 'none', 300);
@@ -1019,20 +683,14 @@
                 sendMailButton.addEventListener('click', () => {
                     const subject = document.getElementById('mailSubject').value || 'somebody';
                     const body = document.getElementById('mailBody').value || '本文なし';
-                    const mailtoLink = `mailto:${subject}@poet.blue?subject=誤字ロマの日記を読みました&body=${encodeURIComponent(body)}`;
-                    window.location.href = mailtoLink;
+                    window.location.href = `mailto:${subject}@poet.blue?subject=誤字ロマの日記を読みました&body=${encodeURIComponent(body)}`;
                 });
 
                 shareButton.addEventListener('click', () => {
                     if (navigator.share) {
-                        navigator.share({
-                            title: '誤字ロマの日記',
-                            url: 'https://nikki.poet.blue'
-                        }).catch(err => {
-                            console.log('共有に失敗しました:', err);
-                        });
+                        navigator.share({ title: '誤字ロマの日記', url: 'https://nikki.poet.blue' });
                     } else {
-                        alert('このブラウザでは共有機能が使えません。URLをコピーしてください: https://nikki.poet.blue');
+                        alert('URLをコピーしてください: https://nikki.poet.blue');
                     }
                 });
             }
@@ -1040,10 +698,7 @@
             static async loadDiaryEntries(filename = 'entry.md') {
                 try {
                     const response = await fetch(filename);
-                    if (!response.ok) {
-                        console.error(`Failed to load ${filename}: ${response.status} ${response.statusText}`);
-                        return;
-                    }
+                    if (!response.ok) throw new Error(`Failed to load ${filename}: ${response.status}`);
                     const text = await response.text();
                     this.renderEntries(text);
                 } catch (error) {
@@ -1064,36 +719,26 @@
 
                     const yyyymmdd = dateMatch[1].trim();
                     const dateObj = DiaryUtils.formatJapaneseDate(yyyymmdd);
-                    let contentLines = contentMatch[1]
-                        .split('\n')
-                        .map(line => line.replace(/^\s*\|?\s*/, ''))
-                        .join('\n')
-                        .trim();
-
-                    if (this.currentSearchKeyword) {
-                        contentLines = DiaryUtils.highlightText(contentLines, this.currentSearchKeyword);
-                    }
+                    const contentLines = contentMatch[1].split('\n').map(line => line.replace(/^\s*\|?\s*/, '')).join('\n');
+                    const dateForIcons = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
+                    const iconsHTML = this.getIconsForDate(dateForIcons);
 
                     const entryElement = document.createElement('div');
                     entryElement.className = 'diary-entry';
                     entryElement.id = yyyymmdd;
-
-                    const dateForIcons = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
-                    const iconsHTML = this.getIconsForDate(dateForIcons, this.currentSearchKeyword);
-
                     entryElement.innerHTML = `
-                        <div class="date-container">
-                            <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
-                            <div class="days-ago">${DiaryUtils.calculateDaysAgo(yyyymmdd)}</div>
-                            ${iconsHTML}
-                        </div>
-                        <div class="content">${contentLines}</div>
-                    `;
+                            <div class="date-container">
+                                <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
+                                <div class="days-ago">${DiaryUtils.calculateDaysAgo(yyyymmdd)}</div>
+                                ${iconsHTML}
+                            </div>
+                            <div class="content">${contentLines}</div>
+                        `;
                     container.appendChild(entryElement);
 
                     this.diaryEntries.push({
                         yyyymmdd,
-                        content: contentMatch[1].split('\n').map(line => line.replace(/^\s*\|?\s*/, '')).join('\n').trim(),
+                        content: contentLines.trim(),
                         icons: this.iconsData.filter(icon => icon.date === dateForIcons)
                     });
                 });
@@ -1107,9 +752,7 @@
             static setupDateClick() {
                 document.querySelectorAll('.date').forEach(dateElement => {
                     dateElement.addEventListener('click', () => {
-                        const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
-                        window.location.hash = yyyymmdd;
-                        this.flashEntry(document.getElementById(yyyymmdd));
+                        window.location.hash = dateElement.getAttribute('data-yyyymmdd');
                     });
                 });
             }
@@ -1130,19 +773,18 @@
                     const container = document.createElement('div');
                     container.className = 'timeline-bar';
                     container.dataset.yyyymmdd = entry.yyyymmdd;
-
+                    container.title = `${entry.yyyymmdd}: ${entry.content.length}文字`;
                     const innerBar = document.createElement('div');
                     innerBar.className = 'timeline-bar-inner';
                     const contentLength = Math.min(entry.content.length, maxContentLength);
-                    const height = Math.max(baseHeight, contentLength * heightRatio);
-                    innerBar.style.height = `${height}px`;
+                    innerBar.style.height = `${Math.max(baseHeight, contentLength * heightRatio)}px`;
 
                     container.addEventListener('mouseover', () => {
                         window.location.hash = entry.yyyymmdd;
                         this.scrollToEntryFromHash();
                     });
 
-                    container.addEventListener('touchstart', (e) => {
+                    container.addEventListener('touchstart', e => {
                         e.preventDefault();
                         window.location.hash = entry.yyyymmdd;
                         this.scrollToEntryFromHash();
@@ -1152,16 +794,13 @@
                     timeline.appendChild(container);
                 });
 
-                // 初期表示時にhashが設定されている場合、selectedクラスを追加
                 const hash = window.location.hash.substring(1);
                 if (hash && hash.match(/^\d{8}$/)) {
                     const selectedBar = document.querySelector(`.timeline-bar[data-yyyymmdd="${hash}"]`);
-                    if (selectedBar) {
-                        selectedBar.classList.add('selected');
-                    }
+                    if (selectedBar) selectedBar.classList.add('selected');
                 }
 
-                timeline.addEventListener('touchmove', (e) => {
+                timeline.addEventListener('touchmove', e => {
                     e.preventDefault();
                     const touch = e.touches[0];
                     const rect = timeline.getBoundingClientRect();
@@ -1177,15 +816,14 @@
 
             static percentile95(arr) {
                 const sorted = [...arr].sort((a, b) => a - b);
-                const index = Math.floor(sorted.length * 0.95);
-                return sorted[index];
+                return sorted[Math.floor(sorted.length * 0.95)];
             }
 
             static toggleFakeMode() {
+                this.isFakeMode = !this.isFakeMode;
                 const title = document.querySelector('.page-title');
                 const body = document.body;
 
-                this.isFakeMode = !this.isFakeMode;
                 title.textContent = this.isFakeMode ? '誤字ロマの嘘日記' : '誤字ロマの日記';
                 title.classList.toggle('fake-mode', this.isFakeMode);
                 body.classList.toggle('fake-mode', this.isFakeMode);
@@ -1204,25 +842,20 @@
             static async preloadFakeEntries() {
                 try {
                     const response = await fetch('fake.md');
-                    if (response.ok) {
-                        this.fakeEntriesCache = await response.text();
-                    } else {
-                        console.error(`Failed to preload fake.md: ${response.status} ${response.statusText}`);
-                    }
+                    if (response.ok) this.fakeEntriesCache = await response.text();
                 } catch (error) {
                     console.error('Error preloading fake entries:', error);
                 }
             }
 
             static scrollToEntryFromHash() {
-                playBeep(340, 0.1);
+                this.playBeep(340, 0.1);
                 requestAnimationFrame(() => {
                     const hash = window.location.hash.substring(1);
                     const container = document.getElementById('diaryContainer');
                     const entries = document.querySelectorAll('.diary-entry');
                     const timelineBars = document.querySelectorAll('.timeline-bar');
 
-                    // 既存のselectedクラスを削除
                     timelineBars.forEach(bar => bar.classList.remove('selected'));
 
                     if (hash && hash.match(/^\d{8}$/)) {
@@ -1231,13 +864,9 @@
                             const entryRight = entry.offsetLeft + entry.clientWidth;
                             const containerWidth = container.clientWidth;
                             this.smoothScrollTo(container, entryRight - containerWidth);
-                            this.flashEntry(entry);
 
-                            // 選択されているtimeline-barにselectedクラスを追加
                             const selectedBar = document.querySelector(`.timeline-bar[data-yyyymmdd="${hash}"]`);
-                            if (selectedBar) {
-                                selectedBar.classList.add('selected');
-                            }
+                            if (selectedBar) selectedBar.classList.add('selected');
                         }
                     } else if (entries.length > 0) {
                         const latestEntry = entries[0];
@@ -1252,43 +881,14 @@
                 const startPosition = element.scrollLeft;
                 const startTime = performance.now();
 
-                const animateScroll = (currentTime) => {
+                const animateScroll = currentTime => {
                     const elapsedTime = currentTime - startTime;
                     const progress = Math.min(elapsedTime / duration, 1);
                     element.scrollLeft = startPosition + (targetPosition - startPosition) * progress;
-
-                    if (progress < 1) {
-                        requestAnimationFrame(animateScroll);
-                    }
+                    if (progress < 1) requestAnimationFrame(animateScroll);
                 };
 
                 requestAnimationFrame(animateScroll);
-            }
-
-            static flashEntry(entry) {
-                document.querySelectorAll('.diary-entry').forEach(el => {
-                    if (el !== entry) {
-                        Object.assign(el.style, {
-                            transition: 'none',
-                            fontWeight: '',
-                            filter: 'brightness(1)',
-                            color: ''
-                        });
-                    }
-                });
-
-                Object.assign(entry.style, {
-                    transition: 'filter 0.2s ease, color 0.2s ease',
-                    color: this.isFakeMode ? '#fff' : '#333333',
-                    filter: 'brightness(2)'
-                });
-
-                setTimeout(() => {
-                    Object.assign(entry.style, {
-                        color: this.isFakeMode ? '#fff' : this.currentTheme.text,
-                        filter: 'brightness(1)'
-                    });
-                }, 1200);
             }
 
             static handleKeyDown(e) {
@@ -1303,18 +903,15 @@
                         window.location.hash = nextEntry.id;
                         this.scrollToEntryFromHash();
                     }
-                } else if (e.key === 'Escape') {
-                    if (window.location.hash) {
-                        window.location.hash = '';
-                    }
+                } else if (e.key === 'Escape' && window.location.hash) {
+                    window.location.hash = '';
                 }
             }
 
             static getCurrentEntry() {
                 const hash = window.location.hash.substring(1);
-                if (hash && hash.match(/^\d{8}$/)) {
-                    return document.getElementById(hash);
-                }
+                if (hash && hash.match(/^\d{8}$/)) return document.getElementById(hash);
+
                 const entries = document.querySelectorAll('.diary-entry');
                 return entries.length > 0 ? entries[0] : null;
             }
@@ -1329,55 +926,8 @@
                 return entries[nextIndex];
             }
 
-            static handleSearch(keyword) {
-                this.currentSearchKeyword = keyword;
-                const keywordLower = keyword.toLowerCase();
-
-                document.querySelectorAll('.diary-entry').forEach(entry => {
-                    const contentElement = entry.querySelector('.content');
-                    const dateContainer = entry.querySelector('.date-container');
-                    const entryData = this.diaryEntries.find(e => e.yyyymmdd === entry.id);
-                    if (!entryData) return;
-
-                    const originalContent = entryData.content;
-                    const contentLower = originalContent.toLowerCase();
-
-                    // iconのtitleも検索対象に追加
-                    const iconTitles = entryData.icons.map(icon => icon.title.toLowerCase());
-                    const isMatch = contentLower.includes(keywordLower) ||
-                        iconTitles.some(title => title.includes(keywordLower));
-
-                    if (isMatch) {
-                        entry.style.display = 'block';
-                        if (keyword) {
-                            contentElement.innerHTML = DiaryUtils.highlightText(originalContent, keyword);
-
-                            // アイコンのハイライトを更新
-                            const yyyymmdd = entry.id;
-                            const dateForIcons = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
-                            const iconsHTML = this.getIconsForDate(dateForIcons, keyword);
-                            const newDateContainer = document.createElement('div');
-                            newDateContainer.className = 'date-container';
-                            newDateContainer.innerHTML = `
-                                <div class="date" data-yyyymmdd="${yyyymmdd}">${dateContainer.querySelector('.date').textContent}</div>
-                                <div class="days-ago">${dateContainer.querySelector('.days-ago').textContent}</div>
-                                ${iconsHTML}
-                            `;
-                            dateContainer.replaceWith(newDateContainer);
-                        } else {
-                            contentElement.textContent = originalContent;
-                        }
-                    } else {
-                        entry.style.display = 'none';
-                    }
-                });
-            }
-
             static downloadDiaryAsText() {
-                if (this.diaryEntries.length === 0) {
-                    alert('ダウンロードする日記がありません。');
-                    return;
-                }
+                if (this.diaryEntries.length === 0) return alert('ダウンロードする日記がありません。');
 
                 const sortedEntries = [...this.diaryEntries].sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
                 const oldestDate = sortedEntries[0].yyyymmdd;
@@ -1408,11 +958,34 @@
                 pageTitle.textContent = `誤字ロマの${count}日間`;
                 pageInModalTitle.textContent = `誤字ロマの${count}日間`;
             }
+
+            static async playBeep(frequency = 440, duration = 0.1) {
+                if (!this.audioContext) {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    await this.audioContext.resume();
+                } else if (this.audioContext.state === 'suspended') {
+                    await this.audioContext.resume();
+                }
+
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(this.audioContext.destination);
+
+                oscillator.type = 'sine';
+                oscillator.frequency.value = frequency;
+                gainNode.gain.value = 0.1;
+                gainNode.gain.exponentialRampToValueAtTime(0.0001, this.audioContext.currentTime + duration);
+
+                oscillator.start();
+                oscillator.stop(this.audioContext.currentTime + duration);
+            }
         }
 
-        // Initialize the app
         DiaryApp.init();
     </script>
+        
 </body>
 
 </html>
