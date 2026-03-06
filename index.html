@@ -21,6 +21,11 @@
             --icon-size: 34px;
             --modal-bg: rgba(0, 0, 0, 0.5);
             --transition: 0.2s ease;
+            --light-pastel-1: #f8e8e8;
+            --light-pastel-2: #e8f8f5;
+            --dark-pastel-1: #2a2a3a;
+            --dark-pastel-2: #1a1a2a;
+
         }
 
         body {
@@ -38,6 +43,8 @@
             transition: opacity var(--transition), background-color var(--transition);
             background-color: var(--bg-color);
             color: var(--text-color);
+            background-size: 200% 200%;
+
         }
 
         body.fake-mode {
@@ -84,11 +91,6 @@
             color: var(--text-color);
         }
 
-        .page-title.flash {
-            background-color: #000 !important;
-            color: #ff0 !important;
-            border-color: #ff0 !important;
-        }
 
         input[type="text"] {
             color: var(--text-color) !important;
@@ -169,7 +171,7 @@
             font-size: 0.8em;
             margin-left: -3px;
             white-space: nowrap;
-            opacity: 0.2;
+            opacity: 0.6;
         }
 
         .content {
@@ -180,40 +182,16 @@
             position: relative;
         }
 
-        .content-tooltip {
-            position: absolute;
-            top: -28px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 12px;
-            white-space: nowrap;
-            border: 1px solid var(--border-color);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity var(--transition);
-            z-index: 30;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            display: flex;
-            gap: 8px;
+        /* 現在表示中以外のエントリを半透明に */
+        .diary-entry:not(.active) {
+            opacity: 0.6;
         }
 
-        .content-tooltip.show {
+        /* 現在表示中のエントリは不透明 */
+        .diary-entry.active {
             opacity: 1;
-            pointer-events: auto;
         }
 
-        .content-tooltip>span {
-            cursor: pointer;
-            padding: 0 3px;
-        }
-
-        .content-tooltip>span:hover {
-            text-decoration: underline;
-        }
 
         .highlight {
             background-color: var(--highlight-color);
@@ -252,12 +230,7 @@
             align-items: flex-end;
             height: 100%;
             width: 100%;
-            opacity: 0.1;
             transition: opacity var(--transition);
-        }
-
-        .timeline:hover {
-            opacity: 1;
         }
 
         .timeline-bar {
@@ -274,11 +247,11 @@
             width: 100%;
             background-color: var(--text-color);
             transition: background-color var(--transition);
+            opacity: 0.2;
         }
 
         .timeline-bar:hover .timeline-bar-inner,
         .timeline-bar.selected .timeline-bar-inner {
-            background-color: #00bc84 !important;
             opacity: 1 !important;
         }
 
@@ -519,6 +492,15 @@
             cursor: pointer;
         }
 
+        .falling {
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+            /* レンダリング最適化 */
+            perspective: 1000px;
+            /* 3D変換のヒント */
+        }
+
+
         .char.falling,
         .date.falling {
             position: fixed;
@@ -648,8 +630,19 @@
                 this.preloadFakeEntries();
                 this.setupEventListeners();
                 this.setupModal();
+                document.body.style.background = this.generatePastelGradient(!this.isFakeMode);
                 document.body.style.opacity = 1;
-                setTimeout(startFallingAnimation, 180000); // 3分後に実行
+                setTimeout(startFallingAnimation, 180000);
+            }
+            static generatePastelGradient(isLight) {
+                const hue = Math.floor(Math.random() * 360);
+                const saturation = isLight ? '80%' : '60%';
+                const lightness1 = isLight ? '90%' : '20%';
+                const lightness2 = isLight ? '95%' : '25%';
+
+                return `linear-gradient(135deg,
+        hsl(${hue}, ${saturation}, ${lightness1}),
+        hsl(${((hue + 30) % 360)}, ${saturation}, ${lightness2}))`;
             }
 
             static async loadIconsData() {
@@ -753,13 +746,17 @@
 
             static renderEntries(text) {
                 const container = document.getElementById('diaryContainer');
+                if (!container) {
+                    console.error("コンテナが見つかりません。");
+                    return;
+                }
                 container.innerHTML = '';
                 this.diaryEntries = [];
 
                 const entries = text.split('---').filter(entry => entry.trim());
                 entries.reverse().forEach(entry => {
                     const dateMatch = entry.match(/date:\s*(.*)/);
-                    const contentMatch = entry.match(/content:\s*\|\n([\s\S]*?)(?=\n---|\n$)/m);
+                    const contentMatch = entry.match(/content:\s*\|\s*\n([\s\S]*?)(?=\n---|\n$|$)/m);
                     if (!dateMatch || !contentMatch) return;
 
                     const yyyymmdd = dateMatch[1].trim();
@@ -791,62 +788,43 @@
                 this.setupDateClick();
                 this.renderTimeline();
                 this.updatePageTitle(entries.length);
-                this.setupContentTooltips();
+                this.setupContentClick();
                 this.scrollToEntryFromHash();
             }
-            static setupContentTooltips() {
+            static setupContentClick() {
                 document.querySelectorAll('.content').forEach(content => {
-                    const tooltip = document.createElement('div');
-                    tooltip.className = 'content-tooltip';
-                    tooltip.innerHTML = `
-            <span class="copy-btn">copy</span>
-            <span class="speak-btn">speak</span>
-        `;
-                    content.style.position = 'relative';
-                    content.appendChild(tooltip);
-
                     let speechSynthesisUtterance = null;
+                    let isCopied = false;
 
-                    content.addEventListener('mouseenter', () => {
-                        tooltip.classList.add('show');
-                    });
-
-                    content.addEventListener('mouseleave', () => {
-                        tooltip.classList.remove('show');
+                    content.addEventListener('click', (e) => {
+                        e.stopPropagation();
                         if (speechSynthesisUtterance) {
                             window.speechSynthesis.cancel();
                             speechSynthesisUtterance = null;
-                            tooltip.querySelector('.speak-btn').textContent = 'speak';
+                            isCopied = false;
+                            return;
+                        }
+                        if (!isCopied) {
+                            const text = content.textContent;
+                            navigator.clipboard.writeText(text).then(() => {
+                                isCopied = true;
+                                setTimeout(() => { isCopied = false; }, 2000);
+                            });
                         }
                     });
 
-                    tooltip.querySelector('.copy-btn').addEventListener('click', (e) => {
+                    content.addEventListener('dblclick', (e) => {
                         e.stopPropagation();
-                        const text = content.textContent;
-                        navigator.clipboard.writeText(text).then(() => {
-                            tooltip.querySelector('.copy-btn').textContent = 'copied';
-                            setTimeout(() => {
-                                tooltip.querySelector('.copy-btn').textContent = 'copy';
-                            }, 2000);
-                        });
-                    });
-
-                    tooltip.querySelector('.speak-btn').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const btn = tooltip.querySelector('.speak-btn');
                         if (speechSynthesisUtterance) {
                             window.speechSynthesis.cancel();
                             speechSynthesisUtterance = null;
-                            btn.textContent = 'speak';
                         } else {
                             const text = content.textContent;
                             speechSynthesisUtterance = new SpeechSynthesisUtterance(text);
                             speechSynthesisUtterance.onend = () => {
                                 speechSynthesisUtterance = null;
-                                btn.textContent = 'speak';
                             };
                             window.speechSynthesis.speak(speechSynthesisUtterance);
-                            btn.textContent = 'shut';
                         }
                     });
                 });
@@ -936,6 +914,8 @@
                 const body = document.body;
 
                 title.textContent = this.isFakeMode ? '誤字ロマの裏日記' : '誤字ロマの日記';
+                body.style.background = this.generatePastelGradient(!this.isFakeMode);
+
                 title.classList.toggle('fake-mode', this.isFakeMode);
                 body.classList.toggle('fake-mode', this.isFakeMode);
 
@@ -950,6 +930,8 @@
                 }
             }
 
+
+
             static async preloadFakeEntries() {
                 try {
                     const response = await fetch('fake.md');
@@ -960,29 +942,46 @@
             }
 
             static scrollToEntryFromHash() {
-                this.playBeep(340, 0.1);
                 const hash = window.location.hash.substring(1);
-                const container = document.getElementById('diaryContainer');
                 const entries = document.querySelectorAll('.diary-entry');
                 const timelineBars = document.querySelectorAll('.timeline-bar');
 
+                // 全てのエントリからactiveクラスを削除
+                entries.forEach(entry => entry.classList.remove('active'));
                 timelineBars.forEach(bar => bar.classList.remove('selected'));
-
+                const minFreq = 320;
+                const maxFreq = 3200;
                 if (hash && hash.match(/^\d{8}$/)) {
                     const entry = document.getElementById(hash);
                     if (entry) {
+                        entry.classList.add('active'); // アクティブエントリを設定
                         const entryRight = entry.offsetLeft + entry.clientWidth;
-                        const containerWidth = container.clientWidth;
-                        this.scrollTo(container, entryRight - containerWidth);
+                        const containerWidth = document.getElementById('diaryContainer').clientWidth;
+                        this.scrollTo(document.getElementById('diaryContainer'), entryRight - containerWidth);
 
+                        // 対象エントリの文字数に応じたビープ音
+                        const content = entry.querySelector('.content');
+                        const charCount = content.textContent.length;
+
+                        const freq = Math.max(minFreq, Math.min(maxFreq, minFreq + charCount * 0.5));
+                        this.playBeep(freq, 0.3);
+
+                        // 対応するタイムラインバーを選択状態に
                         const selectedBar = document.querySelector(`.timeline-bar[data-yyyymmdd="${hash}"]`);
                         if (selectedBar) selectedBar.classList.add('selected');
                     }
                 } else if (entries.length > 0) {
                     const latestEntry = entries[0];
+                    latestEntry.classList.add('active'); // 最新エントリをアクティブに
                     const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
-                    const containerWidth = container.clientWidth;
-                    this.scrollTo(container, entryRight - containerWidth);
+                    const containerWidth = document.getElementById('diaryContainer').clientWidth;
+                    this.scrollTo(document.getElementById('diaryContainer'), entryRight - containerWidth);
+
+                    // 最新エントリの文字数に応じたビープ音
+                    const content = latestEntry.querySelector('.content');
+                    const charCount = content.textContent.length;
+                    const freq = Math.max(minFreq, Math.min(maxFreq, minFreq + charCount * 0.5));
+                    this.playBeep(freq, 0.3);
                 }
             }
 
@@ -994,6 +993,9 @@
             static handleKeyDown(e) {
                 if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
                     e.preventDefault();
+                    if (this.lastKeyTime && Date.now() - this.lastKeyTime < 62) return;
+                    this.lastKeyTime = Date.now();
+
                     const currentEntry = this.getCurrentEntry();
                     if (!currentEntry) return;
 
@@ -1007,6 +1009,7 @@
                     window.location.hash = '';
                 }
             }
+
 
             static getCurrentEntry() {
                 const hash = window.location.hash.substring(1);
@@ -1065,20 +1068,35 @@
                     await this.audioContext.resume();
                 }
 
+                // 前のオシレーターを停止
+                if (this.currentOscillator) {
+                    this.currentOscillator.stop();
+                    this.currentOscillator.disconnect();
+                }
+
+                // カスタム波形を作成（実数部と虚数部を指定）
+                const real = new Float32Array([0, 1, 0.5, 0.2]); // 実数部（例：基本周波数 + 高調波）
+                const imag = new Float32Array(real.length); // 虚数部（ここではゼロ）
+                const wave = this.audioContext.createPeriodicWave(real, imag);
+
                 const oscillator = this.audioContext.createOscillator();
                 const gainNode = this.audioContext.createGain();
 
+                oscillator.setPeriodicWave(wave); // カスタム波形を設定
                 oscillator.connect(gainNode);
                 gainNode.connect(this.audioContext.destination);
 
-                oscillator.type = 'sine';
                 oscillator.frequency.value = frequency;
                 gainNode.gain.value = 0.1;
                 gainNode.gain.exponentialRampToValueAtTime(0.0001, this.audioContext.currentTime + duration);
 
                 oscillator.start();
                 oscillator.stop(this.audioContext.currentTime + duration);
+
+                this.currentOscillator = oscillator;
             }
+
+
         }
 
         DiaryApp.init();
@@ -1185,7 +1203,7 @@
                     const maxSize = 60; // 最大サイズ
                     const randomSize = Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize;
                     element.style.fontSize = `${randomSize}px`;
-
+                    element.style.willChange = 'transform, opacity'; // GPUアクセラレーションヒント
                     element.classList.add('falling');
 
                     setTimeout(() => {
@@ -1201,7 +1219,8 @@
                 });
             });
         };
-    </script>
+  
+  </script>
 
 </body>
 
