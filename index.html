@@ -558,88 +558,6 @@
         </div>
     </div>
     <script>
-        class WebHaptics {
-  constructor() {
-    this.hapticLabel = null;
-    this.domInitialized = false;
-    this.rafId = null;
-    this.patternResolve = null;
-  }
-
-  static isSupported = typeof navigator !== "undefined" && typeof navigator.vibrate === "function";
-
-  trigger(duration = 50, intensity = 0.7) {
-    if (WebHaptics.isSupported) {
-      navigator.vibrate(duration);
-    } else {
-      this.ensureDOM();
-      if (!this.hapticLabel) return;
-
-      this.hapticLabel.click();
-      if (intensity > 0) {
-        const toggleInterval = 16 + (1 - intensity) * 168; // 16ms〜184ms
-        let lastToggleTime = -1;
-
-        const loop = (time) => {
-          if (lastToggleTime === -1) {
-            lastToggleTime = time;
-          } else if (time - lastToggleTime >= toggleInterval) {
-            this.hapticLabel.click();
-            lastToggleTime = time;
-          }
-
-          if (time - performance.now() < duration) {
-            this.rafId = requestAnimationFrame(loop);
-          } else {
-            this.rafId = null;
-          }
-        };
-        this.rafId = requestAnimationFrame(loop);
-      }
-    }
-  }
-
-  ensureDOM() {
-    if (this.domInitialized) return;
-    if (typeof document === "undefined") return;
-
-    const hapticLabel = document.createElement("label");
-    hapticLabel.setAttribute("for", "web-haptics-checkbox");
-    hapticLabel.style.position = "fixed";
-    hapticLabel.style.bottom = "10px";
-    hapticLabel.style.left = "10px";
-    hapticLabel.style.padding = "5px 10px";
-    hapticLabel.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
-    hapticLabel.style.color = "white";
-    hapticLabel.style.fontFamily = "sans-serif";
-    hapticLabel.style.fontSize = "14px";
-    hapticLabel.style.borderRadius = "4px";
-    hapticLabel.style.zIndex = "9999";
-    hapticLabel.style.userSelect = "none";
-    hapticLabel.style.display = "none";
-
-    const hapticCheckbox = document.createElement("input");
-    hapticCheckbox.type = "checkbox";
-    hapticCheckbox.id = "web-haptics-checkbox";
-    hapticCheckbox.style.all = "initial";
-    hapticCheckbox.style.appearance = "auto";
-
-    hapticLabel.appendChild(hapticCheckbox);
-    document.body.appendChild(hapticLabel);
-    this.hapticLabel = hapticLabel;
-    this.domInitialized = true;
-  }
-
-  cancel() {
-    if (this.rafId !== null) {
-      cancelAnimationFrame(this.rafId);
-      this.rafId = null;
-    }
-  }
-}
-
-const webHaptics = new WebHaptics();
-
         class DiaryUtils {
             static toKanjiNumber(num) {
                 const kanjiNumbers = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
@@ -1023,13 +941,16 @@ const webHaptics = new WebHaptics();
                 }
             }
             static triggerHapticFeedback(charCount) {
-                const minVibrate = 3;
-                const maxVibrate = 50;
-                const duration = Math.max(minVibrate, Math.min(maxVibrate, minVibrate + charCount * 0.5));
-                const intensity = Math.min(1, charCount / 100); // 文字数に応じた強度
-                webHaptics.trigger(duration, intensity);
-            }
+                const minVibrate = 8; // 最小振動時間（ms）
+                const maxVibrate = 160; // 最大振動時間（ms）
 
+                // 文字数に応じた振動時間（1文字あたり1ms、最小20ms、最大200ms）
+                const duration = Math.max(minVibrate, Math.min(maxVibrate, minVibrate + charCount));
+
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(duration);
+                }
+            }
 
             static scrollToEntryFromHash() {
                 const hash = window.location.hash.substring(1);
