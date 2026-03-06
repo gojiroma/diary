@@ -514,6 +514,8 @@
 </head>
 
 <body>
+    <button id="fallingButton" class="btn"
+        style="position: fixed; top: 10px; left: 100px; padding: 5px 10px; opacity: 0.1; border: none; border-radius: 8px; background-color: #6363632f; color: var(--text-color); cursor: pointer; z-index: 10;">fall</button>
     <div class="page-title btn" id="pageTitle"></div>
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
@@ -632,6 +634,8 @@
                 this.setupModal();
                 document.body.style.background = this.generatePastelGradient(!this.isFakeMode);
                 document.body.style.opacity = 1;
+                document.getElementById('fallingButton').addEventListener('click', startFallingAnimation);
+
                 setTimeout(startFallingAnimation, 180000);
             }
             static generatePastelGradient(isLight) {
@@ -1126,6 +1130,7 @@
         }
 
         DiaryApp.init();
+
         document.querySelectorAll('.content').forEach(content => {
             const tooltip = document.createElement('div');
             tooltip.className = 'content-tooltip';
