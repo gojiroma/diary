@@ -177,6 +177,42 @@
             white-space: pre-line;
             text-wrap: balance;
             overflow-wrap: break-word;
+            position: relative;
+        }
+
+        .content-tooltip {
+            position: absolute;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+            white-space: nowrap;
+            border: 1px solid var(--border-color);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition);
+            z-index: 30;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 8px;
+        }
+
+        .content-tooltip.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .content-tooltip>span {
+            cursor: pointer;
+            padding: 0 3px;
+        }
+
+        .content-tooltip>span:hover {
+            text-decoration: underline;
         }
 
         .highlight {
@@ -1000,6 +1036,62 @@
         }
 
         DiaryApp.init();
+        document.querySelectorAll('.content').forEach(content => {
+                const tooltip = document.createElement('div');
+                tooltip.className = 'content-tooltip';
+                tooltip.innerHTML = `
+        <span class="copy-btn">copy</span>
+        <span class="speak-btn">speak</span>
+    `;
+                content.style.position = 'relative';
+                content.appendChild(tooltip);
+
+                let speechSynthesisUtterance = null;
+
+                content.addEventListener('mouseenter', () => {
+                    tooltip.classList.add('show');
+                });
+
+                content.addEventListener('mouseleave', () => {
+                    tooltip.classList.remove('show');
+                    if (speechSynthesisUtterance) {
+                        window.speechSynthesis.cancel();
+                        speechSynthesisUtterance = null;
+                        tooltip.querySelector('.speak-btn').textContent = 'speak';
+                    }
+                });
+
+                tooltip.querySelector('.copy-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const text = content.textContent;
+                    navigator.clipboard.writeText(text).then(() => {
+                        tooltip.querySelector('.copy-btn').textContent = 'copied';
+                        setTimeout(() => {
+                            tooltip.querySelector('.copy-btn').textContent = 'copy';
+                        }, 2000);
+                    });
+                });
+
+                tooltip.querySelector('.speak-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const btn = tooltip.querySelector('.speak-btn');
+                    if (speechSynthesisUtterance) {
+                        window.speechSynthesis.cancel();
+                        speechSynthesisUtterance = null;
+                        btn.textContent = 'speak';
+                    } else {
+                        const text = content.textContent;
+                        speechSynthesisUtterance = new SpeechSynthesisUtterance(text);
+                        speechSynthesisUtterance.onend = () => {
+                            speechSynthesisUtterance = null;
+                            btn.textContent = 'speak';
+                        };
+                        window.speechSynthesis.speak(speechSynthesisUtterance);
+                        btn.textContent = 'shut';
+                    }
+                });
+            });
+
     </script>
     <script>
         const wrapCharsForFalling = () => {
