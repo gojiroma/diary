@@ -993,12 +993,25 @@
             static handleKeyDown(e) {
                 if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
                     e.preventDefault();
-                    if (this.lastKeyTime && Date.now() - this.lastKeyTime < 62) return;
-                    this.lastKeyTime = Date.now();
 
+                    // 現在のエントリを取得
                     const currentEntry = this.getCurrentEntry();
                     if (!currentEntry) return;
 
+                    // 現在のエントリの文字数を取得
+                    const content = currentEntry.querySelector('.content');
+                    const charCount = content.textContent.length;
+
+                    // 文字数に応じた閾値を計算（例：1文字あたり0.5ms、最小62ms、最大300ms）
+                    const baseThreshold = 82;
+                    const maxThreshold = 370;
+                    const threshold = Math.min(baseThreshold + (charCount * 0.5), maxThreshold);
+
+                    // 最後のキー入力からの経過時間をチェック
+                    if (this.lastKeyTime && Date.now() - this.lastKeyTime < threshold) return;
+                    this.lastKeyTime = Date.now();
+
+                    // 方向に応じて次のエントリを取得
                     const direction = e.key === 'ArrowLeft' ? -1 : 1;
                     const nextEntry = this.getAdjacentEntry(currentEntry, direction);
                     if (nextEntry) {
