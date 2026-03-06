@@ -1102,24 +1102,13 @@
                     await this.audioContext.resume();
                 }
 
-                // 前のオシレーターを停止
-                if (this.currentOscillator) {
-                    this.currentOscillator.stop();
-                    this.currentOscillator.disconnect();
-                }
-
-                // カスタム波形を作成（実数部と虚数部を指定）
-                const real = new Float32Array([0, 0.1, 0.5, 0.2]); // 実数部（例：基本周波数 + 高調波）
-                const imag = new Float32Array(real.length); // 虚数部（ここではゼロ）
-                const wave = this.audioContext.createPeriodicWave(real, imag);
-
                 const oscillator = this.audioContext.createOscillator();
                 const gainNode = this.audioContext.createGain();
 
-                oscillator.setPeriodicWave(wave); // カスタム波形を設定
                 oscillator.connect(gainNode);
                 gainNode.connect(this.audioContext.destination);
 
+                oscillator.type = 'sine';
                 oscillator.frequency.value = frequency;
                 gainNode.gain.value = 0.1;
                 gainNode.gain.exponentialRampToValueAtTime(0.0001, this.audioContext.currentTime + duration);
@@ -1127,8 +1116,11 @@
                 oscillator.start();
                 oscillator.stop(this.audioContext.currentTime + duration);
 
+                // 現在のオシレーターを保存
                 this.currentOscillator = oscillator;
             }
+
+
 
 
         }
