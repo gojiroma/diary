@@ -941,8 +941,8 @@
                 }
             }
             static triggerHapticFeedback(charCount) {
-                const minVibrate = 10; // 最小振動時間（ms）
-                const maxVibrate = 80; // 最大振動時間（ms）
+                const minVibrate = 3; // 最小振動時間（ms）
+                const maxVibrate = 50; // 最大振動時間（ms）
 
                 // 文字数に応じた振動時間（1文字あたり1ms、最小20ms、最大200ms）
                 const duration = Math.max(minVibrate, Math.min(maxVibrate, minVibrate + charCount));
