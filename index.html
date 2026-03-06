@@ -940,6 +940,27 @@
                     console.error('Error preloading fake entries:', error);
                 }
             }
+            static triggerHapticFeedback(charCount) {
+                const minVibrate = 20; // 最小振動時間（ms）
+                const maxVibrate = 200; // 最大振動時間（ms）
+
+                // 文字数に応じた振動時間（1文字あたり1ms、最小20ms、最大200ms）
+                const duration = Math.max(minVibrate, Math.min(maxVibrate, minVibrate + charCount));
+
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(duration);
+                } else {
+                    // iOS 17.4以上でのチェックボックスハック
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.style.display = 'none';
+                    document.body.appendChild(checkbox);
+                    checkbox.click();
+                    setTimeout(() => {
+                        document.body.removeChild(checkbox);
+                    }, 100);
+                }
+            }
 
             static scrollToEntryFromHash() {
                 const hash = window.location.hash.substring(1);
@@ -952,8 +973,6 @@
 
                 const minFreq = 320;
                 const maxFreq = 3200;
-                const minVibrate = 20; // 最小振動時間（ms）
-                const maxVibrate = 200; // 最大振動時間（ms）
 
                 if (hash && hash.match(/^\d{8}$/)) {
                     const entry = document.getElementById(hash);
@@ -971,11 +990,8 @@
                         const freq = Math.max(minFreq, Math.min(maxFreq, minFreq + charCount * 0.5));
                         this.playBeep(freq, 0.3);
 
-                        // 文字数に応じた振動時間（1文字あたり1ms、最小20ms、最大200ms）
-                        const vibrateDuration = Math.max(minVibrate, Math.min(maxVibrate, minVibrate + charCount));
-                        if ('vibrate' in navigator) {
-                            navigator.vibrate(vibrateDuration);
-                        }
+                        // ハプティックフィードバックをトリガー（文字数を引数として渡す）
+                        this.triggerHapticFeedback(charCount);
 
                         // 対応するタイムラインバーを選択状態に
                         const selectedBar = document.querySelector(`.timeline-bar[data-yyyymmdd="${hash}"]`);
@@ -994,13 +1010,11 @@
                     const freq = Math.max(minFreq, Math.min(maxFreq, minFreq + charCount * 0.5));
                     this.playBeep(freq, 0.3);
 
-                    // 文字数に応じた振動時間
-                    const vibrateDuration = Math.max(minVibrate, Math.min(maxVibrate, minVibrate + charCount));
-                    if ('vibrate' in navigator) {
-                        navigator.vibrate(vibrateDuration);
-                    }
+                    // ハプティックフィードバックをトリガー（文字数を引数として渡す）
+                    this.triggerHapticFeedback(charCount);
                 }
             }
+
 
 
             static scrollTo(element, targetPosition) {
