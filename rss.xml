@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 06 Mar 2026 20:06:10 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 08 Mar 2026 18:58:30 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,22 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>三月八日（日）</title>
+      <link>https://nikki.poet.blue#20260308</link>
+      <pubDate>Sun, 08 Mar 2026 18:58:30 +0900</pubDate>
+      <description>街歩きイベントに参加した。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260308</guid>
+      <media:content url="https://nc.poet.blue/20260308" type="image/svg+xml" medium="image"/>
+    </item>
+    <item>
+      <title>三月七日（土）</title>
+      <link>https://nikki.poet.blue#20260307</link>
+      <pubDate>Sat, 07 Mar 2026 21:33:58 +0900</pubDate>
+      <description>日記は楽器だ。試しに右キーを押し続けてほしい。その日の文字数に応じてピッチと間が変わるように仕組んである。これは、日記の可聴化だ。もっと発展させて、体調や天気、活動の種類で音を変えたら、別のリズムとして日々を捉えられるかもしれない。△「面白い日記が読みたい」という欲求があるが、今のその欲求は、文章や内容の面白さというより、仕掛け絵本的な面白さの追求に寄っている。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260307</guid>
+      <media:content url="https://nc.poet.blue/20260307" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>三月六日（金）</title>
       <link>https://nikki.poet.blue#20260306</link>
