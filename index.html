@@ -509,6 +509,10 @@
             z-index: 100;
             pointer-events: none;
         }
+
+        #shuffleButton:hover {
+            opacity: 1;
+        }
     </style>
 
 </head>
@@ -516,6 +520,8 @@
 <body>
     <button id="fallingButton" class="btn"
         style="position: fixed; top: 10px; left: 100px; padding: 5px 10px; opacity: 0.1; border: none; border-radius: 8px; background-color: #6363632f; color: var(--text-color); cursor: pointer; z-index: 10;">fall</button>
+    <button id="shuffleButton" class="btn"
+        style="position: fixed; top: 10px; left: 170px; padding: 5px 10px; opacity: 0.1; border: none; border-radius: 8px; background-color: #6363632f; color: var(--text-color); cursor: pointer; z-index: 10;">shuffle</button>
     <div class="page-title btn" id="pageTitle"></div>
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
@@ -621,6 +627,8 @@
 
         class DiaryApp {
             static isFakeMode = false;
+            static isShuffleMode = false;
+            static originalEntriesOrder = [];
             static fakeEntriesCache = null;
             static diaryEntries = [];
             static iconsData = [];
@@ -635,6 +643,7 @@
                 document.body.style.background = this.generatePastelGradient(!this.isFakeMode);
                 document.body.style.opacity = 1;
                 document.getElementById('fallingButton').addEventListener('click', startFallingAnimation);
+                document.getElementById('shuffleButton').addEventListener('click', () => this.toggleShuffleMode());
 
                 setTimeout(startFallingAnimation, 180000);
             }
@@ -696,8 +705,32 @@
                 document.addEventListener('keydown', e => this.handleKeyDown(e));
                 window.addEventListener('hashchange', () => this.scrollToEntryFromHash());
                 window.addEventListener('load', () => this.scrollToEntryFromHash());
-            }
 
+            }
+            // shuffleモードの切り替え
+            static toggleShuffleMode() {
+                this.isShuffleMode = !this.isShuffleMode;
+                const container = document.getElementById('diaryContainer');
+                const entries = Array.from(container.children);
+
+                if (this.isShuffleMode) {
+                    // 初回のみ元の順序を保存
+                    if (this.originalEntriesOrder.length === 0) {
+                        this.originalEntriesOrder = entries.map(entry => entry.id);
+                    }
+                    // ランダムに並び替え
+                    entries.sort(() => Math.random() - 0.5);
+                    entries.forEach(entry => container.appendChild(entry));
+                } else {
+                    // 元の順序に戻す
+                    this.originalEntriesOrder.forEach(id => {
+                        const entry = document.getElementById(id);
+                        if (entry) container.appendChild(entry);
+                    });
+                }
+                // 現在表示中のエントリを再設定
+                this.scrollToEntryFromHash();
+            }
             static setupModal() {
                 const infoButton = document.getElementById('infoButton');
                 const modalOverlay = document.getElementById('modalOverlay');
