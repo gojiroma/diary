@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Mon, 09 Mar 2026 20:19:33 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 10 Mar 2026 20:29:41 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>三月十日（火）</title>
+      <link>https://nikki.poet.blue#20260310</link>
+      <pubDate>Tue, 10 Mar 2026 20:29:41 +0900</pubDate>
+      <description>寒い。鼻が暴れてる。今までの日記をnotebooklmに入れて、音声番組として聞いていた。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260310</guid>
+      <media:content url="https://nc.poet.blue/20260310" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>三月九日（月）</title>
       <link>https://nikki.poet.blue#20260309</link>
