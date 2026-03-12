@@ -36,7 +36,7 @@ def find_unsupported_chars(font_path, file_paths):
     return unsupported_chars
 
 # ファイルパス
-font_path = 'gojiromanus2.otf'
+font_path = 'gojiromanus3.otf'
 file_paths = ['entry.md', 'fake.md', 'index.html']
 
 # 実行
