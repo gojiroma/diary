@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho&display=swap" rel="stylesheet">
+
+    <title>誤字ロマの日記</title>
+    <link rel="icon" href="diary-icon.png" type="image/png">
+    <style>
+        @font-face {
+            font-family: 'gojiromanus';
+            src: url('gojiromanus2.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --bg-color: #f5f5f5;
+            --text-color: #333333;
+            --border-color: #666666;
+            --timeline-color: #666666;
+            --highlight-color: #cccccc;
+            --icon-size: 34px;
+            --modal-bg: rgba(0, 0, 0, 0.5);
+            --transition: 0.2s ease;
+            --light-pastel-1: #f8e8e8;
+            --light-pastel-2: #e8f8f5;
+            --dark-pastel-1: #2a2a3a;
+            --dark-pastel-2: #1a1a2a;
+
+        }
+
+        body {
+            font-family: "gojiromanus", serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100svh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            opacity: 0;
+            transition: opacity var(--transition), background-color var(--transition);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            background-size: 200% 200%;
+
+        }
+
+        body.fake-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+        }
+
+        .page-title,
+        #page-title-inmodal,
+        input[type="text"] {
+            font-family: "Zen Old Mincho", serif;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.1s;
+            text-decoration: none;
+            user-select: none;
+            z-index: 10;
+        }
+
+        .page-title,
+        #page-title-inmodal {
+            color: var(--text-color);
+            background-color: #6363632f;
+            padding: 5px 10px;
+            opacity: 0.1;
+        }
+
+        .page-title:hover,
+        #page-title-inmodal:hover,
+        input[type="text"]:hover {
+            opacity: 1;
+        }
+
+        .page-title {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+        }
+
+        .page-title.fake-mode {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+
+        input[type="text"] {
+            color: var(--text-color) !important;
+            position: fixed;
+            top: 10px;
+            left: 20px;
+            padding: 5px 10px;
+            border: 1px solid var(--border-color);
+            width: 7ic;
+            opacity: .1;
+            outline: none;
+        }
+
+
+
+        .diary-container-wrapper {
+            width: 100%;
+            max-width: 90%;
+            height: 78vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            box-sizing: border-box;
+            margin-top: 20px;
+            transition: background-color var(--transition);
+        }
+
+        .diary-container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .diary-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .diary-entry {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            line-height: 2;
+            letter-spacing: 0.1em;
+            width: auto;
+            white-space: normal;
+            overflow: visible;
+            scroll-margin-top: 50px;
+            padding: 0 10px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            text-wrap: balance;
+            overflow-wrap: break-word;
+            background-color: transparent;
+            position: relative;
+        }
+
+        .date-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin: 0 20px;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .date {
+            font-size: 1.6em;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .days-ago {
+            font-size: 0.8em;
+            margin-left: -3px;
+            white-space: nowrap;
+            opacity: 0.6;
+        }
+
+        .content {
+            font-size: 1.3em;
+            white-space: pre-line;
+            text-wrap: balance;
+            overflow-wrap: break-word;
+            position: relative;
+        }
+
+        /* 現在表示中以外のエントリを半透明に */
+        .diary-entry:not(.active) {
+            opacity: 0.6;
+        }
+
+        /* 現在表示中のエントリは不透明 */
+        .diary-entry.active {
+            opacity: 1;
+        }
+
+
+        .highlight {
+            background-color: var(--highlight-color);
+            font-weight: bold;
+            padding: 0 2px;
+            border-radius: 2px;
+            margin: 0 -2px;
+        }
+
+        .timeline-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            padding: 0 10%;
+            box-sizing: border-box;
+            touch-action: none;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-container {
+                height: 20px;
+            }
+        }
+
+        .timeline {
+            position: relative;
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            align-items: flex-end;
+            height: 100%;
+            width: 100%;
+            transition: opacity var(--transition);
+        }
+
+        .timeline-bar {
+            width: 6px;
+            height: 100%;
+            margin: 0 1px;
+            background-color: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .timeline-bar-inner {
+            width: 100%;
+            background-color: var(--text-color);
+            transition: background-color var(--transition);
+            opacity: 0.2;
+        }
+
+        .timeline-bar:hover .timeline-bar-inner,
+        .timeline-bar.selected .timeline-bar-inner {
+            opacity: 1 !important;
+        }
+
+        .icon {
+            width: var(--icon-size);
+            height: var(--icon-size);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            left: 6px;
+            transition: transform 0.1s, background-color var(--transition), filter var(--transition);
+            border-radius: 4px;
+
+        }
+
+        .icon:hover {
+            transform: scale(1.1);
+            z-index: 20;
+        }
+
+        .icon.highlight {
+            background-color: var(--highlight-color);
+            filter: brightness(0.85);
+        }
+
+        .icon img,
+        .icon-emoji {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 4px;
+            font-size: x-large;
+            filter: grayscale(100%);
+            opacity: 0.2;
+        }
+
+        .icon:hover img,
+        .icon:hover .icon-emoji {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
+        .tooltip {
+            position: absolute;
+            top: -50%;
+            left: 140%;
+            transform: translateX(-50%);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            border: 1px solid var(--border-color);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition);
+            z-index: 30;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon:hover .tooltip {
+            opacity: 1;
+        }
+
+        .info-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: none;
+            background-color: #6363632f;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 18px;
+            transition: all var(--transition);
+            user-select: none;
+            opacity: 0.2;
+        }
+
+        .info-button:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            visibility: hidden;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: skewY(-3deg) translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: skewY(-3deg) translateY(0);
+            opacity: 1;
+        }
+
+        .modal-inner {
+            transform: skewY(3deg);
+        }
+
+        .modal-content h1,
+        .modal-content h2,
+        .modal-content p,
+        .modal-content textarea {
+            transform: skewY(-3deg);
+        }
+
+        .modal-content h1 {
+            font-size: 1.8em;
+            margin-top: 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .modal-content h2 {
+            font-size: 1.3em;
+            margin-top: 20px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .modal-content p {
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        .modal-content input[type="text"] {
+            position: static;
+            width: 150px;
+            margin: 0 5px;
+            opacity: 1;
+            border: none;
+            border-bottom: 1px solid var(--border-color);
+            background-color: transparent;
+            font-size: 1em;
+            padding: 5px;
+        }
+
+        .modal-content textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 3px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            resize: vertical;
+        }
+
+        .modal-content img {
+            display: block;
+            margin: 15px auto;
+        }
+
+        .qr {
+            max-width: 150px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .modal-button,
+        .share-button {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .modal-button:hover,
+        .share-button:hover {
+            opacity: 0.8;
+        }
+
+        .modal-button {
+            margin: 0 10px;
+        }
+
+        .share-button {
+            margin: 15px auto;
+            display: block;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
+        .falling {
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+            /* レンダリング最適化 */
+            perspective: 1000px;
+            /* 3D変換のヒント */
+        }
+
+
+        .char.falling,
+        .date.falling {
+            position: fixed;
+            transition: transform 2s ease-in, opacity 2s ease-out;
+            will-change: transform, opacity;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        #shuffleButton:hover {
+            opacity: 1;
+        }
+    </style>
+
+</head>
+
+<body>
+    <button id="fallingButton" class="btn"
+        style="position: fixed; top: 10px; left: 100px; padding: 5px 10px; opacity: 0.1; border: none; border-radius: 8px; background-color: #6363632f; color: var(--text-color); cursor: pointer; z-index: 10;">fall</button>
+    <button id="shuffleButton" class="btn"
+        style="position: fixed; top: 10px; left: 170px; padding: 5px 10px; opacity: 0.1; border: none; border-radius: 8px; background-color: #6363632f; color: var(--text-color); cursor: pointer; z-index: 10;">shuffle</button>
+    <div class="page-title btn" id="pageTitle"></div>
+    <div class="diary-container-wrapper">
+        <div class="diary-container" id="diaryContainer"></div>
+    </div>
+    <div class="timeline-container">
+        <div class="timeline" id="timeline"></div>
+    </div>
+    <div class="info-button btn" id="infoButton">i</div>
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <button class="close-button" id="closeButton">&times;</button>
+            <div class="modal-inner">
+                <h1>誤字ロマの日記</h1>
+
+                <h2>なんだ、この日記は？</h2>
+                <p>このインターネット日記は、北関東の某所で生きるひとりの人間が、その日の出来事や思ったことを気軽に、かつ無責任に書き続けているものです。</p>
+
+                <h2>おたより</h2>
+                <p>日記の感想、自分語り、尿漏れのお悩みなど、<input type="text" id="mailSubject"
+                        placeholder="お好きな英数字">@poet.blueまで、気軽にお送りください。なお、メールへの返信は気分次第です。ご了承ください。場合によっては日記の日付下部に「📮」アイコンを設置し、お返事ページの掲載をもってリアクションとする場合もあります。
+                </p>
+                <textarea id="mailBody" placeholder="例:○月×日の『〇〇』という部分を読んで、△△を思い出しました。"></textarea>
+                <div class="modal-buttons">
+                    <button class="modal-button" id="sendMailButton">送る一歩手前</button>
+                </div>
+
+                <h2>知人に知らせる</h2>
+                <p>気分がふさがっている、暇を持て余している、何か無料で読みたいという方がいらっしゃいましたら、この日記をご紹介ください。</p>
+                <img src="https://i.imgur.com/BxnlTB4.png" alt="QRコード" class="qr">
+                <center>
+                    <p>https://nikki.poet.blue</p>
+                </center>
+                <button class="share-button" id="shareButton">共有する</button>
+
+                <h2>Buy me a pen</h2>
+                <p>今日は珍しく面白かった！とか、なんか機嫌が良かった、という日にぜひ！
+                </p>
+                <a href="https://www.buymeacoffee.com/gojiroma" target="_blank" class="noskew"><img
+                        src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee"
+                        style="height: 60px !important;width: 217px !important;"></a>
+            </div>
+        </div>
+    </div>
+    <script>
+        class DiaryUtils {
+            static toKanjiNumber(num) {
+                const kanjiNumbers = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+                return num.toString().split('').map(digit => kanjiNumbers[digit]).join('');
+            }
+
+            static toKanjiMonth(month) {
+                const kanjiMonths = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+                return kanjiMonths[month - 1];
+            }
+
+            static toKanjiDay(day) {
+                const days = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十', '二十一', '二十二', '二十三', '二十四', '二十五', '二十六', '二十七', '二十八', '二十九', '三十', '三十一'];
+                return days[day];
+            }
+
+            static toJapaneseEra(year) {
+                const eras = [
+                    { name: '令和', start: 2019, offset: 2018 },
+                    { name: '平成', start: 1989, offset: 1988 },
+                    { name: '昭和', start: 1926, offset: 1925 },
+                    { name: '大正', start: 1912, offset: 1911 },
+                    { name: '明治', start: 1868, offset: 1867 }
+                ];
+                const era = eras.find(e => year >= e.start);
+                const eraYear = year - era.offset;
+                return `${era.name}${this.toKanjiNumber(eraYear)}年`;
+            }
+
+            static formatJapaneseDate(yyyymmdd) {
+                const year = parseInt(yyyymmdd.substring(0, 4), 10);
+                const month = parseInt(yyyymmdd.substring(4, 6), 10);
+                const day = parseInt(yyyymmdd.substring(6, 8), 10);
+                const date = new Date(year, month - 1, day);
+                const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+                return {
+                    short: `${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '裏' : dayOfWeek}）`,
+                    long: `${this.toJapaneseEra(year)}${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '裏' : dayOfWeek}）`
+                };
+            }
+
+            static calculateDaysAgo(yyyymmdd) {
+                const entryDate = new Date(
+                    parseInt(yyyymmdd.substring(0, 4), 10),
+                    parseInt(yyyymmdd.substring(4, 6), 10) - 1,
+                    parseInt(yyyymmdd.substring(6, 8), 10)
+                );
+                const today = new Date();
+                const diffTime = today - entryDate;
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                return diffDays === 0 ? '今日' : `${diffDays}日前`;
+            }
+
+            static escapeRegExp(string) {
+                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            }
+
+        }
+
+        class DiaryApp {
+            static isFakeMode = false;
+            static isShuffleMode = false;
+            static originalEntriesOrder = [];
+            static fakeEntriesCache = null;
+            static diaryEntries = [];
+            static iconsData = [];
+            static audioContext = null;
+
+            static async init() {
+                await this.loadIconsData();
+                await this.loadDiaryEntries();
+                this.preloadFakeEntries();
+                this.setupEventListeners();
+                this.setupModal();
+                document.body.style.background = this.generatePastelGradient(!this.isFakeMode);
+                document.body.style.opacity = 1;
+                document.getElementById('fallingButton').addEventListener('click', startFallingAnimation);
+                document.getElementById('shuffleButton').addEventListener('click', () => this.toggleShuffleMode());
+
+                setTimeout(startFallingAnimation, 180000);
+            }
+            static generatePastelGradient(isLight) {
+                const hue = Math.floor(Math.random() * 360);
+                const saturation = isLight ? '80%' : '60%';
+                const lightness1 = isLight ? '90%' : '20%';
+                const lightness2 = isLight ? '95%' : '25%';
+
+                return `linear-gradient(135deg,
+        hsl(${hue}, ${saturation}, ${lightness1}),
+        hsl(${((hue + 30) % 360)}, ${saturation}, ${lightness2}))`;
+            }
+
+            static async loadIconsData() {
+                try {
+                    const response = await fetch('icons.csv');
+                    if (!response.ok) throw new Error(`Failed to load icons.csv: ${response.status}`);
+                    const csv = await response.text();
+                    this.iconsData = this.parseCSV(csv);
+                } catch (error) {
+                    console.error('Error loading icons.csv:', error);
+                }
+            }
+
+            static parseCSV(csv) {
+                const lines = csv.split('\n').filter(line => line.trim());
+                return lines.slice(1).map(line => {
+                    const [date, title, icon, url] = line.split(',').map(v => v.trim());
+                    return { date, title, icon, url };
+                });
+            }
+
+            static getIconsForDate(dateForIcons, keyword = '') {
+                const icons = this.iconsData.filter(icon => icon.date === dateForIcons);
+                if (icons.length === 0) return '';
+
+                return icons.map(icon => {
+                    const isUrl = icon.icon && (icon.icon.startsWith('http://') || icon.icon.startsWith('https://'));
+                    const iconContent = isUrl
+                        ? `<img src="${icon.icon}" alt="${icon.title}" class="icon-img" loading="lazy">`
+                        : `<span class="icon-emoji">${icon.icon}</span>`;
+                    const tooltip = icon.title ? `<div class="tooltip">${icon.title}</div>` : '';
+                    const urlAttr = icon.url ? `onclick="window.open('${icon.url}', '_blank')" style="cursor: pointer;"` : '';
+                    const highlightClass = keyword && icon.title.toLowerCase().includes(keyword.toLowerCase()) ? 'highlight' : '';
+                    return `<div class="icon ${highlightClass}" ${urlAttr}>${iconContent}${tooltip}</div>`;
+                }).join('');
+            }
+
+            static setupEventListeners() {
+                const pageTitle = document.getElementById('pageTitle');
+                pageTitle.addEventListener('click', () => this.toggleFakeMode());
+
+                let pressTimer;
+                pageTitle.addEventListener('mousedown', () => pressTimer = setTimeout(() => this.downloadDiaryAsText(), 1000));
+                pageTitle.addEventListener('mouseup', () => clearTimeout(pressTimer));
+                pageTitle.addEventListener('mouseleave', () => clearTimeout(pressTimer));
+
+                document.addEventListener('keydown', e => this.handleKeyDown(e));
+                window.addEventListener('hashchange', () => this.scrollToEntryFromHash());
+                window.addEventListener('load', () => this.scrollToEntryFromHash());
+
+            }
+            // shuffleモードの切り替え
+            static toggleShuffleMode() {
+                this.isShuffleMode = !this.isShuffleMode;
+                const container = document.getElementById('diaryContainer');
+                const entries = Array.from(container.children);
+
+                if (this.isShuffleMode) {
+                    // 初回のみ元の順序を保存
+                    if (this.originalEntriesOrder.length === 0) {
+                        this.originalEntriesOrder = entries.map(entry => entry.id);
+                    }
+                    // ランダムに並び替え
+                    entries.sort(() => Math.random() - 0.5);
+                    entries.forEach(entry => container.appendChild(entry));
+                } else {
+                    // 元の順序に戻す
+                    this.originalEntriesOrder.forEach(id => {
+                        const entry = document.getElementById(id);
+                        if (entry) container.appendChild(entry);
+                    });
+                }
+                // 現在表示中のエントリを再設定
+                this.scrollToEntryFromHash();
+            }
+            static setupModal() {
+                const infoButton = document.getElementById('infoButton');
+                const modalOverlay = document.getElementById('modalOverlay');
+                const closeButton = document.getElementById('closeButton');
+                const sendMailButton = document.getElementById('sendMailButton');
+                const shareButton = document.getElementById('shareButton');
+
+                infoButton.addEventListener('click', () => {
+                    modalOverlay.style.display = 'flex';
+                    setTimeout(() => modalOverlay.classList.add('show'), 10);
+                });
+
+                closeButton.addEventListener('click', () => {
+                    modalOverlay.classList.remove('show');
+                    setTimeout(() => modalOverlay.style.display = 'none', 300);
+                });
+
+                modalOverlay.addEventListener('click', e => {
+                    if (e.target === modalOverlay) {
+                        modalOverlay.classList.remove('show');
+                        setTimeout(() => modalOverlay.style.display = 'none', 300);
+                    }
+                });
+
+                sendMailButton.addEventListener('click', () => {
+                    const subject = document.getElementById('mailSubject').value || 'somebody';
+                    const body = document.getElementById('mailBody').value || '本文なし';
+                    window.location.href = `mailto:${subject}@poet.blue?subject=誤字ロマの日記を読みました&body=${encodeURIComponent(body)}`;
+                });
+
+                shareButton.addEventListener('click', () => {
+                    if (navigator.share) {
+                        navigator.share({ title: '誤字ロマの日記', url: 'https://nikki.poet.blue' });
+                    } else {
+                        alert('URLをコピーしてください: https://nikki.poet.blue');
+                    }
+                });
+            }
+
+            static async loadDiaryEntries(filename = 'entry.md') {
+                try {
+                    const response = await fetch(filename);
+                    if (!response.ok) throw new Error(`Failed to load ${filename}: ${response.status}`);
+                    const text = await response.text();
+                    this.renderEntries(text);
+                } catch (error) {
+                    console.error(`Error loading ${filename}:`, error);
+                }
+            }
+
+            static renderEntries(text) {
+                const container = document.getElementById('diaryContainer');
+                if (!container) {
+                    console.error("コンテナが見つかりません。");
+                    return;
+                }
+                container.innerHTML = '';
+                this.diaryEntries = [];
+
+                const entries = text.split('---').filter(entry => entry.trim());
+                entries.reverse().forEach(entry => {
+                    const dateMatch = entry.match(/date:\s*(.*)/);
+                    const contentMatch = entry.match(/content:\s*\|\s*\n([\s\S]*?)(?=\n---|\n$|$)/m);
+                    if (!dateMatch || !contentMatch) return;
+
+                    const yyyymmdd = dateMatch[1].trim();
+                    const dateObj = DiaryUtils.formatJapaneseDate(yyyymmdd);
+                    const contentLines = contentMatch[1].split('\n').map(line => line.replace(/^\s*\|?\s*/, '')).join('\n');
+                    const dateForIcons = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
+                    const iconsHTML = this.getIconsForDate(dateForIcons);
+
+                    const entryElement = document.createElement('div');
+                    entryElement.className = 'diary-entry';
+                    entryElement.id = yyyymmdd;
+                    entryElement.innerHTML = `
+                            <div class="date-container">
+                                <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
+                                <div class="days-ago">${DiaryUtils.calculateDaysAgo(yyyymmdd)}</div>
+                                ${iconsHTML}
+                            </div>
+                            <div class="content">${contentLines}</div>
+                        `;
+                    container.appendChild(entryElement);
+
+                    this.diaryEntries.push({
+                        yyyymmdd,
+                        content: contentLines.trim(),
+                        icons: this.iconsData.filter(icon => icon.date === dateForIcons)
+                    });
+                });
+
+                this.setupDateClick();
+                this.renderTimeline();
+                this.updatePageTitle(entries.length);
+                this.setupContentClick();
+                this.scrollToEntryFromHash();
+            }
+            static setupContentClick() {
+                document.querySelectorAll('.content').forEach(content => {
+                    let speechSynthesisUtterance = null;
+                    let isCopied = false;
+
+                    content.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (speechSynthesisUtterance) {
+                            window.speechSynthesis.cancel();
+                            speechSynthesisUtterance = null;
+                            isCopied = false;
+                            return;
+                        }
+                        if (!isCopied) {
+                            const text = content.textContent;
+                            navigator.clipboard.writeText(text).then(() => {
+                                isCopied = true;
+                                setTimeout(() => { isCopied = false; }, 2000);
+                            });
+                        }
+                    });
+
+                    content.addEventListener('dblclick', (e) => {
+                        e.stopPropagation();
+                        if (speechSynthesisUtterance) {
+                            window.speechSynthesis.cancel();
+                            speechSynthesisUtterance = null;
+                        } else {
+                            const text = content.textContent;
+                            speechSynthesisUtterance = new SpeechSynthesisUtterance(text);
+                            speechSynthesisUtterance.onend = () => {
+                                speechSynthesisUtterance = null;
+                            };
+                            window.speechSynthesis.speak(speechSynthesisUtterance);
+                        }
+                    });
+                });
+            }
+
+            static setupDateClick() {
+                document.querySelectorAll('.date').forEach(dateElement => {
+                    dateElement.addEventListener('click', () => {
+                        window.location.hash = dateElement.getAttribute('data-yyyymmdd');
+                    });
+                });
+            }
+
+            static renderTimeline() {
+                const timeline = document.getElementById('timeline');
+                timeline.innerHTML = '';
+
+                if (this.diaryEntries.length === 0) return;
+
+                const sortedEntries = [...this.diaryEntries].sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
+                const contentLengths = sortedEntries.map(entry => entry.content.length);
+                const maxContentLength = Math.min(this.percentile95(contentLengths), 500);
+                const baseHeight = 5;
+                const heightRatio = 45 / maxContentLength;
+
+                sortedEntries.forEach(entry => {
+                    const container = document.createElement('div');
+                    container.className = 'timeline-bar';
+                    container.dataset.yyyymmdd = entry.yyyymmdd;
+                    container.title = `${entry.yyyymmdd}: ${entry.content.length}文字`;
+                    const innerBar = document.createElement('div');
+                    innerBar.className = 'timeline-bar-inner';
+                    const contentLength = Math.min(entry.content.length, maxContentLength);
+                    innerBar.style.height = `${Math.max(baseHeight, contentLength * heightRatio)}px`;
+
+                    container.addEventListener('mouseover', () => {
+                        window.location.hash = entry.yyyymmdd;
+                        this.scrollToEntryFromHash();
+                    });
+
+                    container.addEventListener('touchstart', e => {
+                        e.preventDefault();
+                        window.location.hash = entry.yyyymmdd;
+                        this.scrollToEntryFromHash();
+                    });
+
+                    container.appendChild(innerBar);
+                    timeline.appendChild(container);
+                });
+
+                const hash = window.location.hash.substring(1);
+                if (hash && hash.match(/^\d{8}$/)) {
+                    const selectedBar = document.querySelector(`.timeline-bar[data-yyyymmdd="${hash}"]`);
+                    if (selectedBar) selectedBar.classList.add('selected');
+                }
+
+                let lastHash = window.location.hash;
+
+                timeline.addEventListener('touchmove', e => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const rect = timeline.getBoundingClientRect();
+                    const x = touch.clientX - rect.left;
+                    const percent = x / rect.width;
+                    const index = Math.floor((1 - percent) * sortedEntries.length);
+
+                    if (index >= 0 && index < sortedEntries.length) {
+                        const newHash = sortedEntries[index].yyyymmdd;
+                        if (lastHash !== `#${newHash}`) {
+                            window.location.hash = newHash;
+                            lastHash = `#${newHash}`;
+                            this.scrollToEntryFromHash();
+                        }
+                    }
+                });
+
+            }
+
+            static percentile95(arr) {
+                const sorted = [...arr].sort((a, b) => a - b);
+                return sorted[Math.floor(sorted.length * 0.95)];
+            }
+
+            static toggleFakeMode() {
+                this.isFakeMode = !this.isFakeMode;
+                const title = document.querySelector('.page-title');
+                const body = document.body;
+
+                title.textContent = this.isFakeMode ? '誤字ロマの裏日記' : '誤字ロマの日記';
+                body.style.background = this.generatePastelGradient(!this.isFakeMode);
+
+                title.classList.toggle('fake-mode', this.isFakeMode);
+                body.classList.toggle('fake-mode', this.isFakeMode);
+
+                if (this.isFakeMode) {
+                    if (this.fakeEntriesCache) {
+                        this.renderEntries(this.fakeEntriesCache);
+                    } else {
+                        this.loadDiaryEntries('fake.md');
+                    }
+                } else {
+                    this.loadDiaryEntries('entry.md');
+                }
+            }
+
+
+
+            static async preloadFakeEntries() {
+                try {
+                    const response = await fetch('fake.md');
+                    if (response.ok) this.fakeEntriesCache = await response.text();
+                } catch (error) {
+                    console.error('Error preloading fake entries:', error);
+                }
+            }
+            static triggerHapticFeedback(charCount) {
+                const minVibrate = 8; // 最小振動時間（ms）
+                const maxVibrate = 160; // 最大振動時間（ms）
+
+                // 文字数に応じた振動時間（1文字あたり1ms、最小20ms、最大200ms）
+                const duration = Math.max(minVibrate, Math.min(maxVibrate, minVibrate + charCount));
+
+                if ('viiibrate' in navigator) {
+                    navigator.vibrate(duration);
+                }
+            }
+
+            static scrollToEntryFromHash() {
+                const hash = window.location.hash.substring(1);
+                const entries = document.querySelectorAll('.diary-entry');
+                const timelineBars = document.querySelectorAll('.timeline-bar');
+
+                // 全てのエントリからactiveクラスを削除
+                entries.forEach(entry => entry.classList.remove('active'));
+                timelineBars.forEach(bar => bar.classList.remove('selected'));
+
+                const minFreq = 320;
+                const maxFreq = 3200;
+
+                if (hash && hash.match(/^\d{8}$/)) {
+                    const entry = document.getElementById(hash);
+                    if (entry) {
+                        entry.classList.add('active');
+                        const entryRight = entry.offsetLeft + entry.clientWidth;
+                        const containerWidth = document.getElementById('diaryContainer').clientWidth;
+                        this.scrollTo(document.getElementById('diaryContainer'), entryRight - containerWidth);
+
+                        // 対象エントリの文字数に応じたビープ音
+                        const content = entry.querySelector('.content');
+                        const charCount = content.textContent.length;
+
+                        // 文字数に応じた周波数
+                        const freq = Math.max(minFreq, Math.min(maxFreq, minFreq + charCount * 0.5));
+                        this.playBeep(freq, 0.3);
+
+                        // ハプティックフィードバックをトリガー（文字数を引数として渡す）
+                        this.triggerHapticFeedback(charCount);
+
+                        // 対応するタイムラインバーを選択状態に
+                        const selectedBar = document.querySelector(`.timeline-bar[data-yyyymmdd="${hash}"]`);
+                        if (selectedBar) selectedBar.classList.add('selected');
+                    }
+                } else if (entries.length > 0) {
+                    const latestEntry = entries[0];
+                    latestEntry.classList.add('active');
+                    const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
+                    const containerWidth = document.getElementById('diaryContainer').clientWidth;
+                    this.scrollTo(document.getElementById('diaryContainer'), entryRight - containerWidth);
+
+                    // 最新エントリの文字数に応じたビープ音
+                    const content = latestEntry.querySelector('.content');
+                    const charCount = content.textContent.length;
+                    const freq = Math.max(minFreq, Math.min(maxFreq, minFreq + charCount * 0.5));
+                    this.playBeep(freq, 0.3);
+
+                    // ハプティックフィードバックをトリガー（文字数を引数として渡す）
+                    this.triggerHapticFeedback(charCount);
+                }
+            }
+
+
+
+            static scrollTo(element, targetPosition) {
+                element.scrollLeft = targetPosition;
+            }
+
+            static handleKeyDown(e) {
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                    e.preventDefault();
+
+                    // 現在のエントリを取得
+                    const currentEntry = this.getCurrentEntry();
+                    if (!currentEntry) return;
+
+                    // 現在のエントリの文字数を取得
+                    const content = currentEntry.querySelector('.content');
+                    const charCount = content.textContent.length;
+
+                    // 文字数に応じた閾値を計算（例：1文字あたり0.5ms、最小62ms、最大300ms）
+                    const baseThreshold = 82;
+                    const maxThreshold = 370;
+                    const threshold = Math.min(baseThreshold + (charCount * 0.5), maxThreshold);
+
+                    // 最後のキー入力からの経過時間をチェック
+                    if (this.lastKeyTime && Date.now() - this.lastKeyTime < threshold) return;
+                    this.lastKeyTime = Date.now();
+
+                    // 方向に応じて次のエントリを取得
+                    const direction = e.key === 'ArrowLeft' ? -1 : 1;
+                    const nextEntry = this.getAdjacentEntry(currentEntry, direction);
+                    if (nextEntry) {
+                        window.location.hash = nextEntry.id;
+                        this.scrollToEntryFromHash();
+                    }
+                } else if (e.key === 'Escape' && window.location.hash) {
+                    window.location.hash = '';
+                }
+            }
+
+
+            static getCurrentEntry() {
+                const hash = window.location.hash.substring(1);
+                if (hash && hash.match(/^\d{8}$/)) return document.getElementById(hash);
+
+                const entries = document.querySelectorAll('.diary-entry');
+                return entries.length > 0 ? entries[0] : null;
+            }
+
+            static getAdjacentEntry(currentEntry, direction) {
+                const entries = document.querySelectorAll('.diary-entry');
+                const currentIndex = Array.from(entries).indexOf(currentEntry);
+                if (currentIndex === -1) return null;
+
+                const nextIndex = currentIndex + direction;
+                if (nextIndex < 0 || nextIndex >= entries.length) return null;
+                return entries[nextIndex];
+            }
+
+            static downloadDiaryAsText() {
+                if (this.diaryEntries.length === 0) return alert('ダウンロードする日記がありません。');
+
+                const sortedEntries = [...this.diaryEntries].sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
+                const oldestDate = sortedEntries[0].yyyymmdd;
+                const newestDate = sortedEntries[sortedEntries.length - 1].yyyymmdd;
+                const modePrefix = this.isFakeMode ? '裏日記_' : '';
+                const filename = `${modePrefix}誤字ロマの日記 ${oldestDate}-${newestDate}.txt`;
+
+                let content = '';
+                sortedEntries.forEach(entry => {
+                    const dateObj = DiaryUtils.formatJapaneseDate(entry.yyyymmdd);
+                    content += `${dateObj.long}\n${entry.content}\n\n`;
+                });
+
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            static updatePageTitle(count) {
+                const pageTitle = document.getElementById('pageTitle');
+                pageTitle.textContent = `誤字ロマの${count}日間`;
+            }
+
+            static async playBeep(frequency = 440, duration = 0.1) {
+                if (!this.audioContext) {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    await this.audioContext.resume();
+                } else if (this.audioContext.state === 'suspended') {
+                    await this.audioContext.resume();
+                }
+
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(this.audioContext.destination);
+
+                oscillator.type = 'sine';
+                oscillator.frequency.value = frequency;
+                gainNode.gain.value = 0.1;
+                gainNode.gain.exponentialRampToValueAtTime(0.0001, this.audioContext.currentTime + duration);
+
+                oscillator.start();
+                oscillator.stop(this.audioContext.currentTime + duration);
+
+                // 現在のオシレーターを保存
+                this.currentOscillator = oscillator;
+            }
+
+
+
+
+        }
+
+        DiaryApp.init();
+
+        document.querySelectorAll('.content').forEach(content => {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'content-tooltip';
+            tooltip.innerHTML = `
+        <span class="copy-btn">copy</span>
+        <span class="speak-btn">speak</span>
+    `;
+            content.style.position = 'relative';
+            content.appendChild(tooltip);
+
+            let speechSynthesisUtterance = null;
+
+            content.addEventListener('mouseenter', () => {
+                tooltip.classList.add('show');
+            });
+
+            content.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('show');
+                if (speechSynthesisUtterance) {
+                    window.speechSynthesis.cancel();
+                    speechSynthesisUtterance = null;
+                    tooltip.querySelector('.speak-btn').textContent = 'speak';
+                }
+            });
+
+            tooltip.querySelector('.copy-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                const text = content.textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    tooltip.querySelector('.copy-btn').textContent = 'copied';
+                    setTimeout(() => {
+                        tooltip.querySelector('.copy-btn').textContent = 'copy';
+                    }, 2000);
+                });
+            });
+
+            tooltip.querySelector('.speak-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                const btn = tooltip.querySelector('.speak-btn');
+                if (speechSynthesisUtterance) {
+                    window.speechSynthesis.cancel();
+                    speechSynthesisUtterance = null;
+                    btn.textContent = 'speak';
+                } else {
+                    const text = content.textContent;
+                    speechSynthesisUtterance = new SpeechSynthesisUtterance(text);
+                    speechSynthesisUtterance.onend = () => {
+                        speechSynthesisUtterance = null;
+                        btn.textContent = 'speak';
+                    };
+                    window.speechSynthesis.speak(speechSynthesisUtterance);
+                    btn.textContent = 'shut';
+                }
+            });
+        });
+
+    </script>
+    <script>
+        const wrapCharsForFalling = () => {
+            document.querySelectorAll('.content').forEach(content => {
+                const text = content.textContent;
+                let wrapped = '';
+                for (let i = 0; i < text.length; i++) {
+                    wrapped += `<span class="char">${text[i]}</span>`;
+                }
+                content.innerHTML = wrapped;
+            });
+        };
+
+        const startFallingAnimation = () => {
+            wrapCharsForFalling();
+            const chars = document.querySelectorAll('.char');
+            const dates = document.querySelectorAll('.date');
+            const icons = document.querySelectorAll('.icon');
+            const btns = document.querySelectorAll('.btn');
+            const bars = document.querySelectorAll('.timeline-bar');
+            const daysagos = document.querySelectorAll('.days-ago');
+
+            const animateFalling = (element, rect) => {
+                const delay = Math.random() * 1000; // 0〜1000msのランダムな遅延
+                const randomXOffset = (Math.random() - 0.5) * window.innerWidth * 0.6;
+                const randomYOffset = Math.random() * -window.innerHeight * 0.89;
+                const startTop = window.innerHeight + randomYOffset;
+                const startLeft = rect.left + randomXOffset;
+                const angle = (Math.random() * 63) - 34;
+
+                const duration = 1 + Math.random() * 100;
+                const landingPosition = window.innerHeight * 0.9 + Math.random() * 1200;
+
+                setTimeout(() => {
+                    element.style.position = 'fixed';
+                    element.style.left = `${startLeft}px`;
+                    element.style.top = `${startTop}px`;
+                    element.style.transform = `rotate(${angle}deg)`;
+                    element.style.opacity = Math.random() * 0.5 + 0.5;
+                    const r = Math.floor(Math.random() * 256);
+                    const g = Math.floor(Math.random() * 256);
+                    const b = Math.floor(Math.random() * 256);
+                    element.style.color = `rgb(${r}, ${g}, ${b})`;
+                    const minSize = 12; // 最小サイズ
+                    const maxSize = 60; // 最大サイズ
+                    const randomSize = Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize;
+                    element.style.fontSize = `${randomSize}px`;
+                    element.style.willChange = 'transform, opacity'; // GPUアクセラレーションヒント
+                    element.classList.add('falling');
+
+                    setTimeout(() => {
+                        element.style.transition = `transform ${duration}s cubic-bezier(0.4, 0, 0.2, 1)`;
+                        element.style.transform = `rotate(${angle + (Math.random() * 20 - 10)}deg) translateY(${landingPosition - startTop}px)`;
+                    }, 10);
+                }, delay);
+            };
+            [chars, dates, icons, daysagos, btns, bars].forEach(elements => {
+                elements.forEach(element => {
+                    const rect = element.getBoundingClientRect();
+                    animateFalling(element, rect);
+                });
+            });
+        };
+
+    </script>
+
+</body>
+
+</html>

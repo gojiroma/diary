@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1文字ずつコピーツール</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #remainingChars {
+            margin: 10px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>1文字ずつコピーツール</h1>
+    <p>フォントに含まれない文字をペーストしてください:</p>
+    <textarea id="inputText" placeholder="ここに文字列をペースト"></textarea>
+    <div id="remainingChars">残り文字数: 0</div>
+    <button id="copyButton">1文字コピー</button>
+
+    <script>
+        const inputText = document.getElementById('inputText');
+        const copyButton = document.getElementById('copyButton');
+        const remainingChars = document.getElementById('remainingChars');
+
+        let chars = [];
+
+        inputText.addEventListener('input', () => {
+            chars = inputText.value.split('');
+            updateRemainingChars();
+        });
+
+        copyButton.addEventListener('click', () => {
+            if (chars.length === 0) {
+                alert('文字列を入力してください。');
+                return;
+            }
+
+            const char = chars.shift();
+            inputText.value = chars.join('');
+            updateRemainingChars();
+
+            navigator.clipboard.writeText(char)
+                .then(() => {
+                    return
+                })
+                .catch(err => {
+                    console.error('クリップボードへのコピーに失敗しました:', err);
+                    alert('クリップボードへのコピーに失敗しました。');
+                });
+        });
+
+        function updateRemainingChars() {
+            remainingChars.textContent = `残り文字数: ${chars.length}`;
+        }
+    </script>
+</body>
+
+</html>
