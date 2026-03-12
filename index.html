@@ -14,7 +14,7 @@
     <style>
         @font-face {
             font-family: 'gojiromanus';
-            src: url('gojiromanus6.otf') format('opentype');
+            src: url('gojiromanus10.otf') format('opentype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -188,6 +188,10 @@
             text-wrap: balance;
             overflow-wrap: break-word;
             position: relative;
+        }
+
+        .content.toggle-font {
+            font-family: "Zen Old Mincho", serif !important;
         }
 
         /* 現在表示中以外のエントリを半透明に */
@@ -836,10 +840,12 @@
                 this.setupContentClick();
                 this.scrollToEntryFromHash();
             }
+         
             static setupContentClick() {
                 document.querySelectorAll('.content').forEach(content => {
                     let speechSynthesisUtterance = null;
                     let isCopied = false;
+                    let isFontToggled = false; // フォントトグルの状態を管理
 
                     content.addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -855,9 +861,13 @@
                                 isCopied = true;
                                 setTimeout(() => { isCopied = false; }, 2000);
                             });
+                            // フォントトグル
+                            isFontToggled = !isFontToggled;
+                            content.classList.toggle('toggle-font', isFontToggled);
                         }
                     });
 
+                    // 既存のダブルクリックイベントはそのまま
                     content.addEventListener('dblclick', (e) => {
                         e.stopPropagation();
                         if (speechSynthesisUtterance) {
@@ -874,7 +884,6 @@
                     });
                 });
             }
-
             static setupDateClick() {
                 document.querySelectorAll('.date').forEach(dateElement => {
                     dateElement.addEventListener('click', () => {
@@ -1171,62 +1180,6 @@
         }
 
         DiaryApp.init();
-
-        document.querySelectorAll('.content').forEach(content => {
-            const tooltip = document.createElement('div');
-            tooltip.className = 'content-tooltip';
-            tooltip.innerHTML = `
-        <span class="copy-btn">copy</span>
-        <span class="speak-btn">speak</span>
-    `;
-            content.style.position = 'relative';
-            content.appendChild(tooltip);
-
-            let speechSynthesisUtterance = null;
-
-            content.addEventListener('mouseenter', () => {
-                tooltip.classList.add('show');
-            });
-
-            content.addEventListener('mouseleave', () => {
-                tooltip.classList.remove('show');
-                if (speechSynthesisUtterance) {
-                    window.speechSynthesis.cancel();
-                    speechSynthesisUtterance = null;
-                    tooltip.querySelector('.speak-btn').textContent = 'speak';
-                }
-            });
-
-            tooltip.querySelector('.copy-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                const text = content.textContent;
-                navigator.clipboard.writeText(text).then(() => {
-                    tooltip.querySelector('.copy-btn').textContent = 'copied';
-                    setTimeout(() => {
-                        tooltip.querySelector('.copy-btn').textContent = 'copy';
-                    }, 2000);
-                });
-            });
-
-            tooltip.querySelector('.speak-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                const btn = tooltip.querySelector('.speak-btn');
-                if (speechSynthesisUtterance) {
-                    window.speechSynthesis.cancel();
-                    speechSynthesisUtterance = null;
-                    btn.textContent = 'speak';
-                } else {
-                    const text = content.textContent;
-                    speechSynthesisUtterance = new SpeechSynthesisUtterance(text);
-                    speechSynthesisUtterance.onend = () => {
-                        speechSynthesisUtterance = null;
-                        btn.textContent = 'speak';
-                    };
-                    window.speechSynthesis.speak(speechSynthesisUtterance);
-                    btn.textContent = 'shut';
-                }
-            });
-        });
 
     </script>
     <script>

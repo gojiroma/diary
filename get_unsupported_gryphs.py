@@ -1,6 +1,5 @@
 from collections import Counter
 from fontTools.ttLib import TTFont
-from bs4 import BeautifulSoup
 
 def get_font_chars(font_path):
     """OTF/TTFファイルからサポートされている文字コードを取得"""
@@ -21,8 +20,8 @@ def get_text_chars(file_path):
             text = f.read()
     return text
 
-def find_unsupported_chars(font_path, file_paths):
-    """フォントに含まれない文字を抽出"""
+def find_unsupported_chars(font_path, file_paths, exclude_chars):
+    """フォントに含まれない文字を抽出し、除外文字を除く"""
     font_chars = get_font_chars(font_path)
     char_counter = Counter()
 
@@ -31,17 +30,23 @@ def find_unsupported_chars(font_path, file_paths):
         char_counter.update(text)
 
     # フォントに含まれない文字を抽出
-    unsupported_chars = sorted({char for char in char_counter if char not in font_chars})
+    unsupported_chars = {char for char in char_counter if char not in font_chars}
 
-    return unsupported_chars
+    # 除外文字を除く
+    unsupported_chars = unsupported_chars - set(exclude_chars)
+
+    return sorted(unsupported_chars)
+
+# 除外したい文字
+exclude_chars = '▫☃☻゙゚️🍕🍵🐏🐑🐱📞📮🗣🗺'
 
 # ファイルパス
-font_path = 'gojiromanus6.otf'
+font_path = 'gojiromanus11.otf'
 file_paths = ['entry.md', 'fake.md', 'index.html']
 
 # 実行
-unsupported_chars = find_unsupported_chars(font_path, file_paths)
+unsupported_chars = find_unsupported_chars(font_path, file_paths, exclude_chars)
 
 # 結果を出力
-print("フォントに含まれない文字:")
+print("フォントに含まれない文字（除外文字を除く）:")
 print(''.join(unsupported_chars))
