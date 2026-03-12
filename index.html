@@ -12,6 +12,14 @@
     <title>誤字ロマの日記</title>
     <link rel="icon" href="diary-icon.png" type="image/png">
     <style>
+        @font-face {
+            font-family: 'gojiromanus';
+            src: url('gojiromanus6.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
         :root {
             --bg-color: #f5f5f5;
             --text-color: #333333;
@@ -29,7 +37,7 @@
         }
 
         body {
-            font-family: "Zen Old Mincho", serif;
+            font-family: "gojiromanus", serif;
             display: flex;
             flex-direction: column;
             justify-content: center;

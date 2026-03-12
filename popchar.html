@@ -40,6 +40,17 @@
             margin: 10px 0;
             font-weight: bold;
         }
+
+        #copiedChar {
+            font-size: 200px;
+            font-family: 'MS Mincho', 'IPAMincho', serif;
+            margin: 20px 0;
+            min-height: 250px;
+            border: 1px dashed #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 
@@ -49,11 +60,13 @@
     <textarea id="inputText" placeholder="ここに文字列をペースト"></textarea>
     <div id="remainingChars">残り文字数: 0</div>
     <button id="copyButton">1文字コピー</button>
+    <div id="copiedChar"></div>
 
     <script>
         const inputText = document.getElementById('inputText');
         const copyButton = document.getElementById('copyButton');
         const remainingChars = document.getElementById('remainingChars');
+        const copiedChar = document.getElementById('copiedChar');
 
         let chars = [];
 
@@ -72,9 +85,12 @@
             inputText.value = chars.join('');
             updateRemainingChars();
 
+            // コピーされた文字を表示
+            copiedChar.textContent = char;
+
             navigator.clipboard.writeText(char)
                 .then(() => {
-                    return
+                    return;
                 })
                 .catch(err => {
                     console.error('クリップボードへのコピーに失敗しました:', err);
