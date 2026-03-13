@@ -36,6 +36,12 @@
 
         }
 
+        /* Safariのみに適用するスタイル */
+        .is-safari body,
+        .is-safari .content {
+            font-family: "Zen Old Mincho", serif !important;
+        }
+
         body {
             font-family: "gojiromanus", serif;
             display: flex;
@@ -648,6 +654,9 @@
             static audioContext = null;
 
             static async init() {
+                if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+                    document.documentElement.classList.add('is-safari');
+                }
                 await this.loadIconsData();
                 await this.loadDiaryEntries();
                 this.preloadFakeEntries();
@@ -841,7 +850,7 @@
                 this.setupContentClick();
                 this.scrollToEntryFromHash();
             }
-         
+
             static setupContentClick() {
                 document.querySelectorAll('.content').forEach(content => {
                     let speechSynthesisUtterance = null;
