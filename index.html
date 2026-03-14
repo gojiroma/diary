@@ -157,6 +157,7 @@
             margin-left: -3px;
             white-space: nowrap;
             opacity: 0.6;
+            writing-mode: vertical-rl;
         }
 
         .content {
@@ -311,9 +312,9 @@
         .date .tooltip {
             position: absolute;
             writing-mode: vertical-lr;
-            left:2px;
+            left: 2px;
             color: var(--text-color);
-            top:1px;
+            top: 1px;
             font-size: 14px;
             opacity: 0;
             pointer-events: none;
@@ -364,7 +365,8 @@
 
         .date:hover {
             animation: shake 0.3s infinite;
-            animation-duration: calc(0.1s + 0.2s * var(--wind-level));
+            animation-duration: calc(0.3s - 0.02s * var(--wind-level));
+            /* 風速が強いほど速くシェイク */
         }
 
         .timeline-bar {
@@ -379,7 +381,7 @@
             transition: transform 0.1s;
         }
 
-        .timeline-bar-inner {
+ .timeline-bar-inner {
             width: 100%;
             background-color: var(--bar-color);
             transition: background-color var(--transition), height 0.2s;
@@ -389,7 +391,7 @@
         .timeline-bar:hover .timeline-bar-inner,
         .timeline-bar.selected .timeline-bar-inner {
             opacity: 1 !important;
-            animation: shake-vertical calc(0.1s + 0.2s * var(--wind-level)) infinite;
+            animation: shake-vertical calc(0.1s + 0.2s / var(--wind-level)) infinite;
         }
 
         @keyframes shake-vertical {
@@ -398,15 +400,17 @@
             100% {
                 transform: translateY(0);
             }
-
+            
             25% {
-                transform: translateY(-2px);
+                transform: translateY(-3px);
             }
 
             75% {
-                transform: translateY(2px);
+                transform: translateY(3px);
             }
         }
+
+
 
         .timeline-bar:hover,
         .timeline-bar.selected {
@@ -497,7 +501,6 @@
                 if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
                     document.documentElement.classList.add('is-safari');
                 }
-                await this.loadIconsData();
                 await this.loadWeatherData(); // 追加
                 await this.loadDiaryEntries();
                 this.preloadFakeEntries();
@@ -509,26 +512,28 @@
             }
 
             static generatePastelGradient(isLight) {
-                const hue = Math.floor(Math.random() * 360);
-                const saturation = isLight ? '80%' : '60%';
-                const lightness1 = isLight ? '90%' : '20%';
-                const lightness2 = isLight ? '95%' : '25%';
-
-                return `linear-gradient(135deg,
-        hsl(${hue}, ${saturation}, ${lightness1}),
-        hsl(${((hue + 30) % 360)}, ${saturation}, ${lightness2}))`;
-            }
-
-            static async loadIconsData() {
-                try {
-                    const response = await fetch('icons.csv');
-                    if (!response.ok) throw new Error(`Failed to load icons.csv: ${response.status}`);
-                    const csv = await response.text();
-                    this.iconsData = this.parseCSV(csv);
-                } catch (error) {
-                    console.error('Error loading icons.csv:', error);
+                // 明るいモード: 柔らかいパステルカラー
+                if (isLight) {
+                    const hue = Math.floor(Math.random() * 60) + 200; // 青〜紫系を基調に
+                    const saturation = '80%';
+                    const lightness1 = '85%';
+                    const lightness2 = '95%';
+                    return `linear-gradient(135deg,
+            hsl(${hue}, ${saturation}, ${lightness1}),
+            hsl(${hue + 30}, ${saturation}, ${lightness2}))`;
+                }
+                // 暗いモード: 深みのあるダークトーン
+                else {
+                    const hue = Math.floor(Math.random() * 60) + 200; // 青〜紫系を基調に
+                    const saturation = '70%';
+                    const lightness1 = '15%';
+                    const lightness2 = '25%';
+                    return `linear-gradient(135deg,
+            hsl(${hue}, ${saturation}, ${lightness1}),
+            hsl(${hue + 30}, ${saturation}, ${lightness2}))`;
                 }
             }
+
 
             static parseCSV(csv) {
                 const lines = csv.split('\n').filter(line => line.trim());
@@ -599,7 +604,6 @@
                     const dateObj = DiaryUtils.formatJapaneseDate(yyyymmdd);
                     const contentLines = contentMatch[1].split('\n').map(line => line.replace(/^\s*\|?\s*/, '')).join('\n');
                     const dateForIcons = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
-                    const iconsHTML = this.getIconsForDate(dateForIcons);
 
                     const entryElement = document.createElement('div');
                     entryElement.className = 'diary-entry';
@@ -608,7 +612,6 @@
                             <div class="date-container">
                                 <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
                                 <div class="days-ago">${DiaryUtils.calculateDaysAgo(yyyymmdd)}</div>
-                                ${iconsHTML}
                             </div>
                             <div class="content">${contentLines}</div>
                         `;
@@ -617,7 +620,7 @@
                     this.diaryEntries.push({
                         yyyymmdd,
                         content: contentLines.trim(),
-                        icons: this.iconsData.filter(icon => icon.date === dateForIcons)
+                        icons: [] // iconsDataは使用しない
                     });
                 });
 
@@ -671,7 +674,7 @@
                     });
                 });
             }
-         static setupDateClick() {
+            static setupDateClick() {
                 document.querySelectorAll('.date').forEach(dateElement => {
                     const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
                     const dateForWeather = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
@@ -682,7 +685,10 @@
 
                     // 風速に応じた振動レベル（1〜3）はそのまま残す
                     if (weather) {
-                        const windLevel = Math.min(3, Math.floor(weather.avgWind / 2) + 1);
+                        // 風速に応じた振動レベル（風速が強いほどシェイクが激しくなる）
+                        const maxWindSpeed = 8; // 最大風速（例: 8 m/s）
+                        // 風速が強いほど windLevel が大きくなる（1〜10段階）
+                        const windLevel = Math.min(10, Math.max(1, Math.floor(weather.avgWind * 10 / 8))); // 最大風速8m/sに合わせる
                         dateElement.style.setProperty('--wind-level', windLevel);
 
                         // ツールチップを追加
@@ -725,10 +731,14 @@
                     // 気温に応じた色（-5°C:青、30°C:赤）
                     if (weather) {
                         const temp = weather.avgTemp;
-                        const red = Math.min(255, Math.floor((temp + 5) * 10));
-                        const blue = Math.min(255, Math.floor((30 - temp) * 10));
+                        const red = Math.min(255, Math.floor((temp + 10) * 10));
+                        const blue = Math.min(255, Math.floor((35 - temp) * 10));
                         container.style.setProperty('--bar-color', `rgb(${red}, 50, ${blue})`);
-                        container.style.setProperty('--wind-level', Math.min(3, Math.floor(weather.avgWind * 1.5) + 1));
+                        // 風速に応じた振動レベル（1〜10段階）
+                        const maxWindSpeed = 8; // 最大風速（例: 8 m/s）
+                        // 風速が強いほど windLevel が大きくなる（1〜10段階）
+                        const windLevel = Math.min(10, Math.max(1, Math.floor(weather.avgWind * 10 / 8))); // 最大風速8m/sに合わせる
+                        container.style.setProperty('--wind-level', windLevel);
                     } else {
                         container.style.setProperty('--bar-color', 'var(--text-color)');
                         container.style.setProperty('--wind-level', 1);
