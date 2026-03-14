@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 14 Mar 2026 17:42:56 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 14 Mar 2026 18:01:02 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>三月十四日（土）</title>
+      <link>https://nikki.poet.blue#20260314</link>
+      <pubDate>Sat, 14 Mar 2026 18:01:02 +0900</pubDate>
+      <description>不二家の「アンパンマンペロペロチョコ」の味が結構好きで、年に1回くらいは買う。昨日久々に買って今日食べた。そう、この味だ。だが、別にLOOKとかでもいいのかもしれない。この商品、スーパーによって価格が数十円違ってくるので、安いと思ったらその時が買いどき。△最近はダイソーよりセリアが好きで、まずセリアに行って無いものはダイソーで買うようにしている。とにかくBGMが好みなのと、nanacoが使えるのが推しポイント。先日泡立てネットを購入して、やっぱり泡が立たないということで、ポンプタイプのものを購入した。△日付の下にアイコンを配置していたが、ちょっと複雑さが増していると思ったので内容を本文に記載し、廃止した。一方で、天気情報を入れたくなったのでグラフ部分の気温配色と日付部分の風速揺れ表示を実装した。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260314</guid>
+      <media:content url="https://nc.poet.blue/20260314" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>三月十三日（金）</title>
       <link>https://nikki.poet.blue#20260313</link>
