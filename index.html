@@ -26,7 +26,7 @@
             --border-color: #666666;
             --timeline-color: #666666;
             --highlight-color: #cccccc;
-            --icon-size: 34px;
+            --icon-size: 40px;
             --modal-bg: rgba(0, 0, 0, 0.5);
             --transition: 0.2s ease;
             --light-pastel-1: #f8e8e8;
@@ -43,6 +43,7 @@
         }
 
         body {
+            overflow: hidden;
             font-family: "gojiromanus", serif;
             display: flex;
             flex-direction: column;
@@ -51,7 +52,6 @@
             min-height: 100svh;
             margin: 0;
             padding: 0;
-            overflow: hidden;
             position: relative;
             opacity: 0;
             transition: opacity var(--transition), background-color var(--transition);
@@ -66,59 +66,26 @@
             --text-color: #e0e0e0;
         }
 
-        .page-title,
-        #page-title-inmodal,
-        input[type="text"] {
-            font-family: "Zen Old Mincho", serif;
-            font-size: 18px;
+        .page-title {
+            font-family: "gojiromanus", serif;
+            text-decoration: underline;
+            font-size: 22px;
             font-weight: 700;
             border-radius: 8px;
-            cursor: pointer;
             transition: all 0.1s;
             text-decoration: none;
             user-select: none;
             z-index: 10;
-        }
-
-        .page-title,
-        #page-title-inmodal {
             color: var(--text-color);
-            background-color: #6363632f;
             padding: 5px 10px;
-            opacity: 0.1;
-        }
-
-        .page-title:hover,
-        #page-title-inmodal:hover,
-        input[type="text"]:hover {
-            opacity: 1;
-        }
-
-        .page-title {
             position: fixed;
             top: 10px;
             right: 20px;
         }
 
         .page-title.fake-mode {
-            background-color: var(--bg-color);
             color: var(--text-color);
         }
-
-
-        input[type="text"] {
-            color: var(--text-color) !important;
-            position: fixed;
-            top: 10px;
-            left: 20px;
-            padding: 5px 10px;
-            border: 1px solid var(--border-color);
-            width: 7ic;
-            opacity: .1;
-            outline: none;
-        }
-
-
 
         .diary-container-wrapper {
             width: 100%;
@@ -134,6 +101,7 @@
         }
 
         .diary-container {
+            overflow: hidden;
             display: flex;
             flex-direction: row;
             gap: 20px;
@@ -176,13 +144,17 @@
         }
 
         .date {
-            font-size: 1.6em;
+            font-family: 'Zen Old Mincho', serif;
+            font-weight: bold;
             cursor: pointer;
+            font-size: 1.6em;
             white-space: nowrap;
+            position: relative;
         }
 
         .days-ago {
-            font-size: 0.8em;
+            cursor: default;
+            font-size: 1.6em;
             margin-left: -3px;
             white-space: nowrap;
             opacity: 0.6;
@@ -242,6 +214,7 @@
         }
 
         .timeline {
+            cursor: pointer;
             position: relative;
             display: flex;
             flex-direction: row-reverse;
@@ -257,7 +230,6 @@
             height: 100%;
             margin: 0 1px;
             background-color: transparent;
-            cursor: pointer;
             display: flex;
             align-items: flex-end;
         }
@@ -275,16 +247,17 @@
         }
 
         .icon {
+            cursor: default;
             width: var(--icon-size);
             height: var(--icon-size);
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
             position: relative;
-            left: 6px;
+            left: 18px;
             transition: transform 0.1s, background-color var(--transition), filter var(--transition);
             border-radius: 4px;
+
 
         }
 
@@ -305,7 +278,8 @@
             border-radius: 4px;
             font-size: x-large;
             filter: grayscale(100%);
-            opacity: 0.2;
+            opacity: 0.4;
+            font-size: 2.5em;
         }
 
         .icon:hover img,
@@ -317,199 +291,42 @@
         .tooltip {
             position: absolute;
             top: -50%;
-            left: 140%;
+            left: 90%;
             transform: translateX(-50%);
-            background-color: var(--bg-color);
             color: var(--text-color);
             padding: 4px 8px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 20px;
             white-space: nowrap;
-            border: 1px solid var(--border-color);
+            border: none;
             opacity: 0;
             pointer-events: none;
             transition: opacity var(--transition);
             z-index: 30;
             margin-bottom: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .icon:hover .tooltip {
             opacity: 1;
         }
 
-        .info-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            border: none;
-            background-color: #6363632f;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 100;
-            font-size: 18px;
-            transition: all var(--transition);
-            user-select: none;
-            opacity: 0.2;
-        }
-
-        .info-button:hover {
-            transform: scale(1.1);
-            opacity: 0.8;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--modal-bg);
-            z-index: 1000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            visibility: hidden;
-        }
-
-        .modal-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 30px;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            transform: skewY(-3deg) translateY(20px);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border-color);
-        }
-
-        .modal-overlay.show .modal-content {
-            transform: skewY(-3deg) translateY(0);
-            opacity: 1;
-        }
-
-        .modal-inner {
-            transform: skewY(3deg);
-        }
-
-        .modal-content h1,
-        .modal-content h2,
-        .modal-content p,
-        .modal-content textarea {
-            transform: skewY(-3deg);
-        }
-
-        .modal-content h1 {
-            font-size: 1.8em;
-            margin-top: 0;
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-
-        .modal-content h2 {
-            font-size: 1.3em;
-            margin-top: 20px;
-            border-bottom: 1px dashed var(--border-color);
-            padding-bottom: 5px;
-        }
-
-        .modal-content p {
-            line-height: 1.6;
-            margin: 10px 0;
-        }
-
-        .modal-content input[type="text"] {
-            position: static;
-            width: 150px;
-            margin: 0 5px;
-            opacity: 1;
-            border: none;
-            border-bottom: 1px solid var(--border-color);
-            background-color: transparent;
-            font-size: 1em;
-            padding: 5px;
-        }
-
-        .modal-content textarea {
-            width: 100%;
-            height: 100px;
-            margin: 10px 0;
-            padding: 3px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background-color: rgba(255, 255, 255, 0.1);
-            resize: vertical;
-        }
-
-        .modal-content img {
-            display: block;
-            margin: 15px auto;
-        }
-
-        .qr {
-            max-width: 150px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .modal-button,
-        .share-button {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all var(--transition);
-        }
-
-        .modal-button:hover,
-        .share-button:hover {
-            opacity: 0.8;
-        }
-
-        .modal-button {
-            margin: 0 10px;
-        }
-
-        .share-button {
-            margin: 15px auto;
-            display: block;
-        }
-
-        .close-button {
+        .date .tooltip {
             position: absolute;
-            top: 10px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 1.5em;
-            cursor: pointer;
+            writing-mode: vertical-lr;
+            left:2px;
+            color: var(--text-color);
+            top:1px;
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 30;
         }
+
+        .date:hover .tooltip {
+            opacity: 1;
+        }
+
+
 
         .falling {
             will-change: transform, opacity;
@@ -529,18 +346,79 @@
             pointer-events: none;
         }
 
-        #shuffleButton:hover {
-            opacity: 1;
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60%,
+            80% {
+                transform: translateX(-2px);
+            }
+
+            40% {
+                transform: translateX(2px);
+            }
+        }
+
+        .date:hover {
+            animation: shake 0.3s infinite;
+            animation-duration: calc(0.1s + 0.2s * var(--wind-level));
+        }
+
+        .timeline-bar {
+            --bar-color: var(--text-color);
+            --wind-level: 1;
+            width: 6px;
+            height: 100%;
+            margin: 0 1px;
+            background-color: transparent;
+            display: flex;
+            align-items: flex-end;
+            transition: transform 0.1s;
+        }
+
+        .timeline-bar-inner {
+            width: 100%;
+            background-color: var(--bar-color);
+            transition: background-color var(--transition), height 0.2s;
+            opacity: 0.6;
+        }
+
+        .timeline-bar:hover .timeline-bar-inner,
+        .timeline-bar.selected .timeline-bar-inner {
+            opacity: 1 !important;
+            animation: shake-vertical calc(0.1s + 0.2s * var(--wind-level)) infinite;
+        }
+
+        @keyframes shake-vertical {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            25% {
+                transform: translateY(-2px);
+            }
+
+            75% {
+                transform: translateY(2px);
+            }
+        }
+
+        .timeline-bar:hover,
+        .timeline-bar.selected {
+            transform: scaleY(1.2);
         }
     </style>
 
 </head>
 
 <body>
-    <button id="fallingButton" class="btn"
-        style="position: fixed; top: 10px; left: 100px; padding: 5px 10px; opacity: 0.1; border: none; border-radius: 8px; background-color: #6363632f; color: var(--text-color); cursor: pointer; z-index: 10;">落</button>
-    <button id="shuffleButton" class="btn"
-        style="position: fixed; top: 10px; left: 170px; padding: 5px 10px; opacity: 0.1; border: none; border-radius: 8px; background-color: #6363632f; color: var(--text-color); cursor: pointer; z-index: 10;">乱</button>
     <div class="page-title btn" id="pageTitle"></div>
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
@@ -548,41 +426,6 @@
     <div class="timeline-container">
         <div class="timeline" id="timeline"></div>
     </div>
-    <div class="info-button btn" id="infoButton">i</div>
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-content">
-            <button class="close-button" id="closeButton">&times;</button>
-            <div class="modal-inner">
-                <h1>誤字ロマの日記</h1>
-
-                <h2>なんだ、この日記は？</h2>
-                <p>このインターネット日記は、北関東の某所で生きるひとりの人間が、その日の出来事や思ったことを気軽に、かつ無責任に書き続けているものです。</p>
-
-                <h2>おたより</h2>
-                <p>日記の感想、自分語り、尿漏れのお悩みなど、<input type="text" id="mailSubject"
-                        placeholder="お好きな英数字">@poet.blueまで、気軽にお送りください。なお、メールへの返信は気分次第です。ご了承ください。場合によっては日記の日付下部に「📮」アイコンを設置し、お返事ページの掲載をもってリアクションとする場合もあります。
-                </p>
-                <textarea id="mailBody" placeholder="例:○月×日の『〇〇』という部分を読んで、△△を思い出しました。"></textarea>
-                <div class="modal-buttons">
-                    <button class="modal-button" id="sendMailButton">送る一歩手前</button>
-                </div>
-
-                <h2>知人に知らせる</h2>
-                <p>気分がふさがっている、暇を持て余している、何か無料で読みたいという方がいらっしゃいましたら、この日記をご紹介ください。</p>
-                <img src="https://i.imgur.com/BxnlTB4.png" alt="QRコード" class="qr">
-                <center>
-                    <p>https://nikki.poet.blue</p>
-                </center>
-                <button class="share-button" id="shareButton">共有する</button>
-
-                <h2>Buy me a pen</h2>
-                <p>今日は珍しく面白かった！とか、なんか機嫌が良かった、という日にぜひ！
-                </p>
-                <a href="https://www.buymeacoffee.com/gojiroma" target="_blank" class="noskew"><img
-                        src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee"
-                        style="height: 60px !important;width: 217px !important;"></a>
-            </div>
-        </div>
     </div>
     <script>
         class DiaryUtils {
@@ -646,7 +489,6 @@
 
         class DiaryApp {
             static isFakeMode = false;
-            static isShuffleMode = false;
             static originalEntriesOrder = [];
             static fakeEntriesCache = null;
             static diaryEntries = [];
@@ -658,17 +500,16 @@
                     document.documentElement.classList.add('is-safari');
                 }
                 await this.loadIconsData();
+                await this.loadWeatherData(); // 追加
                 await this.loadDiaryEntries();
                 this.preloadFakeEntries();
                 this.setupEventListeners();
-                this.setupModal();
                 document.body.style.background = this.generatePastelGradient(!this.isFakeMode);
                 document.body.style.opacity = 1;
-                document.getElementById('fallingButton').addEventListener('click', startFallingAnimation);
-                document.getElementById('shuffleButton').addEventListener('click', () => this.toggleShuffleMode());
 
                 setTimeout(startFallingAnimation, 180000);
             }
+
             static generatePastelGradient(isLight) {
                 const hue = Math.floor(Math.random() * 360);
                 const saturation = isLight ? '80%' : '60%';
@@ -728,68 +569,6 @@
                 window.addEventListener('hashchange', () => this.scrollToEntryFromHash());
                 window.addEventListener('load', () => this.scrollToEntryFromHash());
 
-            }
-            // shuffleモードの切り替え
-            static toggleShuffleMode() {
-                this.isShuffleMode = !this.isShuffleMode;
-                const container = document.getElementById('diaryContainer');
-                const entries = Array.from(container.children);
-
-                if (this.isShuffleMode) {
-                    // 初回のみ元の順序を保存
-                    if (this.originalEntriesOrder.length === 0) {
-                        this.originalEntriesOrder = entries.map(entry => entry.id);
-                    }
-                    // ランダムに並び替え
-                    entries.sort(() => Math.random() - 0.5);
-                    entries.forEach(entry => container.appendChild(entry));
-                } else {
-                    // 元の順序に戻す
-                    this.originalEntriesOrder.forEach(id => {
-                        const entry = document.getElementById(id);
-                        if (entry) container.appendChild(entry);
-                    });
-                }
-                // 現在表示中のエントリを再設定
-                this.scrollToEntryFromHash();
-            }
-            static setupModal() {
-                const infoButton = document.getElementById('infoButton');
-                const modalOverlay = document.getElementById('modalOverlay');
-                const closeButton = document.getElementById('closeButton');
-                const sendMailButton = document.getElementById('sendMailButton');
-                const shareButton = document.getElementById('shareButton');
-
-                infoButton.addEventListener('click', () => {
-                    modalOverlay.style.display = 'flex';
-                    setTimeout(() => modalOverlay.classList.add('show'), 10);
-                });
-
-                closeButton.addEventListener('click', () => {
-                    modalOverlay.classList.remove('show');
-                    setTimeout(() => modalOverlay.style.display = 'none', 300);
-                });
-
-                modalOverlay.addEventListener('click', e => {
-                    if (e.target === modalOverlay) {
-                        modalOverlay.classList.remove('show');
-                        setTimeout(() => modalOverlay.style.display = 'none', 300);
-                    }
-                });
-
-                sendMailButton.addEventListener('click', () => {
-                    const subject = document.getElementById('mailSubject').value || 'somebody';
-                    const body = document.getElementById('mailBody').value || '本文なし';
-                    window.location.href = `mailto:${subject}@poet.blue?subject=誤字ロマの日記を読みました&body=${encodeURIComponent(body)}`;
-                });
-
-                shareButton.addEventListener('click', () => {
-                    if (navigator.share) {
-                        navigator.share({ title: '誤字ロマの日記', url: 'https://nikki.poet.blue' });
-                    } else {
-                        alert('URLをコピーしてください: https://nikki.poet.blue');
-                    }
-                });
             }
 
             static async loadDiaryEntries(filename = 'entry.md') {
@@ -894,13 +673,34 @@
                     });
                 });
             }
-            static setupDateClick() {
+         static setupDateClick() {
                 document.querySelectorAll('.date').forEach(dateElement => {
+                    const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
+                    const dateForWeather = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
+                    const weather = this.weatherData.find(w => w.date === dateForWeather);
+
+                    // 気温に応じた色変更を削除
+                    // dateElement.style.color = `rgb(${red}, 50, ${blue})`;
+
+                    // 風速に応じた振動レベル（1〜3）はそのまま残す
+                    if (weather) {
+                        const windLevel = Math.min(3, Math.floor(weather.avgWind / 2) + 1);
+                        dateElement.style.setProperty('--wind-level', windLevel);
+
+                        // ツールチップを追加
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'tooltip';
+                        tooltip.textContent = `${weather.avgTemp}°C　${weather.avgWind}m/s`;
+                        dateElement.appendChild(tooltip);
+                    }
+
                     dateElement.addEventListener('click', () => {
                         window.location.hash = dateElement.getAttribute('data-yyyymmdd');
                     });
                 });
             }
+
+
 
             static renderTimeline() {
                 const timeline = document.getElementById('timeline');
@@ -915,10 +715,27 @@
                 const heightRatio = 45 / maxContentLength;
 
                 sortedEntries.forEach(entry => {
+                    const yyyymmdd = entry.yyyymmdd;
+                    const dateForWeather = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
+                    const weather = this.weatherData.find(w => w.date === dateForWeather);
+
                     const container = document.createElement('div');
                     container.className = 'timeline-bar';
                     container.dataset.yyyymmdd = entry.yyyymmdd;
                     container.title = `${entry.yyyymmdd}: ${entry.content.length}文字`;
+
+                    // 気温に応じた色（-5°C:青、30°C:赤）
+                    if (weather) {
+                        const temp = weather.avgTemp;
+                        const red = Math.min(255, Math.floor((temp + 5) * 10));
+                        const blue = Math.min(255, Math.floor((30 - temp) * 10));
+                        container.style.setProperty('--bar-color', `rgb(${red}, 50, ${blue})`);
+                        container.style.setProperty('--wind-level', Math.min(3, Math.floor(weather.avgWind * 1.5) + 1));
+                    } else {
+                        container.style.setProperty('--bar-color', 'var(--text-color)');
+                        container.style.setProperty('--wind-level', 1);
+                    }
+
                     const innerBar = document.createElement('div');
                     innerBar.className = 'timeline-bar-inner';
                     const contentLength = Math.min(entry.content.length, maxContentLength);
@@ -939,14 +756,15 @@
                     timeline.appendChild(container);
                 });
 
+                // 選択中のバーをハイライト
                 const hash = window.location.hash.substring(1);
                 if (hash && hash.match(/^\d{8}$/)) {
                     const selectedBar = document.querySelector(`.timeline-bar[data-yyyymmdd="${hash}"]`);
                     if (selectedBar) selectedBar.classList.add('selected');
                 }
 
+                // タッチ操作の処理（既存のまま）
                 let lastHash = window.location.hash;
-
                 timeline.addEventListener('touchmove', e => {
                     e.preventDefault();
                     const touch = e.touches[0];
@@ -964,7 +782,6 @@
                         }
                     }
                 });
-
             }
 
             static percentile95(arr) {
@@ -1185,6 +1002,32 @@
             }
 
 
+            static async loadWeatherData() {
+                try {
+                    const response = await fetch('data.csv');
+                    if (!response.ok) throw new Error(`Failed to load data.csv: ${response.status}`);
+                    const csv = await response.text();
+                    this.weatherData = this.parseWeatherCSV(csv);
+                } catch (error) {
+                    console.error('Error loading data.csv:', error);
+                    this.weatherData = []; // エラー時は空配列
+                }
+            }
+            static parseWeatherCSV(csv) {
+                const lines = csv.split('\n').filter(line => line.trim());
+                return lines.slice(1).map(line => {
+                    const [date, avgTemp, , , avgWind] = line.split(',').map(v => v.trim());
+                    // 日付をyyyy/mm/dd形式に統一（例: 2025/12/6 → 2025/12/06）
+                    const normalizedDate = date.replace(/(\d+)\/(\d+)\/(\d+)/, (_, y, m, d) =>
+                        `${y}/${m.padStart(2, '0')}/${d.padStart(2, '0')}`
+                    );
+                    return {
+                        date: normalizedDate,
+                        avgTemp: parseFloat(avgTemp),
+                        avgWind: parseFloat(avgWind)
+                    };
+                });
+            }
 
 
         }
