@@ -381,7 +381,7 @@
             transition: transform 0.1s;
         }
 
- .timeline-bar-inner {
+        .timeline-bar-inner {
             width: 100%;
             background-color: var(--bar-color);
             transition: background-color var(--transition), height 0.2s;
@@ -400,7 +400,7 @@
             100% {
                 transform: translateY(0);
             }
-            
+
             25% {
                 transform: translateY(-3px);
             }
@@ -864,12 +864,8 @@
                         // 対象エントリの文字数に応じたビープ音
                         const content = entry.querySelector('.content');
                         const charCount = content.textContent.length;
-
-                        // 文字数に応じた周波数
                         const freq = Math.max(minFreq, Math.min(maxFreq, minFreq + charCount * 0.5));
                         this.playBeep(freq, 0.3);
-
-                        // ハプティックフィードバックをトリガー（文字数を引数として渡す）
                         this.triggerHapticFeedback(charCount);
 
                         // 対応するタイムラインバーを選択状態に
@@ -888,12 +884,14 @@
                     const charCount = content.textContent.length;
                     const freq = Math.max(minFreq, Math.min(maxFreq, minFreq + charCount * 0.5));
                     this.playBeep(freq, 0.3);
-
-                    // ハプティックフィードバックをトリガー（文字数を引数として渡す）
                     this.triggerHapticFeedback(charCount);
+
+                    // 最新エントリに対応するタイムラインバーを選択状態に
+                    const latestEntryId = latestEntry.id;
+                    const selectedBar = document.querySelector(`.timeline-bar[data-yyyymmdd="${latestEntryId}"]`);
+                    if (selectedBar) selectedBar.classList.add('selected');
                 }
             }
-
 
 
             static scrollTo(element, targetPosition) {
