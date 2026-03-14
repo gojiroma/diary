@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="縦書き日記アプリ。偽日記と本日記の2ペイン対応。GitHub連携で自動保存。">
+    <meta name="date" content="2026-02-27">
+    <title>かくぞう</title>
+    <link rel="icon" href="icon-write.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        @font-face {
+            font-family: 'gojiromanus';
+            src: url('gojiromanus.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        body {
+            background-color: #121212;
+            color: #ffe4da;
+            font-family: "gojiromanus", serif;
+            font-weight: 400;
+            font-style: normal;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        .diary-container {
+            width: 95%;
+            max-width: 1000px;
+            height: 90vh;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .diary-boxes {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            height: 800px;
+        }
+
+        .diary-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .diary-box textarea {
+            flex: 1;
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+            border: none;
+            resize: none;
+            font-size: 16px;
+            line-height: 1.5;
+            padding: 20px;
+            border-radius: 20px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 1.2em;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+        }
+
+        .diary-box textarea:focus {
+            outline: none;
+        }
+
+        .date-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-size: 1.2em;
+            padding: 10px;
+            color: #aaa;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .date-nav {
+            cursor: pointer;
+            font-size: 1.5em;
+            margin: 0 10px;
+            color: #aaa;
+        }
+
+        .date-nav:hover {
+            color: #ffe4da;
+        }
+
+        .date-text {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+        }
+
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 10px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            right: 30px;
+            top: 30px;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .link-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .subtle-link {
+            font-size: 0.8em;
+            color: #aaa;
+            opacity: 0.5;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .subtle-link:hover {
+            opacity: 1;
+            color: #ffe4da;
+        }
+
+        .copy-button {
+            width: 100%;
+            padding: 8px;
+            background-color: #3d3d3d;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .copy-button:hover {
+            background-color: #4d4d4d;
+        }
+
+        @media (max-width: 600px) {
+            .diary-boxes {
+                flex-direction: column;
+            }
+
+            .date-display {
+                writing-mode: horizontal-tb;
+                text-orientation: mixed;
+                flex-direction: row;
+                justify-content: center;
+            }
+
+            .date-nav {
+                writing-mode: horizontal-tb;
+                text-orientation: mixed;
+            }
+
+            .date-text {
+                writing-mode: horizontal-tb;
+                text-orientation: mixed;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="diary-container">
+        <div class="diary-boxes">
+            <div class="diary-box">
+                <textarea id="fakeDiary" placeholder="偽日記を入力..."></textarea>
+                <button class="copy-button" data-target="fakeDiary">copy text</button>
+            </div>
+            <div class="date-display" id="dateDisplayContainer">
+                <span class="date-nav" id="prevDay">↑・</span>
+                <span class="date-text" id="dateDisplay"></span>
+                <span class="date-nav" id="nextDay">・↓</span>
+            </div>
+            <div class="diary-box">
+                <textarea id="realDiary" placeholder="本日記を入力..."></textarea>
+                <button class="copy-button" data-target="realDiary">copy text</button>
+            </div>
+        </div>
+    </div>
+    <div class="link-container">
+        <a href="https://github.com/gojiroma/diary" class="subtle-link" target="_blank"
+            rel="noopener noreferrer">日記のrepo</a>
+        <a href="https://nikki.poet.blue" class="subtle-link" target="_blank" rel="noopener noreferrer">日記prod</a>
+    </div>
+    <div id="toast" class="toast"></div>
+    <script>
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.backgroundColor = isError ? '#ff4444' : '#4CAF50';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        const formatDateKey = (date, forMd = true) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return forMd ? `${year}${month}${day}` : `${year}/${month}/${day}`;
+        };
+
+        const toKanjiNumber = (num) => ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'][num] || num;
+        const toKanjiMonth = (month) => ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'][month - 1];
+        const toKanjiDay = (day) => {
+            if (day === 10) return '十';
+            if (day === 20) return '二十';
+            if (day === 30) return '三十';
+            if (day < 10) return toKanjiNumber(day);
+            if (day < 20) return '十' + toKanjiNumber(day - 10);
+            if (day < 30) return '二十' + toKanjiNumber(day - 20);
+            return toKanjiNumber(day);
+        };
+        const formatJapaneseDate = (date) => {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+            return `令和${toKanjiNumber(year - 2018)}年${toKanjiMonth(month)}${toKanjiDay(day)}日（${dayOfWeek}）`;
+        };
+
+        const realDiary = document.getElementById('realDiary');
+        const fakeDiary = document.getElementById('fakeDiary');
+        const dateDisplay = document.getElementById('dateDisplay');
+        const prevDayButton = document.getElementById('prevDay');
+        const nextDayButton = document.getElementById('nextDay');
+
+        let currentDate = new Date();
+        let currentDateKeyMd = formatDateKey(currentDate, true);
+        let currentDateKeyCsv = formatDateKey(currentDate, false);
+        let cachedDiaryContent = null;
+        let cachedFakeContent = null;
+
+        dateDisplay.textContent = formatJapaneseDate(currentDate);
+
+        async function fetchGitHubFile(fileName, token) {
+            try {
+                const apiUrl = `https://api.github.com/repos/gojiroma/diary/contents/${fileName}`;
+                const response = await fetch(apiUrl, { headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } });
+                if (!response.ok) throw new Error(`Failed to fetch ${fileName}`);
+                const fileData = await response.json();
+                return await (await fetch(fileData.download_url)).text();
+            } catch (error) {
+                console.error(`Error fetching ${fileName}:`, error);
+                return null;
+            }
+        }
+
+        function extractEntry(content, dateKeyMd, dateKeyCsv) {
+            if (!content) return null;
+            const datePattern = dateKeyMd + '|' + dateKeyCsv.replace(/\//g, '\\/');
+            const entryRegex = new RegExp(`date:\\s*(${datePattern})[\\s\\S]*?content:\\s*\\|([\\s\\S]*?)(?=---|\\n\\s*date:|$)`, 'i');
+            const match = content.match(entryRegex);
+            return match ? match[2].trim().replace(/^\s{2}/gm, '') : null;
+        }
+
+        async function loadEntriesForDate(date) {
+            const dateKeyMd = formatDateKey(date, true);
+            const dateKeyCsv = formatDateKey(date, false);
+            const token = localStorage.getItem('githubToken');
+            if (!token) return;
+
+            try {
+                if (!cachedDiaryContent || !cachedFakeContent) {
+                    [cachedDiaryContent, cachedFakeContent] = await Promise.all([
+                        fetchGitHubFile('entry.md', token),
+                        fetchGitHubFile('fake.md', token)
+                    ]);
+                }
+
+                const diaryEntry = extractEntry(cachedDiaryContent, dateKeyMd, dateKeyCsv);
+                const fakeEntry = extractEntry(cachedFakeContent, dateKeyMd, dateKeyCsv);
+
+                realDiary.value = diaryEntry || '';
+                fakeDiary.value = fakeEntry || '';
+            } catch (error) {
+                console.error('Error loading entries:', error);
+                showToast('エントリの読み込みに失敗しました。', true);
+            }
+        }
+
+        prevDayButton.addEventListener('click', () => {
+            currentDate.setDate(currentDate.getDate() - 1);
+            currentDateKeyMd = formatDateKey(currentDate, true);
+            currentDateKeyCsv = formatDateKey(currentDate, false);
+            dateDisplay.textContent = formatJapaneseDate(currentDate);
+            loadEntriesForDate(currentDate);
+        });
+
+        nextDayButton.addEventListener('click', () => {
+            currentDate.setDate(currentDate.getDate() + 1);
+            currentDateKeyMd = formatDateKey(currentDate, true);
+            currentDateKeyCsv = formatDateKey(currentDate, false);
+            dateDisplay.textContent = formatJapaneseDate(currentDate);
+            loadEntriesForDate(currentDate);
+        });
+
+        async function updateMultipleFiles(token, dateKeyMd, dateKeyCsv, realContent, fakeContent) {
+            const repoOwner = 'gojiroma';
+            const repoName = 'diary';
+            const branch = 'main';
+            const baseUrl = `https://api.github.com/repos/${repoOwner}/${repoName}`;
+
+            try {
+                const refResponse = await fetch(`${baseUrl}/git/refs/heads/${branch}`, { headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } });
+                if (!refResponse.ok) throw new Error('Failed to get branch');
+                const refData = await refResponse.json();
+                const latestCommitSha = refData.object.sha;
+
+                const commitResponse = await fetch(`${baseUrl}/git/commits/${latestCommitSha}`, { headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } });
+                if (!commitResponse.ok) throw new Error('Failed to get commit');
+                const commitData = await commitResponse.json();
+                const latestTreeSha = commitData.tree.sha;
+
+                const treeResponse = await fetch(`${baseUrl}/git/trees`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        base_tree: latestTreeSha,
+                        tree: [
+                            { path: 'entry.md', mode: '100644', type: 'blob', content: realContent },
+                            { path: 'fake.md', mode: '100644', type: 'blob', content: fakeContent }
+                        ]
+                    })
+                });
+                if (!treeResponse.ok) throw new Error('Failed to create tree');
+                const treeData = await treeResponse.json();
+                const newTreeSha = treeData.sha;
+
+                const newCommitResponse = await fetch(`${baseUrl}/git/commits`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: `Update entries for ${dateKeyMd}`, tree: newTreeSha, parents: [latestCommitSha] })
+                });
+                if (!newCommitResponse.ok) throw new Error('Failed to create commit');
+                const newCommitData = await newCommitResponse.json();
+                const newCommitSha = newCommitData.sha;
+
+                await fetch(`${baseUrl}/git/refs/heads/${branch}`, {
+                    method: 'PATCH',
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sha: newCommitSha })
+                });
+
+                cachedDiaryContent = realContent;
+                cachedFakeContent = fakeContent;
+
+                return true;
+            } catch (error) {
+                console.error('Error updating files:', error);
+                showToast('更新に失敗しました。', true);
+                return false;
+            }
+        }
+
+        dateDisplay.addEventListener('click', async () => {
+            const token = localStorage.getItem('githubToken');
+            if (!token) {
+                const userToken = prompt('GitHub Personal Access Tokenを入れてください:');
+                if (!userToken) return;
+                localStorage.setItem('githubToken', userToken);
+            }
+
+            if (!realDiary.value.trim() && !fakeDiary.value.trim()) {
+                showToast('本文が空です。', true);
+                return;
+            }
+
+            try {
+                let newEntryContent = cachedDiaryContent || '';
+                let newFakeContent = cachedFakeContent || '';
+
+                const entryRegexMd = new RegExp(`date:\\s*${currentDateKeyMd}[\\s\\S]*?(?=---|$)`);
+                const entryRegexCsv = new RegExp(`date:\\s*${currentDateKeyCsv.replace(/\//g, '\\/')}[\\s\\S]*?(?=---|$)`);
+
+                if (realDiary.value.trim()) {
+                    if (entryRegexMd.test(newEntryContent)) {
+                        newEntryContent = newEntryContent.replace(entryRegexMd, `date: ${currentDateKeyMd}\ncontent: |\n  ${realDiary.value.replace(/\n/g, '\n  ')}\n---`);
+                    } else if (entryRegexCsv.test(newEntryContent)) {
+                        newEntryContent = newEntryContent.replace(entryRegexCsv, `date: ${currentDateKeyMd}\ncontent: |\n  ${realDiary.value.replace(/\n/g, '\n  ')}\n---`);
+                    } else {
+                        newEntryContent += `\n---\ndate: ${currentDateKeyMd}\ncontent: |\n  ${realDiary.value.replace(/\n/g, '\n  ')}\n---`;
+                    }
+                }
+
+                if (fakeDiary.value.trim()) {
+                    if (entryRegexMd.test(newFakeContent)) {
+                        newFakeContent = newFakeContent.replace(entryRegexMd, `date: ${currentDateKeyMd}\ncontent: |\n  ${fakeDiary.value.replace(/\n/g, '\n  ')}\n---`);
+                    } else if (entryRegexCsv.test(newFakeContent)) {
+                        newFakeContent = newFakeContent.replace(entryRegexCsv, `date: ${currentDateKeyMd}\ncontent: |\n  ${fakeDiary.value.replace(/\n/g, '\n  ')}\n---`);
+                    } else {
+                        newFakeContent += `\n---\ndate: ${currentDateKeyMd}\ncontent: |\n  ${fakeDiary.value.replace(/\n/g, '\n  ')}\n---`;
+                    }
+                }
+
+                const success = await updateMultipleFiles(token, currentDateKeyMd, currentDateKeyCsv, newEntryContent, newFakeContent);
+                if (success) {
+                    showToast('保存しました。');
+                    loadEntriesForDate(currentDate);
+                }
+            } catch (error) {
+                console.error('Error sending update:', error);
+                showToast('送信に失敗しました。', true);
+            }
+        });
+
+        window.addEventListener('load', () => {
+            if (!localStorage.getItem('githubToken')) {
+                const userToken = prompt('GitHub Personal Access Tokenを入力してください:');
+                if (userToken) localStorage.setItem('githubToken', userToken);
+                else { showToast('GitHub Tokenが必要です。', true); return; }
+            }
+            loadEntriesForDate(currentDate);
+        });
+
+        // コピーボタンのクリックイベント
+        document.querySelectorAll('.copy-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-target');
+                const textarea = document.getElementById(targetId);
+                if (textarea.value.trim()) {
+                    textarea.select();
+                    document.execCommand('copy');
+                    showToast('テキストをコピーしました。');
+                } else {
+                    showToast('コピーするテキストがありません。', true);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
