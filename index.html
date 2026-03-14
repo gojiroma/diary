@@ -802,7 +802,6 @@
                 const title = document.querySelector('.page-title');
                 const body = document.body;
 
-                title.textContent = this.isFakeMode ? '誤字ロマの裏日記' : '誤字ロマの日記';
                 body.style.background = this.generatePastelGradient(!this.isFakeMode);
 
                 title.classList.toggle('fake-mode', this.isFakeMode);

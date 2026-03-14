@@ -1,5 +1,6 @@
 from collections import Counter
 from fontTools.ttLib import TTFont
+from bs4 import BeautifulSoup
 
 def get_font_chars(font_path):
     """OTF/TTFファイルからサポートされている文字コードを取得"""
@@ -41,7 +42,7 @@ def find_unsupported_chars(font_path, file_paths, exclude_chars):
 exclude_chars = '▫☃☻゙゚️🍕🍵🐏🐑🐱📞📮🗣🗺'
 
 # ファイルパス
-font_path = 'gojiromanus11.otf'
+font_path = 'gojiromanus.otf'
 file_paths = ['entry.md', 'fake.md', 'index.html']
 
 # 実行
