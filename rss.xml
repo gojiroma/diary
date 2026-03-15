@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 14 Mar 2026 18:01:02 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 15 Mar 2026 22:09:21 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>三月十五日（日）</title>
+      <link>https://nikki.poet.blue#20260315</link>
+      <pubDate>Sun, 15 Mar 2026 22:09:21 +0900</pubDate>
+      <description>ブウウ〜〜〜ンンン〜〜〜ンンンン〜〜。最高にデーデポッポポーな天気だったので、自転車で北にドゥルンドゥルンしてきた。さいきん利根川本流も見飽きてきたので、支流の良さげなカーブを通った。猫・亀多数発見。ずっと気になっていた第四のコンビニ「さくらみくら」でカレーとシェイクを堪能してきた。有酸素運動目標を少し超えてしまった。ああ、桜の樹の下には死体が埋まっている！</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260315</guid>
+      <media:content url="https://nc.poet.blue/20260315" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>三月十四日（土）</title>
       <link>https://nikki.poet.blue#20260314</link>
