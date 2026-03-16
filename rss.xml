@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Mon, 16 Mar 2026 00:59:59 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 16 Mar 2026 22:06:54 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>三月十六日（月）</title>
+      <link>https://nikki.poet.blue#20260316</link>
+      <pubDate>Mon, 16 Mar 2026 22:06:54 +0900</pubDate>
+      <description>今日もホーホケキョな陽気だったが、インドアな日になった。俺アプリとしてwikiっぽいものを運用していたが、一旦cosenseに退避して運用終了した。今はなぜかiCloudメモがしっくり来ている。別にリンクを張りたいとは思わない。フォルダという植木鉢を用意して、いくつか違う花を咲かせたいだけだったんだよな。リストをチェックすると、完了したものが下に移動するのも嬉しい。△ノートPCを全然使えていないと思ったので、キャスター付き3段ケースにのっけて、スクリーンロックを廃止して運用。本棚の近くに椅子と一緒に設置した。これは良さそうだ。未読本を消化したり、ついでに調べたりできる。ノッてきたので本棚もいい感じに「脱整理」してみた。縦に積んだ上に横に並べたり、斜めにしたり。なんとなく似てるなと思う本を島にまとめたり。一冊一冊が生命を取り戻したような気分。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260316</guid>
+      <media:content url="https://nc.poet.blue/20260316" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>三月十五日（日）</title>
       <link>https://nikki.poet.blue#20260315</link>
