@@ -568,3 +568,8 @@ date: 20260315
 content: |
   梶井基次郎と夢野久作かよ！
 ---
+---
+date: 20260316
+content: |
+  これっくらいの textareaに 妄想 後悔 ちょっとつめて ホントと嘘を並べて書いて marginさん　paddingさん positionさん colorさん バグが気になるwriting-modeさん　世界遺産のmarquee! （替え歌難しい、悔しい！）
+---
