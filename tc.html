@@ -22,7 +22,7 @@
 
 <body>
     <h1>Theme Color Changer</h1>
-    <p>このページのtheme-colorが0.1秒ごとにランダムに変わります。</p>
+    <p>このページのtheme-colorが0.05秒ごとにランダムに変わります。</p>
 
     <script>
         function getRandomColor() {
@@ -39,8 +39,8 @@
             metaThemeColor.setAttribute('content', getRandomColor());
         }
 
-        // 0.5秒ごとにtheme-colorを更新
-        setInterval(updateThemeColor, 100);
+        // 0.05秒ごとにtheme-colorを更新
+        setInterval(updateThemeColor, 50);
     </script>
 </body>
 
