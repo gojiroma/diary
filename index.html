@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <meta name="theme-color" content="#f5f5f5">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho&display=swap" rel="stylesheet">
 
@@ -506,6 +507,7 @@
                 this.preloadFakeEntries();
                 this.setupEventListeners();
                 document.body.style.background = this.generatePastelGradient(!this.isFakeMode);
+                this.updateThemeColor(!this.isFakeMode);
                 document.body.style.opacity = 1;
 
                 setTimeout(startFallingAnimation, 180000);
@@ -531,6 +533,22 @@
                     return `linear-gradient(135deg,
             hsl(${hue}, ${saturation}, ${lightness1}),
             hsl(${hue + 30}, ${saturation}, ${lightness2}))`;
+                }
+            }
+            static updateThemeColor(isLight) {
+                const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+                if (!metaThemeColor) return;
+
+                if (isLight) {
+                    // 明るいモードの場合、背景色に合わせた明るい色を設定
+                    const hue = Math.floor(Math.random() * 60) + 200;
+                    const lightness = 95; // 明るい色
+                    metaThemeColor.setAttribute('content', `hsl(${hue}, 80%, ${lightness}%)`);
+                } else {
+                    // 暗いモードの場合、背景色に合わせた暗い色を設定
+                    const hue = Math.floor(Math.random() * 60) + 200;
+                    const lightness = 20; // 暗い色
+                    metaThemeColor.setAttribute('content', `hsl(${hue}, 70%, ${lightness}%)`);
                 }
             }
 
@@ -803,7 +821,7 @@
                 const body = document.body;
 
                 body.style.background = this.generatePastelGradient(!this.isFakeMode);
-
+                this.updateThemeColor(!this.isFakeMode);
                 title.classList.toggle('fake-mode', this.isFakeMode);
                 body.classList.toggle('fake-mode', this.isFakeMode);
 
