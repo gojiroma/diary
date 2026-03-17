@@ -535,22 +535,31 @@
             hsl(${hue + 30}, ${saturation}, ${lightness2}))`;
                 }
             }
-            static updateThemeColor(isLight) {
+            static updateThemeColor() {
                 const metaThemeColor = document.querySelector('meta[name="theme-color"]');
                 if (!metaThemeColor) return;
 
-                if (isLight) {
-                    // 明るいモードの場合、背景色に合わせた明るい色を設定
-                    const hue = Math.floor(Math.random() * 60) + 200;
-                    const lightness = 95; // 明るい色
-                    metaThemeColor.setAttribute('content', `hsl(${hue}, 80%, ${lightness}%)`);
+                // 最新のエントリの日付を取得
+                const latestEntry = this.diaryEntries[this.diaryEntries.length - 1];
+                if (!latestEntry) return;
+
+                const yyyymmdd = latestEntry.yyyymmdd;
+                const dateForWeather = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
+                const weather = this.weatherData.find(w => w.date === dateForWeather);
+
+                if (weather) {
+                    // 気温に応じた色（-5°C:青、30°C:赤）
+                    const temp = weather.avgTemp;
+                    const red = Math.min(255, Math.floor((temp + 10) * 10));
+                    const blue = Math.min(255, Math.floor((35 - temp) * 10));
+                    const green = 50; // 固定値
+                    metaThemeColor.setAttribute('content', `rgb(${red}, ${green}, ${blue})`);
                 } else {
-                    // 暗いモードの場合、背景色に合わせた暗い色を設定
-                    const hue = Math.floor(Math.random() * 60) + 200;
-                    const lightness = 20; // 暗い色
-                    metaThemeColor.setAttribute('content', `hsl(${hue}, 70%, ${lightness}%)`);
+                    // 気温データがない場合はデフォルト色
+                    metaThemeColor.setAttribute('content', this.isFakeMode ? '#121212' : '#f5f5f5');
                 }
             }
+
 
 
             static parseCSV(csv) {
@@ -647,6 +656,7 @@
                 this.updatePageTitle(entries.length);
                 this.setupContentClick();
                 this.scrollToEntryFromHash();
+                this.updateThemeColor();
             }
 
             static setupContentClick() {
@@ -834,6 +844,7 @@
                 } else {
                     this.loadDiaryEntries('entry.md');
                 }
+                this.updateThemeColor();
             }
 
 
