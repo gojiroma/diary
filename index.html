@@ -123,17 +123,6 @@
 
         }
 
-
-
-        .days-ago {
-            cursor: default;
-            font-size: 1.6em;
-            margin-left: -3px;
-            white-space: nowrap;
-            opacity: 0.6;
-            writing-mode: vertical-rl;
-        }
-
         .content {
             font-size: 1.3em;
             white-space: pre-line;
@@ -558,6 +547,12 @@
                 if (!['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
                     event.preventDefault();
                     window.location.href = 'write.html';
+                }
+            }
+            else if (event.key==='c' || event.key==='C') {
+                if (!['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+                    event.preventDefault();
+                    window.location.href = 'classic.html';
                 }
             }
         });
