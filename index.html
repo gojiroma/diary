@@ -6,9 +6,6 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#f5f5f5">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho&display=swap" rel="stylesheet">
 
     <title>誤字ロマの日記</title>
     <link rel="icon" href="diary-icon.png" type="image/png">
@@ -37,15 +34,9 @@
 
         }
 
-        /* Safariのみに適用するスタイル */
-        .is-safari body,
-        .is-safari .content {
-            font-family: "Zen Old Mincho", serif !important;
-        }
-
         body {
             overflow: hidden;
-            font-family: "gojiromanus", serif;
+            font-family: "gojiromanus";
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -68,19 +59,17 @@
         }
 
         .page-title {
-            font-family: "gojiromanus", serif;
-            text-decoration: underline;
             font-size: 22px;
-            font-weight: 700;
             border-radius: 8px;
-            transition: all 0.1s;
             text-decoration: none;
             user-select: none;
             z-index: 10;
             color: var(--text-color);
             padding: 5px 10px;
             position: fixed;
+            cursor: pointer;
             top: 20px;
+            user-select: none;
             right: 20px;
         }
 
@@ -145,7 +134,6 @@
         }
 
         .date {
-            font-family: 'Zen Old Mincho', serif;
             cursor: pointer;
             font-size: 1.6em;
             white-space: nowrap;
@@ -170,9 +158,6 @@
             text-shadow: 0.2px 0px 1px var(--text-color);
         }
 
-        .content.toggle-font {
-            font-family: "Zen Old Mincho", serif !important;
-        }
 
         /* 現在表示中以外のエントリを半透明に */
         .diary-entry:not(.active) {
@@ -499,9 +484,6 @@
             static audioContext = null;
 
             static async init() {
-                if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
-                    document.documentElement.classList.add('is-safari');
-                }
                 await this.loadWeatherData(); // 追加
                 await this.loadDiaryEntries();
                 this.preloadFakeEntries();
@@ -582,7 +564,6 @@
                 pageTitle.addEventListener('click', () => this.toggleFakeMode());
 
                 let pressTimer;
-                pageTitle.addEventListener('mousedown', () => pressTimer = setTimeout(() => this.downloadDiaryAsText(), 1000));
                 pageTitle.addEventListener('mouseup', () => clearTimeout(pressTimer));
                 pageTitle.addEventListener('mouseleave', () => clearTimeout(pressTimer));
 
@@ -965,32 +946,6 @@
                 const nextIndex = currentIndex + direction;
                 if (nextIndex < 0 || nextIndex >= entries.length) return null;
                 return entries[nextIndex];
-            }
-
-            static downloadDiaryAsText() {
-                if (this.diaryEntries.length === 0) return alert('ダウンロードする日記がありません。');
-
-                const sortedEntries = [...this.diaryEntries].sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
-                const oldestDate = sortedEntries[0].yyyymmdd;
-                const newestDate = sortedEntries[sortedEntries.length - 1].yyyymmdd;
-                const modePrefix = this.isFakeMode ? '裏日記_' : '';
-                const filename = `${modePrefix}誤字ロマの日記 ${oldestDate}-${newestDate}.txt`;
-
-                let content = '';
-                sortedEntries.forEach(entry => {
-                    const dateObj = DiaryUtils.formatJapaneseDate(entry.yyyymmdd);
-                    content += `${dateObj.long}\n${entry.content}\n\n`;
-                });
-
-                const blob = new Blob([content], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
             }
 
             static updatePageTitle(count) {
