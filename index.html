@@ -19,7 +19,7 @@
         }
 
         * {
-            font-family: 'gojiromanus', sans-serif;
+            font-family: 'gojiromanus', sans-serif ;
         }
 
         :root {
@@ -70,6 +70,7 @@
             box-sizing: border-box;
             margin-top: 20px;
             transition: background-color var(--transition);
+            outline:none;
         }
 
         .diary-container {
@@ -82,6 +83,7 @@
             padding: 0;
             overflow-x: auto;
             scrollbar-width: none;
+            outline:none;
         }
 
         .diary-container::-webkit-scrollbar {
@@ -267,8 +269,8 @@
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
     </div>
-    <div class="setsumei">
-        ← → で move、 space で flip</div>
+    <marquee class="setsumei">
+        ← →キー/マウスホイールで move、 space/日付タップ で flip</marquee>
     <script>
         class DiaryUtils {
             static toKanjiNumber(num) {
