@@ -559,6 +559,11 @@
                     event.preventDefault();
                     window.location.href = 'horizontal.html';
                 }
+            } else if (event.key==='e' || event.key==='E') {
+                if (!['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+                    event.preventDefault();
+                    window.location.href = 'en.html';
+                }
             }
         });
 

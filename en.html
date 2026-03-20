@@ -1,0 +1,2213 @@
+<html lang="en" class="translated-ltr">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="hsl(232, 80%, 95%)">
+
+    <title>105 Days of Typo Romance</title>
+    <link rel="icon" href="https://nikki.poet.blue/diary-icon.png" type="image/png">
+    <style>
+        @font-face {
+            font-family: 'gojiromanus';
+            src: url('gojiromanus.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            font-family: 'gojiromanus', sans-serif;
+        }
+
+        :root {
+            --bg-color: #fffcdb;
+            --text-color: #28466a;
+            --border-color: #666666;
+            --timeline-color: #666666;
+            --highlight-color: #cccccc;
+            --icon-size: 40px;
+            --modal-bg: rgba(0, 0, 0, 0.5);
+            --light-pastel-1: #f8e8e8;
+            --light-pastel-2: #e8f8f5;
+            --dark-pastel-1: #2a2a3a;
+            --dark-pastel-2: #1a1a2a;
+        }
+
+        body {
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100svh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            opacity: 0;
+            transition: opacity var(--transition), background-color var(--transition);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        body.fake-mode {
+            --bg-color: #f4fbff;
+            --text-color: #782727;
+        }
+
+        .diary-container-wrapper {
+            width: 100%;
+            max-width: 90%;
+            height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            box-sizing: border-box;
+            margin-top: 20px;
+            transition: background-color var(--transition);
+            outline: none;
+        }
+
+        .diary-container {
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+            scrollbar-width: none;
+            outline: none;
+        }
+
+        .diary-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .diary-entry {
+            writing-mode: horizontal-tb;
+            text-orientation: mixed;
+            line-height: 1.6;
+            width: 100%;
+            white-space: normal;
+            overflow: visible;
+            scroll-margin-top: 50px;
+            padding: 15px;
+            flex-shrink: 0;
+            text-wrap: balance;
+            overflow-wrap: break-word;
+            background-color: transparent;
+            position: relative;
+        }
+
+        .date-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .date {
+            cursor: pointer;
+            white-space: nowrap;
+            position: relative;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .content {
+            font-size: 1em;
+            white-space: pre-line;
+            text-wrap: balance;
+            overflow-wrap: break-word;
+            position: relative;
+        }
+
+        .diary-entry.active {
+            filter: drop-shadow(0px 1px 0px var(--text-color));
+        }
+
+        .highlight {
+            background-color: var(--highlight-color);
+            font-weight: bold;
+            padding: 0 2px;
+            border-radius: 2px;
+            margin: 0 -2px;
+        }
+    </style>
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="./en_files/m=el_main_css">
+</head>
+
+<body style="opacity: 1;">
+    <div class="diary-container-wrapper">
+        <div class="diary-container" id="diaryContainer">
+            <div class="diary-entry active" id="20260320">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260320">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">Friday, March 20th</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I changed the design of my diary. The size of
+                            the date represents wind speed, and you can "flip" it by tapping it. The previous version
+                            can be accessed by pressing the c key. I want to experiment with various things, but I don't
+                            want to make it complicated, so I've kept it organized. △Today was a bit chilly but there
+                            was no wind, making it a pleasant day for walking. △While researching Western Japan, I felt
+                            like eating okonomiyaki, so I stopped by a 7-Eleven. I hesitated for a moment between
+                            "Hiroshima Okonomiyaki" and "Seafood Okonomiyaki," but I went with the more expensive one. I
+                            was satisfied after eating it, but I think I would have been perfectly satisfied with the
+                            "Seafood" one as well. I want to try the "Seafood" one next time. For this type of
+                            okonomiyaki, "Gotsu Umai" is the best, and I think that those made in the supermarket's
+                            kitchen or those made from okonomiyaki flour are probably more satisfying. In the past, I
+                            only ate "Carp-yaki" in Hiroshima, so I want to try that again.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260319">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260319" style="color: rgb(240, 50, 210);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">March 19th (Thursday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(240, 50, 210);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I've decided to take a trip to Hyogo, so I'm
+                            pinning the places I'm interested in. I can't seem to retain information from travel guides
+                            like Rurubu, so I've started using the railway channel on Prime Video to get a feel for the
+                            locations and atmosphere. When I look up train line names on YouTube, there are a lot of
+                            videos that are just like "I took a picture of it," so watching programs with a story is
+                            more effective.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260318">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260318" style="color: rgb(217, 50, 233);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">March 18th (Wednesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(217, 50, 233);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Feeling unwell, I spent my time soaking in hot
+                            springs, eating omurice at Yoshinoya, and irresponsibly adding places I had no connection to
+                            to my "places to visit" list on Google Maps. It was nice to be able to look at unknown
+                            museums hundreds of kilometers away and delicious-looking restaurants without even leaving
+                            my bed. I was glad I had my laptop. Being able to be hyperactive, even if only on a screen,
+                            was a blessing for me right now. I value the possibility of actually going to these places
+                            when my energy returns, and the fact that they have almost no connection to my past
+                            memories.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260317">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260317" style="color: rgb(210, 50, 240);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">March 17th (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(210, 50, 240);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I feel like a radio that spins the dial all
+                            the way around but doesn't pick up anything. I'm passing the time by solving Sudoku puzzles.
+                        </font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260316">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260316" style="color: rgb(208, 50, 242);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">March 16th (Monday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(208, 50, 242);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">It was another lovely day with lots of cuckoos
+                            singing, but I ended up staying indoors. I had been running a wiki-like app, but I've
+                            temporarily moved it to Cosense and stopped using it. For some reason, iCloud Notes feels
+                            just right now. I don't particularly want to create links. I just wanted to have a flowerpot
+                            called a folder and plant several different flowers in it. I also like that when I check the
+                            list, completed items move to the bottom. I realized I wasn't using my laptop at all, so I
+                            put it on a three-tiered case with casters and disabled the screen lock. I set it up near
+                            the bookshelf with a chair. This seems good. I can catch up on unread books and look things
+                            up at the same time. I was in the zone, so I also "deorganized" my bookshelf nicely. I
+                            stacked them vertically, then lined them up horizontally, and even diagonally. I grouped
+                            books that seemed similar into islands. Each book feels like it has come back to life.
+                        </font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260315">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260315" style="color: rgb(204, 50, 246);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">March 15th (Sunday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(204, 50, 246);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Boooo</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260314">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260314" style="color: rgb(203, 50, 247);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">March 14th (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(203, 50, 247);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I really like the taste of Fujiya's "Anpanman
+                            Peropero Chocolate," and I buy it about once a year. I bought some yesterday for the first
+                            time in a while and ate it today. Yes, this is the taste. But maybe LOOK would be fine too.
+                            The price of this product varies by several tens of yen depending on the supermarket, so if
+                            you think it's cheap, that's the time to buy it. △Lately I prefer Seria to Daiso, so I go to
+                            Seria first and buy anything they don't have at Daiso. I like the background music, and the
+                            fact that I can use nanaco is a big plus. The other day I bought a foaming net, but it
+                            didn't foam up properly, so I bought a pump type. △I had placed icons below the date, but I
+                            thought it was making things a bit more complicated, so I put the content in the main text
+                            and removed it. On the other hand, I wanted to include weather information, so I implemented
+                            temperature color schemes in the graph section and wind speed fluctuation display in the
+                            date section.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260313">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260313" style="color: rgb(175, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">Friday, March 13th</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(175, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I quite like the rhythm from February 28th to
+                            the 21st. Which way. △I completely missed a scheduled appointment! To be continued next
+                            Friday△I forgot what I wanted to write about, but then I remembered. I wish there was a nice
+                            sound when I buy a Kindle book. Maybe I should write a script for the purchase completion
+                            screen. Even the fortune-telling machines in town make a "ding" sound for 20 yen, but Amazon
+                            is different. I wish Suica also had a purchase option where you could buy a touch sound
+                            (this is an entry from a futuristic perspective)△It was the first time I'd ever had two
+                            desserts at Hama Sushi. And it was also the first time I'd seen a bug. I was supposed to get
+                            one plate of three-color dango, but I got two plates of kappa maki, which was different from
+                            the arrival display. I looked further inside and saw the dango waiting. When I handed the
+                            wrong plate to the staff, the "dango have arrived" display was doubled.△I read "Hon no
+                            Zasshi" at the library, so I bought the books I was interested in on Kindle. But it's sad.
+                            "Hon no Zasshi" is published by Hon no Zasshi-sha and is not a PR magazine. This company
+                            doesn't get a single penny of profit from it. I should subscribe. When people say, "Zines
+                            and podcasts are all the rage right now!", I just think, "Oh, I'm done with that."</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260312">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260312" style="color: rgb(177, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">March 12th (Thursday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(177, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">My dream of creating a handwritten font has
+                            come true. However, the work was difficult. There are so many kanji characters, and it takes
+                            a lot of time. I couldn't just do them all one by one, so after adding alphanumeric
+                            characters, symbols, hiragana, katakana, and all the kanji learned in elementary school, I
+                            ran a script to write only the missing characters. If the diary you are reading now is
+                            difficult to read, please tap the text. You can then read it in a font you are familiar
+                            with. Wow, it was like reading out place names one by one. There are so many kanji
+                            characters that I can type but can't write. In the future, I would like to register
+                            differences and rewrite them to make them easier to read. *The display is distorted in
+                            Safari, so I'm keeping it as Zen Old Mincho.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260311">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260311" style="color: rgb(164, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">March 11th (Wednesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(164, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I woke up feeling pretty good. To avoid going
+                            back to bed, I listened to classical music on NHK radio. It felt really good. Just hanging
+                            my futon out on the balcony to dry made me feel like I might be having the best morning
+                            ever. This is it. A highly nutritious choice picked by a human, not something that would
+                            show up in an algorithm's recommendations. △I used my laser printer for the first time in
+                            what it's supposed to be used for, making about 600 double-sided copies. It ran smoothly at
+                            first, but then it started taking cool-downs repeatedly, so it didn't reach the speed
+                            specified in the catalog. I'm glad it wasn't a super critical request.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260310">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260310" style="color: rgb(151, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">March 10th (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(151, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">It's cold. My nose is acting up. I put my past
+                            diary entries into my Notebook LM and listened to them as an audio program. I wanted to eat
+                            the McPork that's back on the menu, so I had McDonald's at home for lunch. I spotted a cat
+                            on my walk.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260309">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260309" style="color: rgb(171, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">March 9th (Monday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(171, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I guess what I really like is "okozatsu" =
+                            "dirty, old, and messy." More than clean, young, and simple.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260308">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260308" style="color: rgb(164, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">March 8th (Sunday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(164, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I participated in a walking tour event. I
+                            soaked in the town's hot springs. The food was better than at the hot springs I usually go
+                            to.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260307">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260307" style="color: rgb(201, 50, 249);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">March 7th (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(201, 50, 249);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">A diary is a musical instrument. Try holding
+                            down the right key. The pitch and pauses will change according to the number of characters
+                            written that day. This is making a diary audible. If we develop this further and change the
+                            sound according to your physical condition, the weather, or the type of activity, we might
+                            be able to perceive each day as a different rhythm. △There is a desire to read an
+                            interesting diary, but currently that desire is more about pursuing the kind of fun found in
+                            pop-up books than the interest of the writing or content itself.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260306">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260306" style="color: rgb(176, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">Friday, March 6th</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(176, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Dinner was hot pot. I finally got NURO Hikari
+                            internet service activated after 4 years. Thank you to the installation crew for your hard
+                            work! This time, it wasn't just a simple observation; there was an element of cooperation
+                            (pressing the switch to light up the reserved line when a phone call came in), so I think it
+                            will be an unforgettable day. With this activation, I probably won't be using another
+                            company's fiber optic service for the time being (it's convenient because the wireless AP
+                            and ONU are integrated). In everyday life, we are aware of "points" like termination devices
+                            and routers because they are in our field of vision, but we rarely think about the "lines"
+                            because we take the connection for granted. I think it's necessary to have opportunities
+                            from time to time to realize that our daily lives are supported by various systems. I have
+                            the utmost respect for the people on site. I'm sure the contractors have a lot of mixed
+                            feelings. △I finally managed to take the shoes that needed sole repair to the orthotics
+                            shop. Before visiting, I searched for the company name and was worried because the
+                            corporation had been liquidated, but the usual person in charge answered the phone. It seems
+                            they have changed from a limited company to a joint-stock company. I was relieved to hear
+                            that there are no problems with finances and that the business will continue. I told them
+                            I'd be okay with them raising prices as long as they continue operating. △I tried to act
+                            like a clown by putting a gas cylinder cap to my nose, but the cap smelled like gas.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260305">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260305" style="color: rgb(191, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">Thursday, March 5th</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(191, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I think I walked too much yesterday. I spent
+                            the day doing nothing. When I turned on the TV, there was news about the cancellation of a
+                            private rocket launch. For a moment, I saw myself reflected in it, having quit my job three
+                            times, but then I realized it wasn't the same, since my third flight was the longest.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260304">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260304" style="color: rgb(187, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">Wednesday, March 4th</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(187, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">It was a windy day. I watched a movie at a
+                            small theater with plenty of seats. I spotted a cat on my walk.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260303">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260303" style="color: rgb(174, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">March 3rd (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(174, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">The "Book Magazine" issue released on the 10th
+                            apparently features diaries. I have to buy it. Today I read books, lay down, and moved some
+                            money. It was a day that felt like winter had returned.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260302">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260302" style="color: rgb(203, 50, 247);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">Monday, March 2nd</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(203, 50, 247);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Since my aerobic exercise goals were
+                            relatively low, I spent my time reading my unread books and reviewing and merging my
+                            unorganized logs. I also worked on improving my diary and wiki.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260301">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260301" style="color: rgb(223, 50, 227);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">March 1st (Sunday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(223, 50, 227);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I completed my bucket list for "Learning
+                            Facial Care." I realized just how carelessly (i.e., improperly) I'd been washing my face
+                            until now. What? Cleansing before washing my face? I didn't even know that. I bought a
+                            good-looking skincare liquid (for the price of about seven books!), and then went to Daiso
+                            to look for some small items. I easily found tweezers and a foaming net, but it was quite
+                            difficult to spot an eyebrow brush. There were lots of things that looked like horsetails...
+                            but I couldn't find anything like a chalk pen. In the THREEPPY section of the same store,
+                            there was one in a very visible location, but it was a transparent body with glitter, and it
+                            had two brushes I wouldn't use. So it was a set of three for 330 yen, but I felt like I'd be
+                            admitting defeat if I bought it. I searched the cosmetics section thoroughly again and found
+                            one sold individually. Wow, it's hard to find products in shelves of unfamiliar genres. At
+                            the same time, it's a little awkward to be browsing shelves that are mainly targeted at
+                            ladies and young girls. That completes today's mission for now. Next up, maybe clothes or
+                            shoes?</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260228">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260228" style="color: rgb(235, 50, 215);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 28th (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(235, 50, 215);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I recently bought Iwatani's "Aburiya II"
+                            grill. Today was its first use. Hmm, unlike home hot plates or commercial grills, it's not
+                            that powerful. It lacks impact, so even though I felt full, it wasn't satisfying. It takes a
+                            long time to cook. Peeled Pacific white shrimp, corn, onions, yakitori, sausages, and french
+                            fries cooked nicely. The squid took quite a while to cook. The moisture in the bag dripped
+                            out. The clams cooked, but part of the shells burst. Maybe there are ingredients that are a
+                            better match for this grill. From what I've seen on video sites, there seems to be a lot of
+                            knowledge gathered about it. I'll try again with some tasty ingredients, or consider getting
+                            a different griddle. Dinner was teppanyaki, and in the evening we went to Coffee Kan.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260227">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260227" style="color: rgb(224, 50, 226);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 27th (Friday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(224, 50, 226);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">A walk. I tried again at the vending machine
+                            that I couldn't use yesterday. The Coke ON worked without a problem, so I got a Schweppes
+                            Melon Soda. It seemed a shame to drink it and head back home, so I walked a little further
+                            than the vending machine. I saw a hospital that had just finished its Shikinen Sengu
+                            (periodic rebuilding of a shrine). In a park with a stray cat shelter, I encountered a cat
+                            that sneezed and rubbed against me. Satisfied, I returned to the vending machine and put the
+                            can in for recycling. On a nearby air conditioner unit, there was a large cat with big,
+                            bright eyes, completely different from the cat that used to hang out there. I wondered if it
+                            was really alive, so I squatted down and moved to the side to check if it could turn its
+                            head. It was so docile.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260226">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260226" style="color: rgb(192, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">Thursday, February 26th</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(192, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">There's a red vending machine on my walking
+                            route that I pass by at least twenty times a year. Today, I went out empty-handed, intending
+                            to have a drink on my way home. I didn't bring my smartphone or wallet because I could use
+                            electronic money. When I arrived, what a surprise! The panel for selecting payment methods
+                            was covered with a red board. Perhaps it had become difficult to maintain the payment
+                            terminal. Not as a replacement, but there were more signs saying, "Please do not litter
+                            here." I thought there should be three vending machines lined up a little further on, so I
+                            headed in, but not only were there no vending machines, the adjacent house was gone. Only
+                            the shadow of the former house (the part that hadn't been sunburnt) remained on the
+                            neighboring house. The quince trees were sprouting new leaves, and the cherry trees were
+                            accumulating plenty of sap. I felt the town was alive. △ Volume 1 of "Hana Yondan to Issho"
+                            was interesting.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260225">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260225" style="color: rgb(195, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 25th (Wednesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(195, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">It was a rainy day for the first time in a
+                            while, so I was tidying up my belongings. My room is much more comfortable now.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260224">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260224" style="color: rgb(225, 50, 225);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 24th (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(225, 50, 225);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I ate some delicious Tsukimi Soba (soba
+                            noodles with a raw egg on top).</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260223">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260223" style="color: rgb(238, 50, 212);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 23rd (Monday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(238, 50, 212);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">It was a warm day. I went to the Saitama
+                            Literature Museum to see a documentary film about a nursery school. It seemed that current
+                            students and their parents were also there to see it. Adults and children alike, things will
+                            work out as they will. I thought that we should believe in the power of life and take a
+                            long-term perspective. The Q&amp;A with the principal gave me a sense of déjà vu. The
+                            structure was that small questions were answered with big stories. It shows how adults are
+                            bound by their sense of norms. After the event, I also saw the exhibits at the literature
+                            museum. I laughed when I read that Tayama Katai wrote that a certain Tobu train station was
+                            shabby. It's similar to "The Country Teacher" and "The Diary of a Country Priest" in that
+                            the main character dies. There were many works set in the local area, and it was worth
+                            seeing. The library's collection is also good. I would like to visit again. △ I liked
+                            Mahler's Symphony No. 7 "Song of the Night" which I heard on the radio.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260222">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260222" style="color: rgb(205, 50, 245);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">Sunday, February 22nd</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(205, 50, 245);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Mirrors don't age us; they just show us a
+                            reversed image. When no one is looking at them, mirrors silently reflect the wall or window.
+                            Conversely, mirrors become cloudy, scratched, and stained by human hands. Our bodies change
+                            along with the mirror. It's not all bad, though. On days when you look into the mirror
+                            feeling gloomy, it can surprisingly confirm that there's no sense of despair in your
+                            expression. △Saw a cat on my walk. △Finished reading volumes 1 of "Skin Cyst Son's Demise"
+                            and "Chihiro-san".</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260221">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260221" style="color: rgb(177, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 21st (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(177, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">① There's a bug in a certain bank where if you
+                            cancel a time deposit, move it back to a regular savings account, and then deposit it back
+                            into a time deposit, the total asset amount displayed on the app doubles. You get the
+                            feeling that your assets have suddenly increased. Of course, the display is accurate when
+                            viewed on the website in a browser. ② There's the concept of PFC for balancing nutrition,
+                            but I think the concept of CPS for balancing activity is also important. Cognitive,
+                            Physical, Social. In my case, cognitive tends to be excessive. If physical and social
+                            activities are moderately increased, the quality of cognitive activities will improve as a
+                            result, so I want to balance it out by going to events a few times a month. ③ I ate pizza.
+                        </font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260220">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260220" style="color: rgb(139, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 20th (Friday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(139, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Toothbrushes, shavers, stick vacuums—the
+                            charging stands are designed to encourage continued use, which I find impressive. I switched
+                            to an electric toothbrush yesterday, which doesn't use batteries, and I feel a sense of
+                            relief because I no longer need to change batteries regularly. The wind was light today, so
+                            I went cycling. Also, I remade my memo app (write.poet.blue) yesterday. This one seems
+                            pretty good.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260219">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260219" style="color: rgb(145, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 19th (Thursday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(145, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">The strong winds made me not want to go out,
+                            but apparently a new general store had opened within walking distance, so I went to check it
+                            out. There were as many people there as at the annual shrine festival, which reaffirmed to
+                            me that this area isn't sparsely populated. They had a plentiful selection of sale items
+                            gathered from other stores, and many things were cheaper than on Amazon's sale. I got an
+                            electric toothbrush.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260218">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260218" style="color: rgb(175, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 18th (Wednesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(175, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">My shoe soles are worn out, I want to take
+                            them to Mr. Minit. But I want to wash them first. I happen to have some leftover bathwater.
+                            Come to think of it, I also wanted to wash the trash can. I recently saw a video of a mini
+                            washing machine. ↓ I decided to use the leftover bathwater and turn the trash can into a
+                            washing machine to wash my shoes. There's plenty of leftover water, so I can rinse as much
+                            as I want. No detergent needed. Just put one shoe at a time into the trash can filled with
+                            water and twist vigorously. Easy. While doing that, the trash can gets clean too. It's been
+                            a while since I've solved a problem in such a way that I can get several benefits in one go!
+                            △ My Tile Slim battery is running low, so I ordered an inexpensive Apple Find My Network
+                            compatible replacement.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260217">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260217" style="color: rgb(163, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 17th (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(163, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Got a haircut. Bought a DyDo Drinco Energy Gym
+                            from a vending machine. I'd never drunk it before. Is it like Coca-Cola's Real Gold? For a
+                            snack, I had a savory bread (hijiki and kinpira) from a local bakery.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260216">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260216" style="color: rgb(207, 50, 243);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 16th (Monday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(207, 50, 243);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">It's the anniversary of Dick Bruna's death. I
+                            visited his official website for the first time. It was a wonderful space like a picture
+                            book, composed of illustrations and voices. I still can't remember the name "Nijntje." I
+                            think it was the right decision to expand globally with "Miffy." △I got "Transitions" on
+                            Kindle.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260215">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260215" style="color: rgb(211, 50, 239);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 15th (Sunday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(211, 50, 239);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">It was a warm day, with both the outside and
+                            inside temperatures around 20 degrees Celsius. The better the weather, the stronger my
+                            desire to stay indoors becomes. I spent the day reading and buying some more books on media
+                            theory.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260214">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260214" style="color: rgb(180, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 14th (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(180, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I bought the following books on Kindle:
+                            "Walks: A Spiritual History of Walking," "Hope in the Dark," "Half-Real: Video Games Between
+                            Reality and Illusion," and "If I Were Always Happy, I Wouldn't Read Books."</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260213">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260213" style="color: rgb(166, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 13th (Friday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(166, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I finally bought a wireless barcode reader,
+                            which I'd been hesitant to buy because it was a bit expensive. I'm thinking of use cases
+                            like scanning barcodes on books or QR codes on posters while I'm out and about, and then
+                            checking them carefully at home. Especially in libraries with lots of specialized books, I
+                            have to put all my belongings in a locker and move from shelf to shelf, so I was looking for
+                            a device that doesn't communicate, has no screen, and makes no sound. If I hadn't used
+                            "Mameppi" for IT asset management when I was a fresh graduate, I don't think I would have
+                            bought this now. It's been a year since I quit my job, and new areas of interest have been
+                            popping up one after another. I'm even thinking about going back to school. What should I
+                            do?</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260212">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260212" style="color: rgb(172, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 12th (Thursday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(172, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Hot springs. I was able to see "Japanese
+                            white-eyes among red plum blossoms," so my February is already over.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260211">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260211" style="color: rgb(154, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 11th (Wednesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(154, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I'm vaguely regaining my senses. The snow has
+                            melted away. The clouds are beautiful. The mountains are clearly visible.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260210">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260210" style="color: rgb(135, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 10th (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(135, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I had yakiniku (Japanese BBQ). I also got the
+                            three-tiered storage unit with casters that I'd been debating buying for a while. I'm glad I
+                            bought it because I can easily move around small items and books that I use often. It's also
+                            easy to move from my desk to my bedside.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260209">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260209" style="color: rgb(120, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 9th (Monday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(120, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I went grocery shopping, ate ramen, and then
+                            went to sleep, and before I knew it, it was evening.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260208">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260208" style="color: rgb(89, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 8th (Sunday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(89, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">☃The city was brighter this morning after the
+                            snow had stopped. The light coming from below is very nice. Everyone looks attractive, which
+                            is dangerous. 🍕. 🗣️Well, today I went to a certain lecture somewhere. The speaker's talk
+                            was interesting, of course, but the attendees who gathered for a certain theme were even
+                            more interesting. Contemporaneity and diversity were right before my eyes. The fact that
+                            people with specific attributes were gathered in the same place is a miracle. The Q&amp;A
+                            session was very enjoyable. 🗺️On the train going and coming back, I added every single
+                            official LINE account of every city, town, and village in Saitama Prefecture as a friend. I
+                            found out that only a very small number of municipalities don't use LINE. I felt like I had
+                            become Saitama Prefecture and was doing a body scan meditation. Saitama, everyone, friends.
+                            So warm. If you look through all the flyers on racks around town and follow every single SNS
+                            and RSS of local governments, you realize that there are so many social resources all around
+                            you. It makes you feel rich.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260207">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260207" style="color: rgb(135, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 7th (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(135, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I live my life clumsily, driven by the desire
+                            to see everything at a glance, not to miss a single drop.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260206">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260206" style="color: rgb(175, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 6th (Friday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(175, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I cast my vote early. While I was there, I
+                            stopped by the cultural hall and checked out the high school photography exhibition. I was
+                            disappointed because the works were simply lined up along the walls, and I couldn't sense
+                            any theme or philosophy. I realized that I really don't like local art exhibitions that feel
+                            both open and closed at the same time.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260205">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260205" style="color: rgb(165, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 5th (Thursday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(165, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Kindness and curiosity alone aren't enough to
+                            survive in society.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260204">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260204" style="color: rgb(151, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">Wednesday, February 4th</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(151, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I realized I had accumulated a lot of paper
+                            (art exhibition pamphlets, etc.), so I looked through them, Googled the information, and
+                            moved them to the recycling bin. The list of places I want to go keeps growing.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260203">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260203" style="color: rgb(150, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 3rd (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(150, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I was rereading the picture book "Z-chan's
+                            Hole in the Wall." It was introduced in Kaori Eguni's "Inside and Outside of Stories," and
+                            it's a book that left a strong impression on me when I actually read it. It's the use of
+                            color, above all else. The sky is white, the sky is sweet potato colored, and the road is
+                            bright yellow. You'll never forget it. I remembered the story that everything is in the
+                            darkness, but I had completely forgotten that Z-chan's way of escaping the pitch-black world
+                            was like "100 steps forward, turn around and take 200 steps!" in the style of "Basic for
+                            Beginners." I probably didn't see it that way at the time, and it didn't register in my
+                            memory, so it wasn't recalled. If I had been born 10 years later, I think my reaction would
+                            have been "Is this a Scratch lesson?" I don't know, but things that I thought "I love this!"
+                            usually had exhibitions or merchandise sales that finished more than 10 years ago, and what
+                            remains now is often a rare item. You could say I'm behind the times, or you could say that
+                            the context has grown sufficiently.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260202">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260202" style="color: rgb(153, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 2nd (Monday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(153, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I found "TOKYO Library Wonderland" at Book
+                            Off. It's a book I discovered at my local library more than 10 years ago, and it stayed in
+                            my memory even after it was removed from the collection. It's fun to plot each location on a
+                            map as I read, lament the disappearances, and be surprised by the name changes, as my
+                            desires escalate.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260201">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260201" style="color: rgb(143, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">February 1st (Sunday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(143, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">full moon!</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260131">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260131" style="color: rgb(125, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 31st (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(125, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I went to Lifetance EXPO 2026. It felt like a
+                            collection of conscientious people, which was great. I hope there will be more events like
+                            this where you can talk directly with people from various products and brands.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260130">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260130" style="color: rgb(128, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 30th (Friday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(128, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I've been vaguely thinking about creating a
+                            new media for the Reiwa era using the telephone. For example, using Twilio to create a
+                            "personal version of Licca-chan Phone (with dialogue)," or a puzzle-solving game that's
+                            limited to outgoing calls from public phones. I tried to think about whether we could
+                            rethink fixed telephone equipment as local media while in the bath, but I didn't make any
+                            particularly new discoveries. Pokémon GO, something's not right. I don't need a specific
+                            worldview, and I don't want to look at a screen. Audio guides are uniform and not optimized
+                            for individual interests. Sekai Camera was fun, it's a shame it's gone. Licca-chan Phone, it
+                            seems like it could be applied somewhere. Field recording examples already exist and are
+                            interesting, but I'm not particularly interested in that. I've been thinking about creating
+                            some kind of location-based audio content since around 2014, but I've been overthinking it
+                            and haven't made any progress. Originally, I wanted to give a different meaning to my
+                            commute, school run, or walking routes, and it would be nice if I could learn about
+                            interesting spots around the route or its history without having to look at a screen or
+                            actively research it. If I go with that idea, it feels like it would end up being an audio
+                            guide, and I think creating that content would be a hassle. I could probably do something
+                            with LLM now, but I think it would be annoying to constantly listen to a guide. Then I
+                            thought about making maps audible and generating ambient music, but it seemed like too much
+                            trouble so I haven't done it. My first experience with "location x sound" was tape, records,
+                            and radio. With tape and records, you can hear the sound from any point by changing the
+                            position of the pickup. Depending on how you move it, the pitch changes. With radio, the
+                            clarity changes depending on the location, and it picks up noise. Depending on the region,
+                            you can hear content from different broadcasting stations even on the same frequency. I have
+                            had such experiences, but I haven't been able to apply them. I just looked it up and found
+                            an example of a public telephone (Shoji Toyama's "Point Hope"). It seems there are still
+                            many interesting experiences that I haven't explored yet.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260129">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260129" style="color: rgb(135, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 29th (Thursday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(135, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I went to Kuki not to fulfill the pun "I
+                            bought cookies in Kuki!", but because I had business at the Kuki Prefectural Library. I did
+                            actually buy cookies. This library has a huge collection of books on media studies (and
+                            other natural sciences, technology, art, language, and literature), and you could easily
+                            spend the whole day there. The "Children's Reading Support Center" within the same facility,
+                            like the Kumagaya branch, has a wonderful atmosphere with a perfectly sized room, and once
+                            again, the staff were talking about books and planning events. Libraries really are treasure
+                            chests. And these treasure chests exist because of the staff who think about (future)
+                            readers and go through trial and error. I also wanted to see a show at the planetarium next
+                            door, but I was getting home late, so I'll have to do it another time.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260128">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260128" style="color: rgb(151, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 28th (Wednesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(151, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Libraries are the best. Even if my interests
+                            change quickly, I can always find something interesting. If I find an interesting book, I
+                            use Google Lens on the spot. I add a short comment and save it to Fabric. If there's a
+                            reference to another book in one book, I search for it in the OPAC. If it's available where
+                            I am, I walk to get it. If not, I look for it on Kindle, Book Off, or the prefectural
+                            library. It's a great feeling to be able to move around on foot in this rich information
+                            space. It makes impulsive broad research much easier. It's useful for more than just books.
+                            I can watch classic masterpieces in a focused environment. And there are no commercials!
+                            Also, the racks at the entrance have flyers for various workshops and art museums. I can
+                            fill my stomach. Libraries are treasure chests. And it's even better if there's a cultural
+                            hall nearby. There are announcement flyers that aren't in the library, and I can find
+                            coin-operated charging machines that can only charge old cell phones. The ultimate is the
+                            Dydo vending machine. They sell weird stuff there. Today I got a Basque cheesecake (220
+                            yen). This might be a good find. Dydo vending machines are treasure chests. (Added later
+                            tonight:) My nearest 7-Eleven finally has a tea machine!! I chose a hot, large Assam for my
+                            first cup. The aroma is wonderful! I'll save the Darjeeling and Earl Grey for later.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260127">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260127" style="color: rgb(146, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 27th (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(146, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I walked to the hot springs and decided to
+                            take a different route home than usual, walking along the cherry tree-lined path in the
+                            park. I heard a tapping sound from above. I quietly looked up and saw a Great Spotted
+                            Woodpecker! I couldn't believe there was a Great Spotted Woodpecker in a park in a
+                            residential area like this! It was really pecking at a tree. I watched it longer than I
+                            would have watched Monet's Water Lilies. When I got home, I poked the bottom of the ice
+                            cream container with my spoon.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260126">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260126" style="color: rgb(125, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 26th (Monday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(125, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I was watching "100 Refreshing Natural
+                            Sceneries." In a snowy mountain, a monkey was perched on the tip of a tree branch. As it
+                            reached out to grab a fruit at the very top, the branch bent and the monkey fell due to its
+                            own weight. That's life, I thought.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260125">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260125" style="color: rgb(124, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 25th (Sunday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(124, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Despite using a name like "Typo Roma," I
+                            didn't know anything about the nomadic Roma people, so I started reading "The Romani Code:
+                            An Adventure Surrounding the Mysterious Roma People." I've been living my life aimlessly.
+                        </font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260124">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260124" style="color: rgb(129, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 24th (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(129, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">You might sometimes feel like you want to
+                            disappear, but don't worry. You can "lose yourself." You can "disappear" by simply walking
+                            while looking diagonally upwards in an area with very little traffic and a wide-open sky.
+                            It's even better if you walk on a slightly uneven or grassy area rather than a flat one. If
+                            you vaguely concentrate on your movements, thinking, "I'm not moving anywhere, I'm just a
+                            tube moving my arms and legs back and forth, and the scenery is slowly moving," you'll be
+                            freed from your daily worries. It's especially effective if you walk without carrying
+                            anything.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260123">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260123" style="color: rgb(121, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 23rd (Friday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(121, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I switched my number from mineo to Japan
+                            Communications via MNP. I also looked at several portal sites promoting relocation and found
+                            a day trip walking event nearby, so I applied for the lottery. I've been staying indoors a
+                            lot since my cycling day, but I walked today. I saw three cats. Ihara Rikka's podcast is my
+                            current favorite. Being close by, being relevant. Arranging my surroundings so that these
+                            things are clearly visible.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260122">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260122" style="color: rgb(114, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 22nd (Thursday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(114, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I'm probably the kind of person who, no matter
+                            how old I get, will never settle on the arrangement of my room or the contents of my bag. I
+                            think I'm a troublesome creature. For someone like me, it might be better to have someone
+                            else suggest things like, "Doesn't this look good?" rather than continuing with my own DIY
+                            projects, so I can think about other things. I feel compelled to take action on all sorts of
+                            things that arise in my life. This isn't always a good thing. It's like someone whose
+                            dermatitis won't stop because they keep irritating their skin.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260121">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260121" style="color: rgb(124, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 21st (Wednesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(124, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">The kalanchoe I bought last year is still
+                            going strong. Lots of buds are appearing. I wish I could be like that.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260120">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260120" style="color: rgb(146, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 20th (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(146, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">It's the coldest day of the year. I didn't go
+                            out because of the strong winds. Shueisha's "Youth and Reading" arrived. Takeda Satetsu's
+                            serialized column "The True Nature of Emotion" left a strong impression on me. At events
+                            where people gather, there are words and techniques used to create a sense of unity. Among
+                            them, there have been moments in the past when I felt that some of them were violent. I have
+                            lived my life feeling uncomfortable with the weakness and superficiality of ideas. I want to
+                            continue living without ignoring that discomfort.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260119">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260119" style="color: rgb(173, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 19th (Monday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(173, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">The weather is fine. Change is falling from
+                            the sky.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260118">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260118" style="color: rgb(185, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 18th (Sunday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(185, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Sunday was a day where I could truly
+                            appreciate every second. What made today so good? Firstly, I cleaned the balcony. Secondly,
+                            I removed the curtains. The room is brighter and easier to ventilate. The room feels more
+                            open with the gentle sounds of the outside world coming through. Thirdly, I got plenty of
+                            exercise yesterday. It's not good for people to spend all their time looking at screens. If
+                            you sit at a desk, you end up only getting work done on the screen. That stagnates your
+                            entire life.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260117">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260117" style="color: rgb(183, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 17th (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(183, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I went to an artificial lake, a place I
+                            occasionally feel like visiting. This time, I rented an electric-assist bicycle for the
+                            first time. Unlike the area around my home, there were many narrow, steeply sloping paths,
+                            which was very satisfying. While I was eating ice cream at a shop by the lake, I was offered
+                            a sample of an orange (just one!). It was much cheaper than what they sell in supermarkets
+                            and tasted fantastic, so I bought a bag to take home.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260116">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260116" style="color: rgb(187, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 16th (Friday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(187, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Got a haircut. Picked up "Illustrated
+                            Encyclopedia of How-tos: 438 Useful Tips" from Book Off. It's interesting because there are
+                            many descriptions that make you think, "Does that situation ever happen in real life?" I
+                            wonder if roasted tarantulas taste good. A wonderful book that's like WikiHow condensed into
+                            one volume.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260115">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260115" style="color: rgb(155, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 15th (Thursday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(155, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I renewed my membership at the local cinema.
+                            Whenever I come here, I always let my guard down because it's so close to home, and end up
+                            doing a speedrun to park my bike. Today wasn't quite that close, but it turned into a
+                            speedrun to get fried chicken (there's a restaurant right next door). However, every time, I
+                            feel like my senses are heightened because the movie starts just as I've calmed down after
+                            doing some cardio. It's nice to be able to reset my expectations and thoughts and watch with
+                            a calm mind.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260114">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260114" style="color: rgb(165, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 14th (Wednesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(165, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">It was a day for organizing. I moved extra
+                            shelves to other shelves and rearranged items, tinkered with desktop widgets, and created a
+                            tool to quickly reread past logs. I was doing all sorts of things and before I knew it, the
+                            day was over, and it turned out to be a no-go day.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260113">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260113" style="color: rgb(160, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 13th (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(160, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">① I've started to feel like working again.
+                            Today is my interview day with Persol Mirise. I like that they're not an agency. I had some
+                            time before the interview, so I consulted with Gemini. I told them, "Based on my work
+                            history, I tend to be recommended for general affairs or corporate IT. But that doesn't feel
+                            right," and wrote down some things I was interested in, and they suggested, "How about
+                            administrative work at a library or museum?" It's tough to suddenly start looking at job
+                            postings, but I discovered that reading interview articles makes me feel more positive. ② I
+                            received a notice from my local shopping mall that the custom suit corner is closing. I
+                            thought it would close soon since a major suit manufacturer has entered the market. I only
+                            have good memories of buying suits there.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260112">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260112" style="color: rgb(137, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 12th (Monday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(137, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I'm not getting enough aerobic exercise, so I
+                            went cycling along the Tone River. I like the time just before sunset the best because the
+                            mountains look their best then. Indoors, I revamped my diary editor. I made it so that I can
+                            write both a real diary and a fictional diary together and push them at the same time. It's
+                            designed so that two text areas spread across the screen. Because of the "paper
+                            constraints," I don't think my future diary entries will be as long.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260111">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260111" style="color: rgb(154, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 11th (Sunday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(154, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">My parent's smartphone was slow, so I backed
+                            up various data and performed a factory reset. This involved logging back into various
+                            banking apps, redoing KYC, and registering fingerprints. It was quite a hassle. Some apps
+                            wouldn't work until I waited for support to contact me (this was a mistake on my part as
+                            their proxy... I forgot to get a code and log out before the factory reset). While I was at
+                            it, I also sorted out my bank accounts and decided on an easier way to manage them. Today is
+                            hot but windy, so I'm staying indoors and tackling tasks I usually don't feel like doing.
+                        </font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260110">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260110" style="color: rgb(144, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 10th (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(144, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I would walk along the riverbank, drawn in by
+                            the sun, pinch my earlobe to feel my pulse, and read books about work.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260109">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260109" style="color: rgb(135, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 9th (Friday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(135, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I came across my life log from around
+                            September or October of last year. It seems I wasn't feeling very well. There were some fun
+                            things, but it was tough not making any progress on my own issues. I feel like the situation
+                            hasn't changed much even now.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260108">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260108" style="color: rgb(125, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 8th (Thursday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(125, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I spent the time lying down. My body is the
+                            most important thing, so I have no choice but to obey it.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260107">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260107" style="color: rgb(114, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 7th (Wednesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(114, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I realized that I was repeating the "feeling
+                            unwell due to the cold after the New Year" pattern again this year. (If I had taken
+                            sufficient measures at that time, I wouldn't have quit my job last year, I could have held
+                            on.) As a physical measure, I decided to buy a large insulation board from a home
+                            improvement store. During the summer after I quit my job, I had applied light-blocking and
+                            heat-insulating film to my windows. In the summer, it was good because it improved the
+                            effectiveness of the air conditioner and reduced the glare from outside, but I felt many
+                            disadvantages from autumn and winter onwards. It was dark even during the day, and at night
+                            it was just as cold as without the film. I had bought the frosted glass type, so when I
+                            wanted to watch meteor showers or fireworks displays at night, I had to open the window and
+                            let in the cold air. I chose film because I didn't want it to look cheap, but I should have
+                            just bought an insulation board from the beginning. I had been avoiding double-glazed
+                            windows or replacing the windows because I felt it would mean living at my parents' house
+                            for a long time. In terms of communication, I reaffirmed that the first action should be
+                            "don't stay silent when you're feeling unwell, and specifically state what kind of ailment
+                            you're experiencing." When I say I'm "not feeling well," it's mostly "90% fatigue + 10%
+                            impaired judgment," but if I stay silent, I just look like "a silent person who's putting on
+                            a show and demanding special treatment," so it's better to speak up. More often than not,
+                            the other person will tell me something similar, and we can find a solution. Yet, when I'm
+                            feeling unwell, I worry about things like "What if they talk back when I say I'm not feeling
+                            well?" or "What if it makes everyone around me gloomy?" It's obvious that ignoring a gloomy
+                            face will worsen the atmosphere at home and at work. There are training institutions that
+                            teach health management before you start working, and support organizations that provide
+                            care while you work, but from my experience using them, I think they're insufficient. When I
+                            was feeling unwell, I wasn't honest, or my self-perception was too distorted, and there were
+                            many times when I rejected better care that I could have received. On that note, I think it
+                            would be great if there was something like a "mental health RPG." Reading various survivors'
+                            accounts is good, but I think it would be nice to have an experience where you can rapidly
+                            iterate through situations where you roll back to just before a game over, and even further
+                            back, and choose different actions to improve your prognosis, thereby learning how to cope
+                            in the real world. You can't experience that level of rapid iteration in actual communities
+                            or training institutions. I'd also like a "Project Management RPG."</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260106">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260106" style="color: rgb(151, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 6th (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(151, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I felt heavy and lay down.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260105">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260105" style="color: rgb(147, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 5th (Monday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(147, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">For the past five years, I've felt uneasy if I
+                            haven't watched the first trading day of the year on the Tokyo Stock Exchange, so I watched
+                            the live stream. This year's start was promising, with the index in the 51,000 yen range. As
+                            soon as the stream ended, YouTube's autoplay started showing the Osaka Stock Exchange
+                            archive. That was fast! The Osaka Exchange was splendid with a puppet show. The economy is
+                            better than the numbers suggest! You rarely hear the floor pounding at the exchange. I wish
+                            it would. I also want a virtual bell-ringing app. Maybe I should make one.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260104">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260104" style="color: rgb(149, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 4th (Sunday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(149, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I felt great after a half-day digital detox. I
+                            want to do it a few times a month. I went cycling and visited my family's grave. For dinner,
+                            I had a salt-based hot pot.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260103">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260103" style="color: rgb(139, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 3rd (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(139, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Electric toothbrushes, shavers, lint removers,
+                            etc. They all have similar motors. I don't like the idea of ​​resources that shouldn't be
+                            running at the same time overlapping, but at the same time, it's convenient that they're all
+                            distributed. If symbolic links were usable in the physical world, resource locks would
+                            probably occur in unexpected situations. That would be good for ideas for a fake diary,
+                            though. I'm very sleepy today and have been lying down a lot. Even my strict Fitbit has
+                            significantly lowered my cardio exercise goal.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260102">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260102" style="color: rgb(136, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 2nd (Friday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(136, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Today's theme was "populate." We implemented
+                            Vivaldi to display LLM services from various companies as tiles, and wrote recurring tasks
+                            on magnetic sheets and cut them out. We thoroughly reviewed things that we previously had to
+                            remember and execute, or that required cumbersome context switching.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20260101">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20260101" style="color: rgb(150, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">January 1st (Thursday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(150, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I went on my annual cycling trip along the
+                            Tone River. There seemed to be more birds than people, which gave me a great sense of
+                            freedom. The weather was great, and the mountains looked fantastic. I also used up a
+                            Coca-Cola drink ticket that was about to expire. After finishing a regular Coca-Cola, I
+                            looked at the cap and it said "contains sugar." I understand they want to distinguish it
+                            from zero-sugar, but having it written so directly makes me feel like I'm drinking something
+                            bad.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251231">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251231" style="color: rgb(173, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 31st (Wednesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(173, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">This year has been a very fruitful one. First,
+                            I quit my job. Ta-da!! It seems like almost everyone I used to talk to a lot at my previous
+                            job has quit. Amazing. Next, I was able to buy a lot of books. Spending 300,000 yen in
+                            Amazon gift cards at the beginning of the year is great for my mental health. I hate it when
+                            my credit card statement is filled with Amazon purchases. I've been able to break free from
+                            the student mentality of wondering, "Should I buy this ebook?" Now it's just a matter of
+                            willpower, energy, and time. And, although I'm only halfway there, I've been able to develop
+                            a way of thinking that isn't confined to the scope of "job hunting." Learning about the
+                            concept of a career break was a big deal. There are many things I wouldn't have been able to
+                            do if I had kept looking at job postings or been confined to vocational training.
+                            Participating in a literary flea market for the first time was also a big deal. I also had
+                            my first experience with coaching. I don't know what kind of social participation and
+                            money-making I'll be achieving in the coming years, but I want to find something that's
+                            manageable without being too fixated on "having to do it!" This year, it took me a while to
+                            get back to a level where I could say "I'm healthy as an individual" after my health
+                            deteriorated. Next year, I want to expand the things I enjoy doing with others.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251230">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251230" style="color: rgb(173, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 30th (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(173, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Kiritanpo hot pot, pizza, and alcohol.
+                            Delicious!! And when I've had a few drinks, I feel like cleaning. I place a penlight on the
+                            floor to check for dust and then vacuum. Today I'm feeling more energetic than usual, so I
+                            set the penlight to flashing mode and put it inside the stick vacuum cleaner. The beige body
+                            starts to light up, which is fun. How can I describe it? It's like the feeling a boy gets
+                            when he receives a Kamen Rider toy.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251229">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251229" style="color: rgb(152, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 29th (Monday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(152, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I'm spending the end of the year idly. Just
+                            kidding. I have a lot of unread books that I bought at a literary flea market, so I've been
+                            reading those.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251228">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251228" style="color: rgb(141, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 28th (Sunday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(141, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I've finished setting up the Kagami Mochi
+                            (rice cake offering). This year I chose "Sato's Kagami Mochi Extra Small." The orange has
+                            been changed from paper to plastic. This seems to have changed since last year. If I had
+                            chosen Echigo Seika, it would have been the same as before, but I just picked Sato's Kagami
+                            Mochi on a whim at the supermarket. I think paper would have been fine. There are plenty of
+                            oranges at this time of year, and once the rice cakes are eaten, the orange can just be
+                            rolled around and thrown away.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251227">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251227" style="color: rgb(129, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 27th (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(129, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">When I woke up this morning, all my apps that
+                            use the database were down. It seems I'd exceeded my free tier. I tried to upgrade to a paid
+                            plan, but I kept getting errors even though I was using the correct payment method. After
+                            checking on Discord, I found out that I needed to upgrade my plan through the hosting
+                            service's management panel, not the database's. Ugh.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251226">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251226" style="color: rgb(155, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">Friday, December 26th</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(155, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I spent the day lazily, like an egg yolk
+                            released from hostage. The weather was fine, but the wind was strong.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251225">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251225" style="color: rgb(185, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 25th (Thursday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(185, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">In the morning, I looked at Kikuko Tsumura's
+                            "The Bookshelf by My Bedside" and bought some interesting books on Kindle, or picked them up
+                            at Book Off or the library. Having a reliable book guide makes the book selection process
+                            faster and more enjoyable. Kindle was having a sale, so the timing was perfect. I wouldn't
+                            be this energetic in a physical bookstore. Maybe I just haven't found a bookstore that I
+                            feel this good at yet. Next year, I want to find a reliable bookstore. In the afternoon, I
+                            went to the station and bought New Chicken Pizza flavor. The idea of ​​seasoning it on top
+                            of the coating is refreshing. I continued on and arrived at a municipal amusement park that
+                            will be closing this year. I took pictures of the rusty stairs and ate the most expensive
+                            Uji matcha ice cream at Seventeen Ice. Afterwards, I moved on to the municipal swimming pool
+                            and library. The library was distributing withdrawn books, and I got Harada Munenori's
+                            "Never Seen or Heard Before," which I had borrowed many times before. There were also a few
+                            books by Murakami Haruki, which were probably donated but didn't become part of the
+                            collection. I also got "If There Is No Meaning, There Is No Swing."</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251224">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251224" style="color: rgb(159, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 24th (Wednesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(159, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">My planner was a mess, so I made labels with a
+                            label printer to organize the events and stuck them on. Creating a summary separate from the
+                            diary makes it easier to read. Until now, I'd been using an app to organize things, but it
+                            seems like it would be good to stick these on the monthly pages of my planner as well. It
+                            looks neat when you stick them on top of the messy handwriting. I take pictures of the
+                            chaotic state with my smartphone and use the Gyazo QR code to make labels and stick them on.
+                            This solves the "What's written underneath?" problem.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251223">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251223" style="color: rgb(140, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 23rd (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(140, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I slept more than usual, so I feel very calm.
+                            At the beginning of November, I bought two large Kalanchoe plants at a home improvement
+                            store for 217 yen. One of them was covered in bright orange flowers. The other plant started
+                            blooming later, but the color was pale and it withered. I had kept it on top of the air
+                            conditioner unit on the balcony, but it must have been too cold. When the bright flowers
+                            started to bloom, it was still only mid-November. After that, it got colder, and the young
+                            plant couldn't withstand it. I should have brought it indoors sooner. △I bought a Minute
+                            Maid Honey Yuzu from a vending machine.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251222">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251222" style="color: rgb(185, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 22nd (Monday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(185, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Walking along the riverbank, hot springs,
+                            yakiniku (grilled meat), sleeping. Bought a "Sangaria Shake-and-Drink Pudding" from a
+                            vending machine.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251221">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251221" style="color: rgb(197, 50, 253);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 21st (Sunday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(197, 50, 253);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Today is a relaxed day. This month is the
+                            month to cancel my fiber optic internet service, so I spoke with the provider's operator. I
+                            received a lot of explanations in a rapid-fire manner and was presented with two retention
+                            strategies. Let me cancel online. △ I bought a "Squall White" from a vending machine.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251220">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251220" style="color: rgb(172, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 20th (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(172, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I woke up a little late and had "breakfast" at
+                            Burger King. I went to the O Museum to see a textile exhibition, picked up a few flyers, and
+                            decided where to go. I took the train to Shimokitazawa, as I had never walked there before.
+                            I walked from Shimokitazawa to Nishi-Taishido, and then took the streetcar to Kamimachi. I
+                            visited the Heisei Construction showroom. The videos explaining the names of the tools used
+                            by the craftsmen and how they are used were excellent. The way they wrapped the steel beams
+                            with wire was quick, nimble, and beautiful. None of the videos felt artificial, like they
+                            were just demonstrating for the video; they felt like they were just doing it every day. The
+                            movements of skilled workers are beautiful, no matter the field.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251219">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251219" style="color: rgb(159, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 19th (Friday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(159, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I took a cruise ship ride in Nihonbashi. It
+                            was a great experience to see places I'd only ever seen from the train from below the
+                            bridge. I loved feeling the breeze and looking at the city, the trees, the air conditioning
+                            units on the high-rise buildings, and the laundry hanging out to dry. I want to do it again.
+                        </font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251218">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251218" style="color: rgb(186, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 18th (Thursday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(186, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I felt unusually tired just from walking to
+                            the store and coming back. Since then, I've been getting an alert every hour telling me to
+                            walk 250 steps!</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251217">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251217" style="color: rgb(173, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 17th (Wednesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(173, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I've made improvements to my desk area. Not
+                            only did I add more magnets and hooks, but I also attached strong circular stickers to the
+                            underside of the desk surface so I can suspend lip balm and inhaler medication and easily
+                            grab them. I also utilized the dead space around the monitor, attaching ballpoint pens,
+                            rulers, and sticky notes to both sides. Furthermore, I bought a small stand to mount above
+                            the screen and placed an orangutan plush toy on it. The way the toy seems to be constantly
+                            looking down on me is quite amusing.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251216">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251216" style="color: rgb(167, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 16th (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(167, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Until a few years ago, I used to think, "I
+                            feel better in winter! I love winter!" But lately, it's been taking a toll on my body, and
+                            I'm starting to think summer might be better. If I skimp on heating costs, I'll have less
+                            time to feel energetic at home.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251215">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251215" style="color: rgb(183, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 15th (Monday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(183, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">Attempted haircut, hot springs, shopping,
+                            reading. Bought a Minute Maid Zero Sugar Lemonade from a vending machine.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251214">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251214" style="color: rgb(150, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 14th (Sunday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(150, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I think the shape of correction tape resembles
+                            a cow. The back is rounded and bulges out, and the part where the tape is exposed tapers
+                            towards the end. When you put it on paper, it looks just like a cow eating grass. From what
+                            I've quickly looked, it seems that there are no correction tapes with a cow design. There
+                            are chick designs, though.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251213">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251213" style="color: rgb(149, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 13th (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(149, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I managed to do four things I wanted to do: ①
+                            buy shelf pins, ② check for plaque with a plaque marker, ③ clean the air purifier, and ④
+                            move my desk and bed. I could have easily done ① by Googling it, but I had never tried. I
+                            didn't even know what shelf pins were. Buying them allowed me to put in one of the extra
+                            shelves from my bookshelf. There are probably many other things that I could easily do if I
+                            just looked them up, but I haven't noticed or haven't understood.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251212">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251212" style="color: rgb(157, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">Friday, December 12th</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(157, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I finally got my hands on the kids' camera
+                            I've been wanting for so long. It's so small and light! I plan to use it for taking notes
+                            from now on. It has a music playback function, so I tried putting in a podcast and it played
+                            perfectly fine. The volume is about the same as the maximum volume on headphones, so it's
+                            just a bonus feature, but I thought I'd put in some of my favorite anecdotes.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251211">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251211" style="color: rgb(174, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 11th (Thursday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(174, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">According to my mental system clock, it was
+                            already the 15th, but in reality, it was still the 11th. It was a day with relatively little
+                            physical activity. I recycled the movie and art exhibition flyers and museum booklets that
+                            had accumulated because I "just bound them in for now." I flipped through them and cut out
+                            the ones that I thought were good. I was left with "Beautiful Insect Specimens,"
+                            "Topographical Classification of Saitama," and "Major Tributaries and Diversions of the
+                            Arakawa River," so I pasted them into my notebook.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251210">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251210" style="color: rgb(167, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 10th (Wednesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(167, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I bought a Schweppes melon soda from a vending
+                            machine. I was working on modifying and creating new apps for my everyday "My Apps." My
+                            brain wanted to do a lot of things, but my body wanted to sleep, so I made sure to get some
+                            rest. Now that winter has arrived, I'm so happy that I've been able to accomplish so many
+                            things that I couldn't do at the beginning of the year. Things that I used to think were
+                            "too much activity" or "too much spending" now feel just right because I've subtracted the
+                            amount of work. Next year, I want to achieve a lifestyle where I feel just right even with
+                            work.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251209">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251209" style="color: rgb(190, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 9th (Tuesday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(190, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">It was the day I was certified at the
+                            employment office. During the initial explanation, they strongly recommended that I find a
+                            job as soon as possible, and it felt like they were telling me to get to work quickly
+                            without thinking about my life. Well, the staff themselves didn't scold me, though. △I tried
+                            to replace the battery in my used iPhone myself, but I was afraid I would crack the screen,
+                            so I took it to a repair shop. While waiting for the work to be done, I listened to them
+                            talk about recent repair trends and profitability. I knew about antique dealers, but this
+                            was the first time I'd heard the term "tool dealer." △I bought a Fanta Orange from a vending
+                            machine.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251208">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251208" style="color: rgb(200, 50, 250);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 8th (Monday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(200, 50, 250);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I turned 31. I had a huge lunch at Big Boy. I
+                            realized I'd exceeded 2500 calories, which was bad, so I went cycling. I intended to be back
+                            in about 90 minutes, but I got carried away without my smartphone and ended up cycling for
+                            three hours. I did cancel out the calories from the main dish, but my legs are already sore.
+                        </font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251207">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251207" style="color: rgb(175, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 7th (Sunday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(175, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">I bought a Coca-Cola Zero from a vending
+                            machine. As I was walking along the promenade, happily listening to a podcast, a white
+                            pickup truck suddenly appeared. I wondered if it was dangerous driving, but it just drove
+                            into the adjacent field. I realized that I might be the one in danger for walking while
+                            listening to my podcast.</font>
+                    </font>
+                </div>
+            </div>
+            <div class="diary-entry" id="20251206">
+                <div class="date-container">
+                    <div class="date" data-yyyymmdd="20251206" style="color: rgb(156, 50, 255);">
+                        <font dir="auto" style="vertical-align: inherit;">
+                            <font dir="auto" style="vertical-align: inherit;">December 6th (Saturday)</font>
+                        </font>
+                    </div>
+                </div>
+                <div class="content" style="color: rgb(156, 50, 255);">
+                    <font dir="auto" style="vertical-align: inherit;">
+                        <font dir="auto" style="vertical-align: inherit;">While reading a book I bought at a literary
+                            flea market, I felt like trying to create my own vertically written diary, so I did. It
+                            looks simple at first glance, but I'm aiming for a slightly quirky appearance.</font>
+                    </font>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+
+</html>
