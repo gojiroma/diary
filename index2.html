@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#f5f5f5">
+    <meta name="theme-color" content="#ffffff">
 
     <title>誤字ロマの日記</title>
     <link rel="icon" href="diary-icon.png" type="image/png">
@@ -18,28 +18,23 @@
             font-display: swap;
         }
 
-        * {
-            font-family: 'gojiromanus', sans-serif;
-        }
-
         :root {
-            --bg-color: #efffe6;
-            --text-color: #28466a;
+            --bg-color: #ffffffa0;
+            --text-color: #333333;
             --border-color: #666666;
             --timeline-color: #666666;
             --highlight-color: #cccccc;
             --icon-size: 40px;
-            --modal-bg: rgba(0, 0, 0, 0.5);
             --transition: 0.2s ease;
             --light-pastel-1: #f8e8e8;
             --light-pastel-2: #e8f8f5;
             --dark-pastel-1: #2a2a3a;
             --dark-pastel-2: #1a1a2a;
-
         }
 
         body {
             overflow: hidden;
+            font-family: "gojiromanus";
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -55,14 +50,14 @@
         }
 
         body.fake-mode {
-            --bg-color: #f4fbff;
-            --text-color: #782727;
+            --bg-color: #000000;
+            --text-color: #e0e0e0;
         }
 
         .diary-container-wrapper {
             width: 100%;
             max-width: 90%;
-            height: 90vh;
+            height: 85vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -120,10 +115,12 @@
             font-size: 1.6em;
             white-space: nowrap;
             position: relative;
-            transition: color var(--transition);
+            transition: all 0.3s ease;
         }
 
-
+        .date.fake-mode {
+            color: var(--text-color);
+        }
 
         .days-ago {
             cursor: default;
@@ -143,7 +140,7 @@
         }
 
         .diary-entry:not(.active) {
-            opacity: 0.8;
+            opacity: 0.6;
         }
 
         .diary-entry.active {
@@ -156,82 +153,6 @@
             padding: 0 2px;
             border-radius: 2px;
             margin: 0 -2px;
-        }
-
-        .icon {
-            cursor: default;
-            width: var(--icon-size);
-            height: var(--icon-size);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            left: 18px;
-            transition: transform 0.1s, background-color var(--transition), filter var(--transition);
-            border-radius: 4px;
-        }
-
-        .icon:hover {
-            z-index: 20;
-        }
-
-        .icon.highlight {
-            background-color: var(--highlight-color);
-            filter: brightness(0.85);
-        }
-
-        .icon img,
-        .icon-emoji {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 4px;
-            font-size: x-large;
-            filter: grayscale(100%);
-            opacity: 0.4;
-            font-size: 2em;
-        }
-
-        .icon:hover img,
-        .icon:hover .icon-emoji {
-            filter: grayscale(0%);
-            opacity: 1;
-        }
-
-        .tooltip {
-            position: absolute;
-            top: -50%;
-            left: 90%;
-            transform: translateX(-50%);
-            color: var(--text-color);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 20px;
-            white-space: nowrap;
-            border: none;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity var(--transition);
-            z-index: 30;
-            margin-bottom: 5px;
-        }
-
-        .icon:hover .tooltip {
-            opacity: 1;
-        }
-
-        .falling {
-            will-change: transform, opacity;
-            backface-visibility: hidden;
-            perspective: 1000px;
-        }
-
-        .char.falling,
-        .date.falling {
-            position: fixed;
-            transition: transform 2s ease-in, opacity 2s ease-out;
-            will-change: transform, opacity;
-            z-index: 100;
-            pointer-events: none;
         }
 
         @keyframes shake {
@@ -252,6 +173,24 @@
             }
         }
 
+        .date:hover {
+            animation: shake 0.3s infinite;
+        }
+
+        .falling {
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+
+        .char.falling,
+        .date.falling {
+            position: fixed;
+            transition: transform 2s ease-in, opacity 2s ease-out;
+            will-change: transform, opacity;
+            z-index: 100;
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -259,6 +198,7 @@
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
     </div>
+
     <script>
         class DiaryUtils {
             static toKanjiNumber(num) {
@@ -296,13 +236,21 @@
                 const date = new Date(year, month - 1, day);
                 const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
                 return {
-                    short: `${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '裏' : dayOfWeek}）`,
-                    long: `${this.toJapaneseEra(year)}${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '裏' : dayOfWeek}）`
+                    short: `${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${dayOfWeek}）`,
+                    long: `${this.toJapaneseEra(year)}${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${dayOfWeek}）`
                 };
             }
 
-            static escapeRegExp(string) {
-                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            static calculateDaysAgo(yyyymmdd) {
+                const entryDate = new Date(
+                    parseInt(yyyymmdd.substring(0, 4), 10),
+                    parseInt(yyyymmdd.substring(4, 6), 10) - 1,
+                    parseInt(yyyymmdd.substring(6, 8), 10)
+                );
+                const today = new Date();
+                const diffTime = today - entryDate;
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                return diffDays === 0 ? '今日' : `${diffDays}日前`;
             }
         }
 
@@ -311,68 +259,48 @@
             static originalEntriesOrder = [];
             static fakeEntriesCache = null;
             static diaryEntries = [];
-            static iconsData = [];
-            static audioContext = null;
-            static lastKeyTime = null;
-            static wheelTimeout = null;
+            static weatherData = [];
 
             static async init() {
                 await this.loadWeatherData();
                 await this.loadDiaryEntries();
                 this.preloadFakeEntries();
-                this.setupEventListeners();
-                this.updateThemeColor(!this.isFakeMode);
+                this.setupDateClick();
+                this.setupContentClick();
+                this.updatePageTitle(this.diaryEntries.length);
                 document.body.style.opacity = 1;
-                this.setupWheelNavigation();
                 setTimeout(startFallingAnimation, 180000);
-            }
-
-            static updateThemeColor(isLight) {
-                const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-                if (!metaThemeColor) return;
-
-                if (isLight) {
-                    const hue = Math.floor(Math.random() * 60) + 200;
-                    const lightness = 95;
-                    metaThemeColor.setAttribute('content', `hsl(${hue}, 80%, ${lightness}%)`);
-                } else {
-                    const hue = Math.floor(Math.random() * 60) + 200;
-                    const lightness = 20;
-                    metaThemeColor.setAttribute('content', `hsl(${hue}, 70%, ${lightness}%)`);
-                }
             }
 
             static parseCSV(csv) {
                 const lines = csv.split('\n').filter(line => line.trim());
                 return lines.slice(1).map(line => {
-                    const [date, title, icon, url] = line.split(',').map(v => v.trim());
-                    return { date, title, icon, url };
+                    const [date, avgTemp, , , avgWind] = line.split(',').map(v => v.trim());
+                    const normalizedDate = date.replace(/(\d+)\/(\d+)\/(\d+)/, (_, y, m, d) =>
+                        `${y}/${m.padStart(2, '0')}/${d.padStart(2, '0')}`
+                    );
+                    return {
+                        date: normalizedDate,
+                        avgTemp: parseFloat(avgTemp),
+                        avgWind: parseFloat(avgWind)
+                    };
                 });
             }
 
-            
-            static setupWheelNavigation() {
-                const container = document.getElementById('diaryContainer');
-                if (!container) return;
-
-                container.addEventListener('wheel', (e) => {
-                    e.preventDefault();
-                    const currentEntry = this.getCurrentEntry();
-                    if (!currentEntry) return;
-
-                    const direction = e.deltaY > 0 ? 1 : -1;
-                    const nextEntry = this.getAdjacentEntry(currentEntry, direction);
-                    if (nextEntry) {
-                        window.location.hash = nextEntry.id;
-                        this.scrollToEntryFromHash();
-                    }
-                }, { passive: false });
+            static async loadWeatherData() {
+                try {
+                    const response = await fetch('data.csv');
+                    if (!response.ok) throw new Error(`Failed to load data.csv: ${response.status}`);
+                    const csv = await response.text();
+                    this.weatherData = this.parseCSV(csv);
+                } catch (error) {
+                    console.error('Error loading data.csv:', error);
+                    this.weatherData = [];
+                }
             }
 
-            static setupEventListeners() {
-                document.addEventListener('keydown', e => this.handleKeyDown(e));
-                window.addEventListener('hashchange', () => this.scrollToEntryFromHash());
-                window.addEventListener('load', () => this.scrollToEntryFromHash());
+            static getWeatherForDate(dateStr) {
+                return this.weatherData.find(w => w.date === dateStr) || { avgTemp: 15, avgWind: 3 };
             }
 
             static async loadDiaryEntries(filename = 'entry.md') {
@@ -404,81 +332,130 @@
                     const yyyymmdd = dateMatch[1].trim();
                     const dateObj = DiaryUtils.formatJapaneseDate(yyyymmdd);
                     const contentLines = contentMatch[1].split('\n').map(line => line.replace(/^\s*\|?\s*/, '')).join('\n');
-                    const dateForIcons = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
+                    const dateForWeather = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
+                    const weather = this.getWeatherForDate(dateForWeather);
 
                     const entryElement = document.createElement('div');
                     entryElement.className = 'diary-entry';
                     entryElement.id = yyyymmdd;
+
+                    const tempColor = this.getTempColor(weather.avgTemp);
+                    entryElement.style.setProperty('--temp-color', tempColor);
+
                     entryElement.innerHTML = `
-                            <div class="date-container">
-                                <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
-                            </div>
-                            <div class="content">${contentLines}</div>
-                        `;
+                        <div class="date-container">
+                            <div class="date" data-yyyymmdd="${yyyymmdd}" style="color: var(--temp-color)">${dateObj.short}</div>
+                            <div class="days-ago">${DiaryUtils.calculateDaysAgo(yyyymmdd)}</div>
+                        </div>
+                        <div class="content" style="color: var(--temp-color)">${contentLines}</div>
+                    `;
                     container.appendChild(entryElement);
 
                     this.diaryEntries.push({
                         yyyymmdd,
-                        content: contentLines.trim(),
-                        icons: []
+                        content: contentLines.trim()
                     });
                 });
 
                 this.setupDateClick();
-                this.updatePageTitle(entries.length);
                 this.scrollToEntryFromHash();
+            }
+
+            static getTempColor(temp) {
+                const minTemp = -5;
+                const maxTemp = 30;
+                const minHue = 240;
+                const maxHue = 0;
+                const hue = minHue + ((temp - minTemp) / (maxTemp - minTemp)) * (maxHue - minHue);
+                return `hsl(${hue}, 80%, ${this.isFakeMode ? 50 : 40}%)`;
             }
 
             static setupDateClick() {
                 document.querySelectorAll('.date').forEach(dateElement => {
                     const yyyymmdd = dateElement.getAttribute('data-yyyymmdd');
                     const dateForWeather = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
-                    const weather = this.weatherData.find(w => w.date === dateForWeather);
-
-                    if (weather) {
-                        const temp = weather.avgTemp;
-                        const red = Math.min(255, Math.floor((temp + 10) * 10));
-                        const blue = Math.min(255, Math.floor((35 - temp) * 10));
-                        const colorString = `rgb(${red}, 50, ${blue})`;
-
-                        dateElement.style.color = colorString;
-                        const contentElement = dateElement.closest('.diary-entry')?.querySelector('.content');
-                        if (contentElement) {
-                            contentElement.style.color = colorString;
-                        }
-
-                        const windLevel = Math.min(10, Math.max(1, Math.floor(weather.avgWind * 10 / 8)));
-                        dateElement.style.setProperty('--wind-level', windLevel);
-                    }
+                    const weather = this.getWeatherForDate(dateForWeather);
 
                     dateElement.addEventListener('click', () => {
-                        this.toggleFakeMode();
-                        window.location.hash = dateElement.getAttribute('data-yyyymmdd');
+                        this.isFakeMode = !this.isFakeMode;
+                        document.body.classList.toggle('fake-mode', this.isFakeMode);
+                        this.renderEntries(this.isFakeMode ? this.fakeEntriesCache || 'fake.md' : 'entry.md');
+                        this.updatePageTitle(this.diaryEntries.length);
                     });
                 });
             }
 
-            static percentile95(arr) {
-                const sorted = [...arr].sort((a, b) => a - b);
-                return sorted[Math.floor(sorted.length * 0.95)];
+            static setupContentClick() {
+                document.querySelectorAll('.content').forEach(content => {
+                    let speechSynthesisUtterance = null;
+                    let isCopied = false;
+                    let isFontToggled = false;
+
+                    content.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (speechSynthesisUtterance) {
+                            window.speechSynthesis.cancel();
+                            speechSynthesisUtterance = null;
+                            isCopied = false;
+                            return;
+                        }
+                        if (!isCopied) {
+                            const text = content.textContent;
+                            navigator.clipboard.writeText(text).then(() => {
+                                isCopied = true;
+                                setTimeout(() => { isCopied = false; }, 2000);
+                            });
+                            isFontToggled = !isFontToggled;
+                            content.classList.toggle('toggle-font', isFontToggled);
+                        }
+                    });
+
+                    content.addEventListener('dblclick', (e) => {
+                        e.stopPropagation();
+                        if (speechSynthesisUtterance) {
+                            window.speechSynthesis.cancel();
+                            speechSynthesisUtterance = null;
+                        } else {
+                            const text = content.textContent;
+                            speechSynthesisUtterance = new SpeechSynthesisUtterance(text);
+                            speechSynthesisUtterance.onend = () => {
+                                speechSynthesisUtterance = null;
+                            };
+                            window.speechSynthesis.speak(speechSynthesisUtterance);
+                        }
+                    });
+                });
             }
 
-            static toggleFakeMode() {
-                this.isFakeMode = !this.isFakeMode;
-                const body = document.body;
+            static updatePageTitle(count) {
+                document.title = `誤字ロマの${count}日間`;
+            }
 
-                this.updateThemeColor(!this.isFakeMode);
-                body.classList.toggle('fake-mode', this.isFakeMode);
+            static scrollToEntryFromHash() {
+                const hash = window.location.hash.substring(1);
+                const entries = document.querySelectorAll('.diary-entry');
 
-                if (this.isFakeMode) {
-                    if (this.fakeEntriesCache) {
-                        this.renderEntries(this.fakeEntriesCache);
-                    } else {
-                        this.loadDiaryEntries('fake.md');
+                entries.forEach(entry => entry.classList.remove('active'));
+
+                if (hash && hash.match(/^\d{8}$/)) {
+                    const entry = document.getElementById(hash);
+                    if (entry) {
+                        entry.classList.add('active');
+                        const entryRight = entry.offsetLeft + entry.clientWidth;
+                        const containerWidth = document.getElementById('diaryContainer').clientWidth;
+                        this.scrollTo(document.getElementById('diaryContainer'), entryRight - containerWidth);
                     }
-                } else {
-                    this.loadDiaryEntries('entry.md');
+                } else if (entries.length > 0) {
+                    const latestEntry = entries[0];
+                    latestEntry.classList.add('active');
+                    const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
+                    const containerWidth = document.getElementById('diaryContainer').clientWidth;
+                    this.scrollTo(document.getElementById('diaryContainer'), entryRight - containerWidth);
                 }
+            }
+
+            static scrollTo(element, targetPosition) {
+                element.scrollLeft = targetPosition;
             }
 
             static async preloadFakeEntries() {
@@ -489,166 +466,11 @@
                     console.error('Error preloading fake entries:', error);
                 }
             }
-
-            static triggerHapticFeedback(charCount) {
-                const minVibrate = 8;
-                const maxVibrate = 160;
-
-                const duration = Math.max(minVibrate, Math.min(maxVibrate, minVibrate + charCount));
-
-                if ('vibrate' in navigator) {
-                    navigator.vibrate(duration);
-                }
-            }
-
-            static scrollToEntryFromHash() {
-                const hash = window.location.hash.substring(1);
-                const entries = document.querySelectorAll('.diary-entry');
-
-                entries.forEach(entry => entry.classList.remove('active'));
-
-                const minFreq = 320;
-                const maxFreq = 3200;
-
-                if (hash && hash.match(/^\d{8}$/)) {
-                    const entry = document.getElementById(hash);
-                    if (entry) {
-                        entry.classList.add('active');
-                        const entryRight = entry.offsetLeft + entry.clientWidth;
-                        const containerWidth = document.getElementById('diaryContainer').clientWidth;
-                        this.scrollTo(document.getElementById('diaryContainer'), entryRight - containerWidth);
-
-                        const content = entry.querySelector('.content');
-                        const charCount = content.textContent.length;
-                        const freq = Math.max(minFreq, Math.min(maxFreq, minFreq + charCount * 0.5));
-                        this.playBeep(freq, 0.3);
-                        this.triggerHapticFeedback(charCount);
-                    }
-                } else if (entries.length > 0) {
-                    const latestEntry = entries[0];
-                    latestEntry.classList.add('active');
-                    const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
-                    const containerWidth = document.getElementById('diaryContainer').clientWidth;
-                    this.scrollTo(document.getElementById('diaryContainer'), entryRight - containerWidth);
-
-                    const content = latestEntry.querySelector('.content');
-                    const charCount = content.textContent.length;
-                    const freq = Math.max(minFreq, Math.min(maxFreq, minFreq + charCount * 0.5));
-                    this.playBeep(freq, 0.3);
-                    this.triggerHapticFeedback(charCount);
-                }
-            }
-
-            static scrollTo(element, targetPosition) {
-                element.scrollLeft = targetPosition;
-            }
-
-            static handleKeyDown(e) {
-                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-                    e.preventDefault();
-
-                    const currentEntry = this.getCurrentEntry();
-                    if (!currentEntry) return;
-
-                    const content = currentEntry.querySelector('.content');
-                    const charCount = content.textContent.length;
-
-                    const baseThreshold = 82;
-                    const maxThreshold = 370;
-                    const threshold = Math.min(baseThreshold + (charCount * 0.5), maxThreshold);
-
-                    if (this.lastKeyTime && Date.now() - this.lastKeyTime < threshold) return;
-                    this.lastKeyTime = Date.now();
-
-                    const direction = e.key === 'ArrowLeft' ? -1 : 1;
-                    const nextEntry = this.getAdjacentEntry(currentEntry, direction);
-                    if (nextEntry) {
-                        window.location.hash = nextEntry.id;
-                        this.scrollToEntryFromHash();
-                    }
-                } else if (e.key === 'Escape' && window.location.hash) {
-                    window.location.hash = '';
-                }
-            }
-
-            static getCurrentEntry() {
-                const hash = window.location.hash.substring(1);
-                if (hash && hash.match(/^\d{8}$/)) return document.getElementById(hash);
-
-                const entries = document.querySelectorAll('.diary-entry');
-                return entries.length > 0 ? entries[0] : null;
-            }
-
-            static getAdjacentEntry(currentEntry, direction) {
-                const entries = document.querySelectorAll('.diary-entry');
-                const currentIndex = Array.from(entries).indexOf(currentEntry);
-                if (currentIndex === -1) return null;
-
-                const nextIndex = currentIndex + direction;
-                if (nextIndex < 0 || nextIndex >= entries.length) return null;
-                return entries[nextIndex];
-            }
-
-            static updatePageTitle(count) {
-                document.title = `誤字ロマの${count}日間`;
-            }
-
-            static async playBeep(frequency = 440, duration = 0.1) {
-                if (!this.audioContext) {
-                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    await this.audioContext.resume();
-                } else if (this.audioContext.state === 'suspended') {
-                    await this.audioContext.resume();
-                }
-
-                const oscillator = this.audioContext.createOscillator();
-                const gainNode = this.audioContext.createGain();
-
-                oscillator.connect(gainNode);
-                gainNode.connect(this.audioContext.destination);
-
-                oscillator.type = 'sine';
-                oscillator.frequency.value = frequency;
-                gainNode.gain.value = 0.1;
-                gainNode.gain.exponentialRampToValueAtTime(0.0001, this.audioContext.currentTime + duration);
-
-                oscillator.start();
-                oscillator.stop(this.audioContext.currentTime + duration);
-
-                this.currentOscillator = oscillator;
-            }
-
-            static async loadWeatherData() {
-                try {
-                    const response = await fetch('data.csv');
-                    if (!response.ok) throw new Error(`Failed to load data.csv: ${response.status}`);
-                    const csv = await response.text();
-                    this.weatherData = this.parseWeatherCSV(csv);
-                } catch (error) {
-                    console.error('Error loading data.csv:', error);
-                    this.weatherData = [];
-                }
-            }
-
-            static parseWeatherCSV(csv) {
-                const lines = csv.split('\n').filter(line => line.trim());
-                return lines.slice(1).map(line => {
-                    const [date, avgTemp, , , avgWind] = line.split(',').map(v => v.trim());
-                    const normalizedDate = date.replace(/(\d+)\/(\d+)\/(\d+)/, (_, y, m, d) =>
-                        `${y}/${m.padStart(2, '0')}/${d.padStart(2, '0')}`
-                    );
-                    return {
-                        date: normalizedDate,
-                        avgTemp: parseFloat(avgTemp),
-                        avgWind: parseFloat(avgWind)
-                    };
-                });
-            }
         }
 
         DiaryApp.init();
         document.addEventListener('keydown', function (event) {
-            if (event.key === 'i' || event.key === 'I') {
+            if ((event.key === 'i' || event.key === 'I')) {
                 if (!['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
                     event.preventDefault();
                     window.location.href = 'write.html';
@@ -671,7 +493,9 @@
             wrapCharsForFalling();
             const chars = document.querySelectorAll('.char');
             const dates = document.querySelectorAll('.date');
+            const icons = document.querySelectorAll('.icon');
             const btns = document.querySelectorAll('.btn');
+            const daysagos = document.querySelectorAll('.days-ago');
 
             const animateFalling = (element, rect) => {
                 const delay = Math.random() * 1000;
@@ -707,7 +531,7 @@
                     }, 10);
                 }, delay);
             };
-            [dates, btns, chars].forEach(elements => {
+            [chars, dates, icons, daysagos, btns].forEach(elements => {
                 elements.forEach(element => {
                     const rect = element.getBoundingClientRect();
                     animateFalling(element, rect);
