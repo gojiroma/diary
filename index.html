@@ -117,10 +117,10 @@
 
         .date {
             cursor: pointer;
-            font-size: 1.6em;
             white-space: nowrap;
             position: relative;
-            transition: color var(--transition);
+            font-size: calc(1.3em + var(--wind-level) * .1em);
+
         }
 
 
@@ -359,6 +359,7 @@
                     });
                 });
             }
+
 
             static percentile95(arr) {
                 const sorted = [...arr].sort((a, b) => a - b);
