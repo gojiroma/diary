@@ -30,7 +30,6 @@
             --highlight-color: #cccccc;
             --icon-size: 40px;
             --modal-bg: rgba(0, 0, 0, 0.5);
-            --transition: 0.2s ease;
             --light-pastel-1: #f8e8e8;
             --light-pastel-2: #e8f8f5;
             --dark-pastel-1: #2a2a3a;
@@ -100,7 +99,6 @@
             overflow: visible;
             scroll-margin-top: 50px;
             padding: 0 10px;
-            transition: all 0.3s ease;
             flex-shrink: 0;
             text-wrap: balance;
             overflow-wrap: break-word;
@@ -144,12 +142,8 @@
             position: relative;
         }
 
-        .diary-entry:not(.active) {
-            opacity: 0.4;
-        }
-
         .diary-entry.active {
-            opacity: 1;
+            filter: drop-shadow(1px 0px 0px var(--text-color));
         }
 
         .highlight {
@@ -160,108 +154,7 @@
             margin: 0 -2px;
         }
 
-        .icon {
-            cursor: default;
-            width: var(--icon-size);
-            height: var(--icon-size);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            left: 18px;
-            transition: transform 0.1s, background-color var(--transition), filter var(--transition);
-            border-radius: 4px;
-        }
 
-        .icon:hover {
-            z-index: 20;
-        }
-
-        .icon.highlight {
-            background-color: var(--highlight-color);
-            filter: brightness(0.85);
-        }
-
-        .icon img,
-        .icon-emoji {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 4px;
-            font-size: x-large;
-            filter: grayscale(100%);
-            opacity: 0.4;
-            font-size: 2em;
-        }
-
-        .icon:hover img,
-        .icon:hover .icon-emoji {
-            filter: grayscale(0%);
-            opacity: 1;
-        }
-
-        .tooltip {
-            position: absolute;
-            top: -50%;
-            left: 90%;
-            transform: translateX(-50%);
-            color: var(--text-color);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 20px;
-            white-space: nowrap;
-            border: none;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity var(--transition);
-            z-index: 30;
-            margin-bottom: 5px;
-        }
-
-        .icon:hover .tooltip {
-            opacity: 1;
-        }
-
-        .falling {
-            will-change: transform, opacity;
-            backface-visibility: hidden;
-            perspective: 1000px;
-        }
-
-        .char.falling,
-        .date.falling {
-            position: fixed;
-            transition: transform 2s ease-in, opacity 2s ease-out;
-            will-change: transform, opacity;
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            20%,
-            60%,
-            80% {
-                transform: translateX(-2px);
-            }
-
-            40% {
-                transform: translateX(2px);
-            }
-        }
-
-        .setsumei {
-            font-size: 16px;
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0.5;
-        }
     </style>
 </head>
 
@@ -269,8 +162,7 @@
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
     </div>
-    <marquee class="setsumei">
-        ← →キー/マウスホイールで move、 space/日付タップ で flip</marquee>
+
     <script>
         class DiaryUtils {
             static toKanjiNumber(num) {
@@ -668,17 +560,6 @@
                 }
             }
         });
-
-        const wrapCharsForFalling = () => {
-            document.querySelectorAll('.content').forEach(content => {
-                const text = content.textContent;
-                let wrapped = '';
-                for (let i = 0; i < text.length; i++) {
-                    wrapped += `<span class="char">${text[i]}</span>`;
-                }
-                content.innerHTML = wrapped;
-            });
-        };
 
     </script>
 </body>
