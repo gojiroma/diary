@@ -296,7 +296,7 @@
                 const date = new Date(year, month - 1, day);
                 const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
                 return {
-                    short: `${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '裏' : dayOfWeek}）`,
+                    short: `${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日　${DiaryApp.isFakeMode ? '裏日記' : dayOfWeek+"曜日"}`,
                     long: `${this.toJapaneseEra(year)}${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '裏' : dayOfWeek}）`
                 };
             }
