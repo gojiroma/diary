@@ -7,7 +7,7 @@
         content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#f5f5f5">
 
-    <title>誤字ロマの日記</title>
+    <title>誤字ロマの日記（横書き）</title>
     <link rel="icon" href="diary-icon.png" type="image/png">
     <style>
         @font-face {
@@ -19,7 +19,7 @@
         }
 
         * {
-            font-family: 'gojiromanus', sans-serif ;
+            font-family: 'gojiromanus', sans-serif;
         }
 
         :root {
@@ -34,7 +34,6 @@
             --light-pastel-2: #e8f8f5;
             --dark-pastel-1: #2a2a3a;
             --dark-pastel-2: #1a1a2a;
-
         }
 
         body {
@@ -69,20 +68,20 @@
             box-sizing: border-box;
             margin-top: 20px;
             transition: background-color var(--transition);
-            outline:none;
+            outline: none;
         }
 
         .diary-container {
             overflow: hidden;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             gap: 20px;
             width: 100%;
             height: 100%;
-            padding: 0;
-            overflow-x: auto;
+            padding: 20px;
+            overflow-y: auto;
             scrollbar-width: none;
-            outline:none;
+            outline: none;
         }
 
         .diary-container::-webkit-scrollbar {
@@ -90,15 +89,14 @@
         }
 
         .diary-entry {
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            line-height: 2;
-            letter-spacing: 0.1em;
-            width: auto;
+            writing-mode: horizontal-tb;
+            text-orientation: mixed;
+            line-height: 1.6;
+            width: 100%;
             white-space: normal;
             overflow: visible;
             scroll-margin-top: 50px;
-            padding: 0 10px;
+            padding: 15px;
             flex-shrink: 0;
             text-wrap: balance;
             overflow-wrap: break-word;
@@ -110,7 +108,7 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            margin: 0 20px;
+            margin-bottom: 10px;
             flex-wrap: wrap;
             gap: 5px;
         }
@@ -119,12 +117,12 @@
             cursor: pointer;
             white-space: nowrap;
             position: relative;
-            font-size: calc(1.3em + var(--wind-level) * .1em);
-
+            font-size: 1.2em;
+            font-weight: bold;
         }
 
         .content {
-            font-size: 1.3em;
+            font-size: 1em;
             white-space: pre-line;
             text-wrap: balance;
             overflow-wrap: break-word;
@@ -132,7 +130,7 @@
         }
 
         .diary-entry.active {
-            filter: drop-shadow(1px 0px 0px var(--text-color));
+            filter: drop-shadow(1px 1px 0px var(--text-color));
         }
 
         .highlight {
@@ -142,8 +140,6 @@
             border-radius: 2px;
             margin: 0 -2px;
         }
-
-
     </style>
 </head>
 
@@ -189,7 +185,7 @@
                 const date = new Date(year, month - 1, day);
                 const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
                 return {
-                    short: `${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日　${DiaryApp.isFakeMode ? '裏日記' : dayOfWeek+"曜日"}`,
+                    short: `${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '裏日記' : dayOfWeek}曜日）`,
                     long: `${this.toJapaneseEra(year)}${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '裏' : dayOfWeek}）`
                 };
             }
@@ -216,7 +212,6 @@
                 this.setupEventListeners();
                 this.updateThemeColor(!this.isFakeMode);
                 document.body.style.opacity = 1;
-                this.setupWheelNavigation();
             }
 
             static updateThemeColor(isLight) {
@@ -240,25 +235,6 @@
                     const [date, title, icon, url] = line.split(',').map(v => v.trim());
                     return { date, title, icon, url };
                 });
-            }
-
-            
-            static setupWheelNavigation() {
-                const container = document.getElementById('diaryContainer');
-                if (!container) return;
-
-                container.addEventListener('wheel', (e) => {
-                    e.preventDefault();
-                    const currentEntry = this.getCurrentEntry();
-                    if (!currentEntry) return;
-
-                    const direction = e.deltaY > 0 ? 1 : -1;
-                    const nextEntry = this.getAdjacentEntry(currentEntry, direction);
-                    if (nextEntry) {
-                        window.location.hash = nextEntry.id;
-                        this.scrollToEntryFromHash();
-                    }
-                }, { passive: false });
             }
 
             static setupEventListeners() {
@@ -301,11 +277,11 @@
                     entryElement.className = 'diary-entry';
                     entryElement.id = yyyymmdd;
                     entryElement.innerHTML = `
-                            <div class="date-container">
-                                <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
-                            </div>
-                            <div class="content">${contentLines}</div>
-                        `;
+                        <div class="date-container">
+                            <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
+                        </div>
+                        <div class="content">${contentLines}</div>
+                    `;
                     container.appendChild(entryElement);
 
                     this.diaryEntries.push({
@@ -337,9 +313,6 @@
                         if (contentElement) {
                             contentElement.style.color = colorString;
                         }
-
-                        const windLevel = Math.min(10, Math.max(1, Math.floor(weather.avgWind * 10 / 8)));
-                        dateElement.style.setProperty('--wind-level', windLevel);
                     }
 
                     dateElement.addEventListener('click', () => {
@@ -347,12 +320,6 @@
                         window.location.hash = dateElement.getAttribute('data-yyyymmdd');
                     });
                 });
-            }
-
-
-            static percentile95(arr) {
-                const sorted = [...arr].sort((a, b) => a - b);
-                return sorted[Math.floor(sorted.length * 0.95)];
             }
 
             static toggleFakeMode() {
@@ -406,9 +373,7 @@
                     const entry = document.getElementById(hash);
                     if (entry) {
                         entry.classList.add('active');
-                        const entryRight = entry.offsetLeft + entry.clientWidth;
-                        const containerWidth = document.getElementById('diaryContainer').clientWidth;
-                        this.scrollTo(document.getElementById('diaryContainer'), entryRight - containerWidth);
+                        entry.scrollIntoView({ behavior: 'instant', block: 'center' });
 
                         const content = entry.querySelector('.content');
                         const charCount = content.textContent.length;
@@ -419,9 +384,7 @@
                 } else if (entries.length > 0) {
                     const latestEntry = entries[0];
                     latestEntry.classList.add('active');
-                    const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
-                    const containerWidth = document.getElementById('diaryContainer').clientWidth;
-                    this.scrollTo(document.getElementById('diaryContainer'), entryRight - containerWidth);
+                    latestEntry.scrollIntoView({ behavior: 'instant', block: 'center' });
 
                     const content = latestEntry.querySelector('.content');
                     const charCount = content.textContent.length;
@@ -431,12 +394,8 @@
                 }
             }
 
-            static scrollTo(element, targetPosition) {
-                element.scrollLeft = targetPosition;
-            }
-
             static handleKeyDown(e) {
-                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                     e.preventDefault();
 
                     const currentEntry = this.getCurrentEntry();
@@ -452,7 +411,7 @@
                     if (this.lastKeyTime && Date.now() - this.lastKeyTime < threshold) return;
                     this.lastKeyTime = Date.now();
 
-                    const direction = e.key === 'ArrowLeft' ? -1 : 1;
+                    const direction = e.key === 'ArrowUp' ? -1 : 1;
                     const nextEntry = this.getAdjacentEntry(currentEntry, direction);
                     if (nextEntry) {
                         window.location.hash = nextEntry.id;
@@ -460,7 +419,6 @@
                     }
                 } else if (e.key === 'Escape' && window.location.hash) {
                     window.location.hash = '';
-
                 } else if (e.key === ' ') {
                     this.toggleFakeMode();
                 }
@@ -549,19 +507,13 @@
                     window.location.href = 'write.html';
                 }
             }
-            else if (event.key==='c' || event.key==='C') {
+            else if (event.key === 'c' || event.key === 'C') {
                 if (!['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
                     event.preventDefault();
                     window.location.href = 'classic.html';
                 }
-            } else if (event.key==='h' || event.key==='H') {
-                if (!['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
-                    event.preventDefault();
-                    window.location.href = 'horizontal.html';
-                }
             }
         });
-
     </script>
 </body>
 
