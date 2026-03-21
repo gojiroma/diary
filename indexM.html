@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>誤字ロマの日記 - Vertical Mode</title>
+    <title>誤字ロマの日記 - Vertical Focus</title>
     <style>
         @font-face {
             font-family: 'gojiromanus';
@@ -16,7 +16,8 @@
             --text-color: #8fbcf2;
             --fake-bg: #19100d;
             --fake-text: #a7be80;
-            --font-size: 12vh; /* 画面の高さに応じた巨大な文字サイズ */
+            --font-size: 15vh; /* スマホで1列が際立つサイズ */
+            --transition: 0.5s ease;
         }
 
         body, html {
@@ -28,7 +29,7 @@
             color: var(--text-color);
             font-family: 'gojiromanus', serif;
             overflow: hidden;
-            transition: background-color 0.5s, color 0.5s;
+            transition: background-color var(--transition), color var(--transition);
         }
 
         body.fake-mode {
@@ -36,21 +37,22 @@
             color: var(--fake-text);
         }
 
-        /* 日付表示 */
+        /* 日付ヘッダー */
         #date-display {
             position: fixed;
-            top: 20px;
+            top: env(safe-area-inset-top, 20px);
             left: 50%;
             transform: translateX(-50%);
             font-size: 1.2rem;
             z-index: 100;
-            opacity: 0.7;
-            letter-spacing: 0.2em;
-            writing-mode: horizontal-tb;
-            white-space: nowrap;
+            opacity: 0.8;
+            letter-spacing: 0.1em;
+            text-align: center;
+            width: 100%;
+            cursor: pointer;
         }
 
-        /* メインコンテナ（縦書き） */
+        /* 縦書きコンテナ */
         .marquee-container {
             width: 100%;
             height: 100%;
@@ -59,59 +61,63 @@
             align-items: center;
             writing-mode: vertical-rl;
             text-orientation: upright;
+            padding: 0 10px;
+            box-sizing: border-box;
         }
 
-        /* 流れるテキストのラッパー */
+        /* アニメーションの開始位置を工夫 */
         .marquee-content {
             display: inline-block;
             font-size: var(--font-size);
-            line-height: 1.2;
+            line-height: 1.1;
             white-space: nowrap;
-            animation: vertical-marquee 15s linear infinite;
+            /* 最初の開始位置を画面の上方(10vh)に設定 */
+            transform: translateY(10vh); 
+            animation: vertical-flow 20s linear infinite;
         }
 
-        @keyframes vertical-marquee {
-            0% { transform: translateY(100vh); }
+        @keyframes vertical-flow {
+            0% { transform: translateY(15vh); }
             100% { transform: translateY(-100%); }
         }
 
-        /* ナビゲーションボタン */
+        /* ナビゲーション */
         .nav-btn {
             position: fixed;
             bottom: 40px;
-            width: 70px;
-            height: 70px;
-            background: rgba(255, 255, 255, 0.1);
+            width: 65px;
+            height: 65px;
+            background: rgba(255, 255, 255, 0.05);
             color: inherit;
             border: 1px solid currentColor;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             z-index: 1000;
+            backdrop-filter: blur(4px);
             -webkit-tap-highlight-color: transparent;
         }
 
-        #prev-btn { left: 20px; }
-        #next-btn { right: 20px; }
+        #prev-btn { left: 25px; }
+        #next-btn { right: 25px; }
 
-        /* 中央タップでモード切替 */
-        #toggle-zone {
+        /* 中央タップエリア（モード切替） */
+        #tap-zone {
             position: fixed;
-            top: 20%;
+            top: 25%;
             left: 20%;
             width: 60%;
-            height: 60%;
+            height: 50%;
             z-index: 50;
         }
     </style>
 </head>
 <body>
 
-    <div id="date-display">読み込み中...</div>
-    
-    <div id="toggle-zone"></div>
+    <div id="date-display">...</div>
+    <div id="tap-zone"></div>
 
     <div class="marquee-container">
         <div id="marquee-text" class="marquee-content"></div>
@@ -128,22 +134,29 @@
 
         const dateDisplay = document.getElementById('date-display');
         const marqueeText = document.getElementById('marquee-text');
-        const body = document.body;
 
-        async function loadEntries(mode) {
-            const fileName = mode ? 'fake.md' : 'entry.md';
+        // 漢数字変換 (提供されたDiaryUtilsを簡略化)
+        function toKanjiDate(yyyymmdd) {
+            const m = parseInt(yyyymmdd.substring(4, 6));
+            const d = parseInt(yyyymmdd.substring(6, 8));
+            const kanjiMonths = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+            return `${kanjiMonths[m-1]}${d}日${isFakeMode ? '（裏）' : ''}`;
+        }
+
+        async function loadEntries() {
+            const fileName = isFakeMode ? 'fake.md' : 'entry.md';
             try {
                 const response = await fetch(BASE_URL + fileName);
                 const text = await response.text();
                 parseMarkdown(text);
-                renderCurrentEntry();
-            } catch (error) {
-                console.error('データの取得に失敗しました:', error);
-                marqueeText.innerText = "エラーが発生しました";
+                renderEntry();
+            } catch (e) {
+                marqueeText.innerText = "読み込みエラー";
             }
         }
 
         function parseMarkdown(text) {
+            // 元のコードと同様に '---' で分割し、最新が右（最後）にくるよう調整
             const entries = text.split('---').filter(e => e.trim());
             allEntries = entries.reverse().map(entry => {
                 const dateMatch = entry.match(/date:\s*(.*)/);
@@ -155,54 +168,49 @@
             });
         }
 
-        function renderCurrentEntry() {
+        function renderEntry() {
             if (allEntries.length === 0) return;
             const entry = allEntries[currentIndex];
             
-            // 日付の表示
-            dateDisplay.innerText = formatKanjiDate(entry.date);
+            dateDisplay.innerText = toKanjiDate(entry.date);
             
-            // テキストの更新（アニメーションをリセットするために一度消去して再描画）
+            // アニメーションのリセット
             marqueeText.style.animation = 'none';
-            marqueeText.offsetHeight; // reflow
+            marqueeText.offsetHeight; // 強制リフロー
             marqueeText.innerText = entry.content;
             
-            // 内容の長さに応じてスピードを調整（1文字0.3秒程度）
-            const duration = Math.max(10, entry.content.length * 0.4);
-            marqueeText.style.animation = `vertical-marquee ${duration}s linear infinite`;
+            // 速度計算（文字数に応じて可変、最低12秒）
+            const duration = Math.max(12, entry.content.length * 0.45);
+            // 0% (開始時) の位置を 15vh (画面上部) に設定しているので、すぐに読める
+            marqueeText.style.animation = `vertical-flow ${duration}s linear infinite`;
         }
 
-        function formatKanjiDate(yyyymmdd) {
-            const y = yyyymmdd.substring(0, 4);
-            const m = parseInt(yyyymmdd.substring(4, 6));
-            const d = parseInt(yyyymmdd.substring(6, 8));
-            return `${y}年${m}月${d}日${isFakeMode ? '（裏）' : ''}`;
-        }
-
-        // --- イベントハンドラ ---
-
+        // --- ナビゲーション ---
         document.getElementById('prev-btn').addEventListener('click', () => {
             if (currentIndex > 0) {
                 currentIndex--;
-                renderCurrentEntry();
+                renderEntry();
             }
         });
 
         document.getElementById('next-btn').addEventListener('click', () => {
             if (currentIndex < allEntries.length - 1) {
                 currentIndex++;
-                renderCurrentEntry();
+                renderEntry();
             }
         });
 
-        document.getElementById('toggle-zone').addEventListener('click', () => {
-            isFakeMode = !isFakeMode;
-            body.classList.toggle('fake-mode', isFakeMode);
-            loadEntries(isFakeMode);
+        // --- モード切替（中央・日付タップ） ---
+        [document.getElementById('tap-zone'), dateDisplay].forEach(el => {
+            el.addEventListener('click', () => {
+                isFakeMode = !isFakeMode;
+                document.body.classList.toggle('fake-mode', isFakeMode);
+                loadEntries();
+            });
         });
 
-        // 初期読み込み
-        loadEntries(isFakeMode);
+        // 初回実行
+        loadEntries();
     </script>
 </body>
 </html>
