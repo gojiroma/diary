@@ -124,6 +124,19 @@
 
         }
 
+        .entry-stats {
+            margin-top: 25px;
+            font-size: 1em;
+            opacity: 0;
+            letter-spacing: 0.1em;
+            text-orientation: upright;
+        }
+
+        .entry-stats:hover {
+            opacity: 1;
+            cursor: pointer;
+        }
+
         .content {
             font-size: 1.3em;
             white-space: pre-line;
@@ -299,6 +312,7 @@
                 this.setupScrollNavigation();
                 this.setupNavButtons();
                 this.setupSearch();
+                this.setupCreepyParticles();
             }
 
             static updateThemeColor(isLight) {
@@ -463,6 +477,107 @@
                 });
             }
 
+            static setupCreepyParticles() {
+                const canvas = document.createElement('canvas');
+                canvas.id = 'creepyCanvas';
+                Object.assign(canvas.style, {
+                    position: 'fixed',
+                    bottom: '0',
+                    left: '0',
+                    width: '100vw',
+                    height: '40px',
+                    pointerEvents: 'none',
+                    zIndex: '1',
+                    opacity: '0.4'
+                });
+                document.body.appendChild(canvas);
+
+                const ctx = canvas.getContext('2d');
+                let width, height;
+
+                const resize = () => {
+                    width = canvas.width = window.innerWidth;
+                    height = canvas.height = 40;
+                };
+                window.addEventListener('resize', resize);
+                resize();
+
+                const particles = [];
+                for(let i = 0; i < 60; i++) {
+                    particles.push({
+                        x: Math.random() * width,
+                        y: 0,
+                        vx: (Math.random() - 0.5) * 0.4,
+                        baseY: height - 5 - Math.random() * 20,
+                        phase: Math.random() * Math.PI * 2,
+                        phaseSpeed: 0.03 + Math.random() * 0.08,
+                        state: 'walk',
+                        timer: Math.random() * 200,
+                        size: 0.5 + Math.random() * 1.5
+                    });
+                }
+
+                const animate = () => {
+                    ctx.clearRect(0, 0, width, height);
+                    const colorStr = getComputedStyle(document.body).getPropertyValue('--text-color').trim() || '#ffffff';
+                    
+                    for(let i = 0; i < particles.length; i++) {
+                        let p = particles[i];
+                        p.timer--;
+                        if(p.timer <= 0) {
+                            if(p.state === 'walk') {
+                                p.state = 'pause';
+                                p.timer = 50 + Math.random() * 300;
+                            } else {
+                                p.state = 'walk';
+                                p.vx = (Math.random() > 0.5 ? 1 : -1) * (0.05 + Math.random() * 0.2);
+                                p.timer = 100 + Math.random() * 400;
+                            }
+                        }
+
+                        if(p.state === 'walk') {
+                            p.phase += p.phaseSpeed;
+                            p.x += p.vx;
+                            p.y = p.baseY - Math.abs(Math.sin(p.phase)) * 2.5; 
+                        } else {
+                            p.y = p.baseY - Math.abs(Math.sin(Date.now() * 0.001 + p.phase)) * 0.3; 
+                        }
+
+                        if (p.x < -30) p.x = width + 30;
+                        if (p.x > width + 30) p.x = -30;
+                    }
+
+                    ctx.strokeStyle = colorStr;
+                    ctx.lineWidth = 0.4;
+                    ctx.beginPath();
+                    for(let i = 0; i < particles.length; i++) {
+                        let p = particles[i];
+                        for(let j = i + 1; j < particles.length; j++) {
+                            let p2 = particles[j];
+                            let dx = p.x - p2.x;
+                            let dy = p.y - p2.y;
+                            if(dx * dx + dy * dy < 400) {
+                                ctx.moveTo(p.x, p.y);
+                                ctx.lineTo(p2.x, p2.y);
+                            }
+                        }
+                    }
+                    ctx.stroke();
+
+                    ctx.fillStyle = colorStr;
+                    ctx.beginPath();
+                    for(let i = 0; i < particles.length; i++) {
+                        let p = particles[i];
+                        ctx.moveTo(p.x, p.y);
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    }
+                    ctx.fill();
+
+                    requestAnimationFrame(animate);
+                };
+                animate();
+            }
+
             static setupWheelNavigation() {
                 const container = document.getElementById('diaryContainer');
                 if (!container) return;
@@ -516,6 +631,11 @@
                     const dateObj = DiaryUtils.formatJapaneseDate(yyyymmdd);
                     const contentLines = contentMatch[1].split('\n').map(line => line.replace(/^\s*\|?\s*/, '')).join('\n');
                     const dateForIcons = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
+                    
+                    const charCount = contentLines.replace(/\s+/g, '').length;
+                    const weather = this.weatherData ? this.weatherData.find(w => w.date === dateForIcons) : null;
+                    const tempInfo = weather ? `${weather.avgTemp}度` : '-';
+                    const windInfo = weather ? `毎秒${weather.avgWind}メートル` : '-';
 
                     const entryElement = document.createElement('div');
                     entryElement.className = 'diary-entry';
@@ -523,6 +643,7 @@
                     entryElement.innerHTML = `
                             <div class="date-container">
                                 <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
+                                <div class="entry-stats">平均気温 ${tempInfo} ・ 平均風速 ${windInfo} ・ ${charCount}文字</div>
                             </div>
                             <div class="content">${contentLines}</div>
                         `;
@@ -553,6 +674,8 @@
                         const colorString = `rgb(${red}, 50, ${blue})`;
 
                         dateElement.style.color = colorString;
+                        const statsElement = dateElement.closest('.diary-entry')?.querySelector('.entry-stats');
+                        if (statsElement) statsElement.style.color = colorString;
                         const contentElement = dateElement.closest('.diary-entry')?.querySelector('.content');
                         if (contentElement) {
                             contentElement.style.color = colorString;
