@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>流</title>
+    <title>流 - 両面</title>
     <style>
         @font-face {
             font-family: 'gojiromanus';
@@ -14,9 +14,9 @@
         :root {
             --bg-color: #271f2c;
             --text-color: #8fbcf2;
-            --font-size: 8svh; 
-            /* 速度（1px進むのにかかるミリ秒）さらに速く設定 */
-            --scroll-speed: 2; 
+            --fake-text: #a7be80; /* 裏日記の色 */
+            --font-size: 15svh; 
+            --scroll-speed: 5; 
         }
 
         body, html {
@@ -44,18 +44,31 @@
             position: relative;
         }
 
-        .flow-text {
+        .flow-item {
             display: inline-block;
             font-size: var(--font-size);
             line-height: 1;
             white-space: nowrap;
             position: absolute;
+            top: 100%;
             will-change: transform;
-            /* 初期位置：画面下端の外 */
-            top: 100%; 
         }
 
-        /* 右上の日付：縦書き・完全漢数字 */
+        /* 裏日記のスタイル */
+        .is-fake {
+            color: var(--fake-text);
+        }
+
+        /* 日付の境界線 */
+        .day-separator {
+            height: 2px;
+            background: currentColor;
+            opacity: 0.3;
+            margin: 20px 0;
+            width: 80%;
+            align-self: center;
+        }
+
         #date-overlay {
             position: fixed;
             top: calc(25px + env(safe-area-inset-top, 0px));
@@ -67,7 +80,12 @@
             writing-mode: vertical-rl;
             text-orientation: upright;
             pointer-events: none;
-            text-shadow: 0 0 10px var(--bg-color);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .date-update {
+            opacity: 0 !important;
+            transform: translateY(-10px);
         }
     </style>
 </head>
@@ -78,10 +96,9 @@
 
     <script>
         const BASE_URL = 'https://nikki.poet.blue/';
-        let allEntries = [];
+        let timeline = [];
         let currentIndex = 0;
 
-        // 数値を正しい漢数字に変換（1〜31対応）
         function convertToKanji(num) {
             const kanjiNums = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
             if (num === 10) return '十';
@@ -98,69 +115,94 @@
             return `${convertToKanji(m)}月${convertToKanji(d)}日`;
         }
 
+        async function fetchAndParse(file, isFake) {
+            const response = await fetch(BASE_URL + file);
+            const text = await response.text();
+            return text.split('---').filter(e => e.trim()).map(entry => {
+                const dateMatch = entry.match(/date:\s*(.*)/);
+                const contentMatch = entry.match(/content:\s*\|\s*\n([\s\S]*?)(?=\n---|\n$|$)/m);
+                return {
+                    date: dateMatch ? dateMatch[1].trim() : '00000000',
+                    content: contentMatch ? contentMatch[1].replace(/^\s*\|?\s*/gm, '').replace(/\n/g, '　').trim() : '',
+                    isFake: isFake
+                };
+            });
+        }
+
         async function init() {
             try {
-                const response = await fetch(BASE_URL + 'entry.md');
-                const text = await response.text();
-                
-                const entries = text.split('---').filter(e => e.trim());
-                allEntries = entries.map(entry => {
-                    const dateMatch = entry.match(/date:\s*(.*)/);
-                    const contentMatch = entry.match(/content:\s*\|\s*\n([\s\S]*?)(?=\n---|\n$|$)/m);
-                    return {
-                        date: dateMatch ? dateMatch[1].trim() : '20240101',
-                        content: contentMatch ? contentMatch[1].replace(/^\s*\|?\s*/gm, '').replace(/\n/g, '　').trim() : ''
-                    };
+                const [normal, fake] = await Promise.all([
+                    fetchAndParse('entry.md', false),
+                    fetchAndParse('fake.md', true)
+                ]);
+
+                // 日付ごとにグループ化
+                const groups = {};
+                [...normal, ...fake].forEach(e => {
+                    if (!groups[e.date]) groups[e.date] = [];
+                    groups[e.date].push(e);
                 });
-                allEntries.sort((a, b) => b.date.localeCompare(a.date));
-                
-                if (allEntries.length > 0) {
-                    spawn();
-                }
-            } catch (e) {
-                console.error("Fetch Error");
+
+                // 日付順（降順）にソートし、各日の「表→裏」の順でフラットなリストにする
+                const sortedDates = Object.keys(groups).sort((a, b) => b.localeCompare(a));
+                sortedDates.forEach(date => {
+                    // 同一日のなかで表が先、裏が後
+                    const dayEntries = groups[date].sort((a, b) => a.isFake - b.isFake);
+                    dayEntries.forEach((entry, index) => {
+                        // 日付の最初の要素にフラグを立てる
+                        timeline.push({ ...entry, isNewDay: index === 0 });
+                    });
+                });
+
+                if (timeline.length > 0) spawn();
+            } catch (e) { console.error(e); }
+        }
+
+        function updateDateLabel(dateStr) {
+            const el = document.getElementById('date-overlay');
+            if (el.innerText !== dateStr) {
+                el.classList.add('date-update');
+                setTimeout(() => {
+                    el.innerText = dateStr;
+                    el.classList.remove('date-update');
+                }, 300);
             }
         }
 
         function spawn() {
-            if (currentIndex >= allEntries.length) currentIndex = 0;
-            const entry = allEntries[currentIndex];
-            
-            // 日付を更新
-            document.getElementById('date-overlay').innerText = toKanjiDate(entry.date);
+            if (currentIndex >= timeline.length) currentIndex = 0;
+            const entry = timeline[currentIndex];
             
             const textEl = document.createElement('div');
-            textEl.className = 'flow-text';
-            textEl.innerText = entry.content;
+            textEl.className = `flow-item ${entry.isFake ? 'is-fake' : ''}`;
+            
+            // 日付が変わるタイミングで記号を挿入
+            const prefix = entry.isNewDay ? " ◆ " : "";
+            textEl.innerText = prefix + entry.content;
+            
             document.getElementById('flow-container').appendChild(textEl);
 
             const textHeight = textEl.offsetHeight;
             const windowHeight = window.innerHeight;
-            
-            // 総移動距離：画面の下(100%)から、テキスト末尾が画面の上(-textHeight)に消えるまで
             const totalDistance = windowHeight + textHeight;
             const speed = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--scroll-speed'));
-            const duration = totalDistance * speed;
 
-            // アニメーション実行
             const animation = textEl.animate([
                 { transform: `translateY(0px)` },
                 { transform: `translateY(-${totalDistance}px)` }
-            ], {
-                duration: duration,
-                easing: 'linear'
-            });
+            ], { duration: totalDistance * speed, easing: 'linear' });
 
-            // 重なりを防ぐため、今のテキストの「末尾」が画面に入りきったタイミングで次を出す
-            // delay = (今のテキストの全高) * speed
-            const nextSpawnDelay = textHeight * speed;
+            // 日付更新タイミング（画面下から少し上がった位置）
+            setTimeout(() => {
+                updateDateLabel(toKanjiDate(entry.date));
+            }, 100 * speed);
 
+            // 次の読み込み（重なり防止：今のテキストが完全に通り過ぎるのを待つ）
             setTimeout(() => {
                 currentIndex++;
                 spawn();
-            }, nextSpawnDelay);
+            }, (textHeight + 20) * speed); 
 
-            // 画面外に消えたら削除
             animation.onfinish = () => textEl.remove();
         }
 
