@@ -14,9 +14,9 @@
         :root {
             --bg-color: #271f2c;
             --text-color: #8fbcf2;
-            --font-size: 14svh; 
-            /* 速度設定（小さいほど速い） */
-            --scroll-speed: 8; 
+            --font-size: 15svh; 
+            /* 速度（1px進むのにかかるミリ秒）さらに速く設定 */
+            --scroll-speed: 5; 
         }
 
         body, html {
@@ -51,22 +51,23 @@
             white-space: nowrap;
             position: absolute;
             will-change: transform;
-            /* 開始位置：画面の下端の外側 */
+            /* 初期位置：画面下端の外 */
             top: 100%; 
         }
 
-        /* 右上の日付：完全な漢数字・縦書き */
+        /* 右上の日付：縦書き・完全漢数字 */
         #date-overlay {
             position: fixed;
-            top: calc(20px + env(safe-area-inset-top, 0px));
+            top: calc(25px + env(safe-area-inset-top, 0px));
             right: calc(20px + env(safe-area-inset-right, 0px));
             font-size: 1.4rem;
             z-index: 100;
             opacity: 0.8;
-            letter-spacing: 0.4em;
+            letter-spacing: 0.3em;
             writing-mode: vertical-rl;
             text-orientation: upright;
             pointer-events: none;
+            text-shadow: 0 0 10px var(--bg-color);
         }
     </style>
 </head>
@@ -80,14 +81,15 @@
         let allEntries = [];
         let currentIndex = 0;
 
-        // 数値を完全な漢数字に変換（1〜31対応）
+        // 数値を正しい漢数字に変換（1〜31対応）
         function convertToKanji(num) {
             const kanjiNums = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
             if (num === 10) return '十';
             if (num < 10) return kanjiNums[num];
             if (num < 20) return '十' + kanjiNums[num % 10];
-            if (num % 10 === 0) return kanjiNums[Math.floor(num / 10)] + '十';
-            return kanjiNums[Math.floor(num / 10)] + '十' + kanjiNums[num % 10];
+            const ten = Math.floor(num / 10);
+            const one = num % 10;
+            return (ten === 1 ? '' : kanjiNums[ten]) + '十' + kanjiNums[one];
         }
 
         function toKanjiDate(yyyymmdd) {
@@ -110,11 +112,9 @@
                         content: contentMatch ? contentMatch[1].replace(/^\s*\|?\s*/gm, '').replace(/\n/g, '　').trim() : ''
                     };
                 });
-                // 最新順にソート
                 allEntries.sort((a, b) => b.date.localeCompare(a.date));
                 
                 if (allEntries.length > 0) {
-                    // 途切れさせないため、少しの間隔で次を呼ぶループを開始
                     spawn();
                 }
             } catch (e) {
@@ -126,6 +126,9 @@
             if (currentIndex >= allEntries.length) currentIndex = 0;
             const entry = allEntries[currentIndex];
             
+            // 日付を更新
+            document.getElementById('date-overlay').innerText = toKanjiDate(entry.date);
+            
             const textEl = document.createElement('div');
             textEl.className = 'flow-text';
             textEl.innerText = entry.content;
@@ -133,11 +136,13 @@
 
             const textHeight = textEl.offsetHeight;
             const windowHeight = window.innerHeight;
-            // 移動距離：画面下端(100%)から、テキストが画面上端(-textHeight)に消えるまで
+            
+            // 総移動距離：画面の下(100%)から、テキスト末尾が画面の上(-textHeight)に消えるまで
             const totalDistance = windowHeight + textHeight;
-            const duration = totalDistance * varSpeed();
+            const speed = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--scroll-speed'));
+            const duration = totalDistance * speed;
 
-            // アニメーション
+            // アニメーション実行
             const animation = textEl.animate([
                 { transform: `translateY(0px)` },
                 { transform: `translateY(-${totalDistance}px)` }
@@ -146,24 +151,17 @@
                 easing: 'linear'
             });
 
-            // 画面の半分くらいまで進んだら次のエントリを表示（重なりを生む）
-            const nextSpawnDelay = (windowHeight * 0.7) * varSpeed();
+            // 重なりを防ぐため、今のテキストの「末尾」が画面に入りきったタイミングで次を出す
+            // delay = (今のテキストの全高) * speed
+            const nextSpawnDelay = textHeight * speed;
+
             setTimeout(() => {
                 currentIndex++;
                 spawn();
             }, nextSpawnDelay);
 
-            // このエントリが画面中央に来たタイミングで日付を更新
-            setTimeout(() => {
-                const dateOverlay = document.getElementById('date-overlay');
-                dateOverlay.innerText = toKanjiDate(entry.date);
-            }, (windowHeight / 2) * varSpeed());
-
+            // 画面外に消えたら削除
             animation.onfinish = () => textEl.remove();
-        }
-
-        function varSpeed() {
-            return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--scroll-speed'));
         }
 
         init();
