@@ -9,17 +9,18 @@
 
     <title>誤字ロマの日記</title>
     <link rel="icon" href="diary-icon.png" type="image/png">
+    <link rel="preload" href="gojiromanus.otf" as="font" type="font/otf" crossorigin>
     <style>
         @font-face {
             font-family: 'gojiromanus';
             src: url('gojiromanus.otf') format('opentype');
             font-weight: normal;
             font-style: normal;
-            font-display: swap;
+            font-display: block;
         }
 
         * {
-            font-family: 'gojiromanus', sans-serif ;
+            font-family: 'gojiromanus', serif;
         }
 
         :root {
@@ -54,7 +55,7 @@
         }
 
         body.fake-mode {
-            --bg-color: #295067;
+            --bg-color: #19100d;
             --text-color: #a7be80;
         }
 
@@ -69,7 +70,7 @@
             box-sizing: border-box;
             margin-top: 20px;
             transition: background-color var(--transition);
-            outline:none;
+            outline: none;
         }
 
         .diary-container {
@@ -82,7 +83,7 @@
             padding: 0;
             overflow-x: auto;
             scrollbar-width: none;
-            outline:none;
+            outline: none;
         }
 
         .diary-container::-webkit-scrollbar {
@@ -132,7 +133,7 @@
         }
 
         .diary-entry.active {
-            filter: drop-shadow(0px 0px 1 px var(--text-color));
+            filter: brightness(1.4);
         }
 
         .highlight {
@@ -143,14 +144,87 @@
             margin: 0 -2px;
         }
 
+        .nav-button {
+            position: fixed;
+            bottom: 3vh;
+            width: 60px;
+            height: 60px;
+            background: var(--text-color);
+            color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            border-radius: 50%;
+            cursor: pointer;
+            user-select: none;
+            z-index: 1000;
+            opacity: 0.1;
+            transition: opacity 0.3s;
+        }
 
+        .nav-button:hover,
+        .nav-button:active {
+            opacity: 0.6;
+        }
+
+        .nav-left {
+            left: 3vw;
+        }
+
+        .nav-right {
+            right: 3vw;
+        }
+
+        .search-input {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15rem;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            text-align: center;
+            opacity: 0.2;
+            transition: opacity 0.3s, width 0.3s;
+            z-index: 1000;
+            outline: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-input:focus,
+        .search-input:hover {
+            opacity: 0.8;
+            width: 20rem;
+        }
+
+        .search-input::placeholder {
+            color: var(--border-color);
+        }
+
+        .search-highlight {
+            background-color: #ffeb3b;
+            color: #000;
+            border-radius: 2px;
+            padding: 0 2px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
 <body>
+    <input type="text" id="searchInput" class="search-input" placeholder="検索" autocomplete="off">
+
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
     </div>
+
+    <div class="nav-button nav-left" id="navLeft">＜</div>
+    <div class="nav-button nav-right" id="navRight">＞</div>
 
     <script>
         class DiaryUtils {
@@ -189,7 +263,7 @@
                 const date = new Date(year, month - 1, day);
                 const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
                 return {
-                    short: `${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日　${DiaryApp.isFakeMode ? '裏日記' : dayOfWeek+"曜日"}`,
+                    short: `${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日　${DiaryApp.isFakeMode ? '裏日記' : dayOfWeek + "曜日"}`,
                     long: `${this.toJapaneseEra(year)}${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${DiaryApp.isFakeMode ? '裏' : dayOfWeek}）`
                 };
             }
@@ -208,6 +282,8 @@
             static audioContext = null;
             static lastKeyTime = null;
             static wheelTimeout = null;
+            static lastSpaceTime = null;
+            static isProgrammaticScroll = false;
 
             static async init() {
                 await this.loadWeatherData();
@@ -215,8 +291,14 @@
                 this.preloadFakeEntries();
                 this.setupEventListeners();
                 this.updateThemeColor(!this.isFakeMode);
+                
+                await document.fonts.ready;
                 document.body.style.opacity = 1;
+                
                 this.setupWheelNavigation();
+                this.setupScrollNavigation();
+                this.setupNavButtons();
+                this.setupSearch();
             }
 
             static updateThemeColor(isLight) {
@@ -242,7 +324,145 @@
                 });
             }
 
-            
+
+            static setupScrollNavigation() {
+                const container = document.getElementById('diaryContainer');
+                if (!container) return;
+
+                let isScrolling;
+                container.addEventListener('scroll', () => {
+                    if (this.isProgrammaticScroll) return;
+
+                    window.clearTimeout(isScrolling);
+                    isScrolling = setTimeout(() => {
+                        this.updateActiveEntryOnScroll();
+                    }, 150);
+                }, { passive: true });
+            }
+
+            static updateActiveEntryOnScroll() {
+                const container = document.getElementById('diaryContainer');
+                const entries = Array.from(document.querySelectorAll('.diary-entry')).filter(e => e.style.display !== 'none');
+                if (entries.length === 0) return;
+
+                const containerRight = container.scrollLeft + container.clientWidth;
+
+                let closestEntry = entries[0];
+                let minDistance = Infinity;
+
+                entries.forEach(entry => {
+                    const entryRight = entry.offsetLeft + entry.clientWidth;
+                    const distance = Math.abs(containerRight - entryRight);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestEntry = entry;
+                    }
+                });
+
+                if (closestEntry) {
+                    const newHash = closestEntry.id;
+                    if (window.location.hash !== '#' + newHash) {
+                        window.location.hash = newHash;
+                    }
+                }
+            }
+
+            static setupNavButtons() {
+                const navLeft = document.getElementById('navLeft');
+                const navRight = document.getElementById('navRight');
+
+                let holdInterval;
+                const startHold = (key) => {
+                    const simulateKey = () => this.handleKeyDown({ key, preventDefault: () => { } });
+                    simulateKey();
+                    holdInterval = setInterval(simulateKey, 50);
+                };
+
+                const stopHold = () => {
+                    clearInterval(holdInterval);
+                };
+
+                const bindEvents = (btn, key) => {
+                    if (!btn) return;
+                    btn.addEventListener('mousedown', () => startHold(key));
+                    btn.addEventListener('touchstart', (e) => { e.preventDefault(); startHold(key); });
+                    btn.addEventListener('mouseup', stopHold);
+                    btn.addEventListener('mouseleave', stopHold);
+                    btn.addEventListener('touchend', stopHold);
+                    btn.addEventListener('contextmenu', e => e.preventDefault());
+                };
+
+                bindEvents(navLeft, 'ArrowLeft');
+                bindEvents(navRight, 'ArrowRight');
+            }
+
+            static setupSearch() {
+                const searchInput = document.getElementById('searchInput');
+                if (!searchInput) return;
+
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.replace(/　/g, ' ').trim();
+
+                    let matchedDateHash = null;
+                    if (/^\d{6}$/.test(query)) {
+                        matchedDateHash = '20' + query;
+                    } else if (/^\d{8}$/.test(query)) {
+                        matchedDateHash = query;
+                    }
+
+                    const entries = document.querySelectorAll('.diary-entry');
+
+                    entries.forEach((entryElement) => {
+                        const yyyymmdd = entryElement.id;
+                        const entryData = this.diaryEntries.find(entry => entry.yyyymmdd === yyyymmdd);
+                        if (!entryData) return;
+
+                        const contentElement = entryElement.querySelector('.content');
+
+                        if (!query) {
+                            entryElement.style.display = '';
+                            contentElement.innerHTML = entryData.content;
+                            return;
+                        }
+
+                        let isDateMatch = (matchedDateHash && yyyymmdd === matchedDateHash);
+                        const textMatchIndex = entryData.content.toLowerCase().indexOf(query.toLowerCase());
+
+                        if (isDateMatch) {
+                            entryElement.style.display = '';
+                            contentElement.innerHTML = entryData.content;
+                        } else if (textMatchIndex !== -1) {
+                            entryElement.style.display = '';
+                            const escapedQuery = DiaryUtils.escapeRegExp(query);
+                            const regex = new RegExp(`(${escapedQuery})`, 'gi');
+                            contentElement.innerHTML = entryData.content.replace(regex, '<span class="search-highlight">$1</span>');
+                        } else {
+                            entryElement.style.display = 'none';
+                        }
+                    });
+
+                    if (matchedDateHash && document.getElementById(matchedDateHash)) {
+                        window.location.hash = matchedDateHash;
+                    }
+                });
+
+                const clearSearch = () => {
+                    if (searchInput.value !== '') {
+                        searchInput.value = '';
+                        searchInput.dispatchEvent(new Event('input'));
+                    }
+                };
+
+                searchInput.addEventListener('click', clearSearch);
+                searchInput.addEventListener('focus', clearSearch);
+                searchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        clearSearch();
+                        searchInput.blur();
+                    }
+                });
+            }
+
             static setupWheelNavigation() {
                 const container = document.getElementById('diaryContainer');
                 if (!container) return;
@@ -401,29 +621,28 @@
 
                 const minFreq = 320;
                 const maxFreq = 3200;
+                const visibleEntries = Array.from(entries).filter(e => e.style.display !== 'none');
+
+                let targetEntry = null;
 
                 if (hash && hash.match(/^\d{8}$/)) {
                     const entry = document.getElementById(hash);
-                    if (entry) {
-                        entry.classList.add('active');
-                        const entryRight = entry.offsetLeft + entry.clientWidth;
-                        const containerWidth = document.getElementById('diaryContainer').clientWidth;
-                        this.scrollTo(document.getElementById('diaryContainer'), entryRight - containerWidth);
-
-                        const content = entry.querySelector('.content');
-                        const charCount = content.textContent.length;
-                        const freq = Math.max(minFreq, Math.min(maxFreq, minFreq + charCount * 0.5));
-                        this.playBeep(freq, 0.3);
-                        this.triggerHapticFeedback(charCount);
+                    if (entry && entry.style.display !== 'none') {
+                        targetEntry = entry;
                     }
-                } else if (entries.length > 0) {
-                    const latestEntry = entries[0];
-                    latestEntry.classList.add('active');
-                    const entryRight = latestEntry.offsetLeft + latestEntry.clientWidth;
+                }
+
+                if (!targetEntry && visibleEntries.length > 0) {
+                    targetEntry = visibleEntries[0];
+                }
+
+                if (targetEntry) {
+                    targetEntry.classList.add('active');
+                    const entryRight = targetEntry.offsetLeft + targetEntry.clientWidth;
                     const containerWidth = document.getElementById('diaryContainer').clientWidth;
                     this.scrollTo(document.getElementById('diaryContainer'), entryRight - containerWidth);
 
-                    const content = latestEntry.querySelector('.content');
+                    const content = targetEntry.querySelector('.content');
                     const charCount = content.textContent.length;
                     const freq = Math.max(minFreq, Math.min(maxFreq, minFreq + charCount * 0.5));
                     this.playBeep(freq, 0.3);
@@ -432,10 +651,14 @@
             }
 
             static scrollTo(element, targetPosition) {
+                this.isProgrammaticScroll = true;
                 element.scrollLeft = targetPosition;
+                setTimeout(() => { this.isProgrammaticScroll = false; }, 200);
             }
 
             static handleKeyDown(e) {
+                if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
                 if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
                     e.preventDefault();
 
@@ -462,22 +685,29 @@
                     window.location.hash = '';
 
                 } else if (e.key === ' ') {
+                    if (this.lastSpaceTime && Date.now() - this.lastSpaceTime < 100) return;
+                    this.lastSpaceTime = Date.now();
                     this.toggleFakeMode();
                 }
             }
 
             static getCurrentEntry() {
                 const hash = window.location.hash.substring(1);
-                if (hash && hash.match(/^\d{8}$/)) return document.getElementById(hash);
+                if (hash && hash.match(/^\d{8}$/)) {
+                    const el = document.getElementById(hash);
+                    if (el && el.style.display !== 'none') return el;
+                }
 
-                const entries = document.querySelectorAll('.diary-entry');
+                const entries = Array.from(document.querySelectorAll('.diary-entry')).filter(e => e.style.display !== 'none');
                 return entries.length > 0 ? entries[0] : null;
             }
 
             static getAdjacentEntry(currentEntry, direction) {
-                const entries = document.querySelectorAll('.diary-entry');
-                const currentIndex = Array.from(entries).indexOf(currentEntry);
-                if (currentIndex === -1) return null;
+                const entries = Array.from(document.querySelectorAll('.diary-entry')).filter(e => e.style.display !== 'none');
+                let currentIndex = entries.indexOf(currentEntry);
+                if (currentIndex === -1) {
+                    return entries.length > 0 ? entries[0] : null;
+                }
 
                 const nextIndex = currentIndex + direction;
                 if (nextIndex < 0 || nextIndex >= entries.length) return null;
@@ -485,7 +715,10 @@
             }
 
             static updatePageTitle(count) {
-                document.title = `誤字ロマの${count}日間`;
+                const titleStr = `誤字ロマの${count}日間`;
+                document.title = titleStr;
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) searchInput.placeholder = titleStr;
             }
 
             static async playBeep(frequency = 440, duration = 0.1) {
@@ -549,17 +782,17 @@
                     window.location.href = 'write.html';
                 }
             }
-            else if (event.key==='c' || event.key==='C') {
+            else if (event.key === 'c' || event.key === 'C') {
                 if (!['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
                     event.preventDefault();
                     window.location.href = 'classic.html';
                 }
-            } else if (event.key==='h' || event.key==='H') {
+            } else if (event.key === 'h' || event.key === 'H') {
                 if (!['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
                     event.preventDefault();
                     window.location.href = 'horizontal.html';
                 }
-            } else if (event.key==='e' || event.key==='E') {
+            } else if (event.key === 'e' || event.key === 'E') {
                 if (!['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
                     event.preventDefault();
                     window.location.href = 'en.html';
