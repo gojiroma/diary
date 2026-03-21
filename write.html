@@ -15,6 +15,7 @@
         ::-webkit-scrollbar {
             display: none;
         }
+
         @font-face {
             font-family: 'gojiromanus';
             src: url('gojiromanus.otf') format('opentype');
@@ -22,6 +23,7 @@
             font-style: normal;
             font-display: swap;
         }
+
         body {
             background-color: #121212;
             color: #ffe4da;
@@ -271,6 +273,24 @@
 
         dateDisplay.textContent = formatJapaneseDate(currentDate);
 
+        // localStorageから復元
+        function restoreFromLocalStorage() {
+            const savedRealDiary = localStorage.getItem(`realDiary_${currentDateKeyMd}`);
+            const savedFakeDiary = localStorage.getItem(`fakeDiary_${currentDateKeyMd}`);
+            realDiary.value = savedRealDiary || '';
+            fakeDiary.value = savedFakeDiary || '';
+        }
+
+        // localStorageに保存
+        function saveToLocalStorage() {
+            localStorage.setItem(`realDiary_${currentDateKeyMd}`, realDiary.value);
+            localStorage.setItem(`fakeDiary_${currentDateKeyMd}`, fakeDiary.value);
+        }
+
+        // 入力イベントでlocalStorageに保存
+        realDiary.addEventListener('input', saveToLocalStorage);
+        fakeDiary.addEventListener('input', saveToLocalStorage);
+
         async function fetchGitHubFile(fileName, token) {
             try {
                 const apiUrl = `https://api.github.com/repos/gojiroma/diary/contents/${fileName}`;
@@ -306,31 +326,43 @@
                     ]);
                 }
 
+                // localStorageから現在の入力内容を取得
+                const savedRealDiary = localStorage.getItem(`realDiary_${dateKeyMd}`);
+                const savedFakeDiary = localStorage.getItem(`fakeDiary_${dateKeyMd}`);
+
+                // GitHubからデータを取得
                 const diaryEntry = extractEntry(cachedDiaryContent, dateKeyMd, dateKeyCsv);
                 const fakeEntry = extractEntry(cachedFakeContent, dateKeyMd, dateKeyCsv);
 
-                realDiary.value = diaryEntry || '';
-                fakeDiary.value = fakeEntry || '';
+                // localStorageの内容を優先し、GitHubの内容は空欄の場合のみ使用
+                realDiary.value = savedRealDiary !== null ? savedRealDiary : (diaryEntry || '');
+                fakeDiary.value = savedFakeDiary !== null ? savedFakeDiary : (fakeEntry || '');
             } catch (error) {
                 console.error('Error loading entries:', error);
                 showToast('エントリの読み込みに失敗しました。', true);
             }
         }
 
-        prevDayButton.addEventListener('click', () => {
-            currentDate.setDate(currentDate.getDate() - 1);
+        function moveToDate(date) {
+            saveToLocalStorage();
+            currentDate = date;
             currentDateKeyMd = formatDateKey(currentDate, true);
             currentDateKeyCsv = formatDateKey(currentDate, false);
             dateDisplay.textContent = formatJapaneseDate(currentDate);
+            restoreFromLocalStorage();
             loadEntriesForDate(currentDate);
+        }
+
+        prevDayButton.addEventListener('click', () => {
+            const newDate = new Date(currentDate);
+            newDate.setDate(newDate.getDate() - 1);
+            moveToDate(newDate);
         });
 
         nextDayButton.addEventListener('click', () => {
-            currentDate.setDate(currentDate.getDate() + 1);
-            currentDateKeyMd = formatDateKey(currentDate, true);
-            currentDateKeyCsv = formatDateKey(currentDate, false);
-            dateDisplay.textContent = formatJapaneseDate(currentDate);
-            loadEntriesForDate(currentDate);
+            const newDate = new Date(currentDate);
+            newDate.setDate(newDate.getDate() + 1);
+            moveToDate(newDate);
         });
 
         async function updateMultipleFiles(token, dateKeyMd, dateKeyCsv, realContent, fakeContent) {
@@ -399,11 +431,6 @@
                 localStorage.setItem('githubToken', userToken);
             }
 
-            if (!realDiary.value.trim() && !fakeDiary.value.trim()) {
-                showToast('本文が空です。', true);
-                return;
-            }
-
             try {
                 let newEntryContent = cachedDiaryContent || '';
                 let newFakeContent = cachedFakeContent || '';
@@ -411,6 +438,7 @@
                 const entryRegexMd = new RegExp(`date:\\s*${currentDateKeyMd}[\\s\\S]*?(?=---|$)`);
                 const entryRegexCsv = new RegExp(`date:\\s*${currentDateKeyCsv.replace(/\//g, '\\/')}[\\s\\S]*?(?=---|$)`);
 
+                // 本日記の更新
                 if (realDiary.value.trim()) {
                     if (entryRegexMd.test(newEntryContent)) {
                         newEntryContent = newEntryContent.replace(entryRegexMd, `date: ${currentDateKeyMd}\ncontent: |\n  ${realDiary.value.replace(/\n/g, '\n  ')}\n---`);
@@ -419,8 +447,13 @@
                     } else {
                         newEntryContent += `\n---\ndate: ${currentDateKeyMd}\ncontent: |\n  ${realDiary.value.replace(/\n/g, '\n  ')}\n---`;
                     }
+                } else {
+                    // 本日記が空の場合、該当エントリを削除
+                    newEntryContent = newEntryContent.replace(entryRegexMd, '');
+                    newEntryContent = newEntryContent.replace(entryRegexCsv, '');
                 }
 
+                // 偽日記の更新
                 if (fakeDiary.value.trim()) {
                     if (entryRegexMd.test(newFakeContent)) {
                         newFakeContent = newFakeContent.replace(entryRegexMd, `date: ${currentDateKeyMd}\ncontent: |\n  ${fakeDiary.value.replace(/\n/g, '\n  ')}\n---`);
@@ -429,6 +462,10 @@
                     } else {
                         newFakeContent += `\n---\ndate: ${currentDateKeyMd}\ncontent: |\n  ${fakeDiary.value.replace(/\n/g, '\n  ')}\n---`;
                     }
+                } else {
+                    // 偽日記が空の場合、該当エントリを削除
+                    newFakeContent = newFakeContent.replace(entryRegexMd, '');
+                    newFakeContent = newFakeContent.replace(entryRegexCsv, '');
                 }
 
                 const success = await updateMultipleFiles(token, currentDateKeyMd, currentDateKeyCsv, newEntryContent, newFakeContent);
@@ -448,9 +485,9 @@
                 if (userToken) localStorage.setItem('githubToken', userToken);
                 else { showToast('GitHub Tokenが必要です。', true); return; }
             }
+            restoreFromLocalStorage();
             loadEntriesForDate(currentDate);
         });
-
 
         // コピーボタンのクリックイベント
         document.querySelectorAll('.copy-button').forEach(button => {
