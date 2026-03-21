@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>誤字ロマの日記 - Vertical Flow</title>
+    <title>誤字ロマの時流 - Gojiroma Timeflow</title>
     <style>
         @font-face {
             font-family: 'gojiromanus';
@@ -14,11 +14,10 @@
         :root {
             --bg-color: #271f2c;
             --text-color: #8fbcf2;
-            --fake-bg: #19100d;
-            --fake-text: #a7be80;
-            /* スマホで1列が際立つサイズ */
-            --font-size: 14svh; 
-            --transition: 0.5s ease;
+            /* 画面の高さに基づく巨大なフォントサイズ */
+            --font-size: 16svh; 
+            /* スクロール速度（1ピクセルあたりのミリ秒。小さいほど速い） */
+            --scroll-speed: 50; 
         }
 
         body, html {
@@ -29,33 +28,15 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: 'gojiromanus', serif;
-            overflow: hidden;
-            transition: background-color var(--transition), color var(--transition);
+            /* ユーザーによるスクロールを禁止 */
+            overflow: hidden; 
+            transition: background-color 1s ease;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
-        body.fake-mode {
-            background-color: var(--fake-bg);
-            color: var(--fake-text);
-        }
-
-        /* 日付ヘッダー */
-        #date-display {
-            position: fixed;
-            top: calc(10px + env(safe-area-inset-top, 0px));
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.1rem;
-            z-index: 100;
-            opacity: 0.8;
-            letter-spacing: 0.1em;
-            text-align: center;
-            width: 100%;
-            cursor: pointer;
-            writing-mode: horizontal-tb;
-        }
-
-        /* 縦書きコンテナ */
-        .marquee-container {
+        /* メインの表示コンテナ */
+        #flow-container {
             width: 100%;
             height: 100%;
             display: flex;
@@ -63,157 +44,190 @@
             align-items: center;
             writing-mode: vertical-rl;
             text-orientation: upright;
-            padding: 0;
-            box-sizing: border-box;
+            position: relative;
         }
 
-        /* アニメーションの開始位置を画面中央(50svh)に設定 */
-        .marquee-content {
+        /* 現在流れているテキストエレメント */
+        .flow-text {
             display: inline-block;
             font-size: var(--font-size);
             line-height: 1.1;
             white-space: nowrap;
-            /* 初期位置を中央に */
-            transform: translateY(50svh); 
-            animation: vertical-flow 25s linear infinite;
+            position: absolute;
+            /* 初期位置は画面の下 */
+            top: 100svh; 
+            will-change: transform;
         }
 
-        /* 0%から20%まで中央に留まり、そこから上へ流れる */
-        @keyframes vertical-flow {
-            0% { transform: translateY(50svh); }
-            20% { transform: translateY(50svh); } 
-            100% { transform: translateY(-100%); }
-        }
-
-        /* ナビゲーション */
-        .nav-btn {
+        /* 日付表示（画面上部に固定） */
+        #date-overlay {
             position: fixed;
-            bottom: calc(30px + env(safe-area-inset-bottom, 0px));
-            width: 65px;
-            height: 65px;
-            background: rgba(255, 255, 255, 0.05);
-            color: inherit;
-            border: 1px solid currentColor;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.8rem;
-            z-index: 1000;
-            backdrop-filter: blur(4px);
-            -webkit-tap-highlight-color: transparent;
+            top: calc(15px + env(safe-area-inset-top, 0px));
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            z-index: 100;
+            opacity: 0.5;
+            letter-spacing: 0.2em;
+            text-align: center;
+            width: 100%;
+            writing-mode: horizontal-tb;
+            transition: opacity 0.5s ease;
         }
 
-        #prev-btn { left: 25px; }
-        #next-btn { right: 25px; }
-
-        /* 中央タップエリア（モード切替） */
-        #tap-zone {
+        /* 読み込み中などのメッセージ */
+        #status-overlay {
             position: fixed;
-            top: 20svh;
-            left: 20svw;
-            width: 60svw;
-            height: 60svh;
-            z-index: 50;
+            bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            z-index: 90;
+            opacity: 0.3;
+            writing-mode: horizontal-tb;
         }
+
     </style>
 </head>
 <body>
 
-    <div id="date-display">...</div>
-    <div id="tap-zone"></div>
+    <div id="date-overlay"></div>
+    <div id="status-overlay"></div>
 
-    <div class="marquee-container">
-        <div id="marquee-text" class="marquee-content"></div>
-    </div>
-
-    <div id="prev-btn" class="nav-btn">＜</div>
-    <div id="next-btn" class="nav-btn">＞</div>
+    <div id="flow-container">
+        </div>
 
     <script>
         const BASE_URL = 'https://nikki.poet.blue/';
         let allEntries = [];
-        let currentIndex = 0;
-        let isFakeMode = false;
+        let currentIndex = 0; // 最新（インデックス0）から開始
+        let currentAnimation = null;
 
-        const dateDisplay = document.getElementById('date-display');
-        const marqueeText = document.getElementById('marquee-text');
+        const container = document.getElementById('flow-container');
+        const dateOverlay = document.getElementById('date-overlay');
+        const statusOverlay = document.getElementById('status-overlay');
 
         // 漢数字変換
         function toKanjiDate(yyyymmdd) {
+            const y = yyyymmdd.substring(0, 4);
             const m = parseInt(yyyymmdd.substring(4, 6));
             const d = parseInt(yyyymmdd.substring(6, 8));
             const kanjiMonths = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
-            return `${kanjiMonths[m-1]}${d}日${isFakeMode ? '（裏）' : ''}`;
+            return `${y}年 ${kanjiMonths[m-1]}${d}日`;
         }
 
-        async function loadEntries() {
-            const fileName = isFakeMode ? 'fake.md' : 'entry.md';
-            try {
-                const response = await fetch(BASE_URL + fileName);
-                const text = await response.text();
-                parseMarkdown(text);
-                renderEntry();
-            } catch (e) {
-                marqueeText.innerText = "読み込みエラー";
-            }
-        }
-
+        // Markdownパース
         function parseMarkdown(text) {
+            // '---' で分割。fetch元が最新順か過去順か不明だが、
+            // 日付順にソートする。
             const entries = text.split('---').filter(e => e.trim());
-            allEntries = entries.reverse().map(entry => {
+            const parsed = entries.map(entry => {
                 const dateMatch = entry.match(/date:\s*(.*)/);
                 const contentMatch = entry.match(/content:\s*\|\s*\n([\s\S]*?)(?=\n---|\n$|$)/m);
                 return {
-                    date: dateMatch ? dateMatch[1].trim() : '',
+                    date: dateMatch ? dateMatch[1].trim() : '00000000',
+                    // 改行を全角スペースに変換し、1行にする
                     content: contentMatch ? contentMatch[1].replace(/^\s*\|?\s*/gm, '').replace(/\n/g, '　').trim() : ''
                 };
             });
+
+            // 日付の降順（最新が上）にソート
+            parsed.sort((a, b) => b.date.localeCompare(a.date));
+            return parsed;
         }
 
-        function renderEntry() {
-            if (allEntries.length === 0) return;
+        // 初期データの読み込み
+        async function initApp() {
+            statusOverlay.innerText = "時流を読み込み中...";
+            try {
+                const response = await fetch(BASE_URL + 'entry.md');
+                const text = await response.text();
+                allEntries = parseMarkdown(text);
+                
+                if (allEntries.length > 0) {
+                    statusOverlay.innerText = "";
+                    startFlow();
+                } else {
+                    statusOverlay.innerText = "エントリが見つかりません。";
+                }
+            } catch (e) {
+                console.error(e);
+                statusOverlay.innerText = "通信エラー";
+            }
+        }
+
+        // 指定されたインデックスのエントリを流す
+        function startFlow() {
+            if (currentIndex >= allEntries.length) {
+                // すべて読み終わったら最初に戻る（ループ）か、停止するか。
+                // ここではループさせる。
+                currentIndex = 0; 
+            }
+
             const entry = allEntries[currentIndex];
             
-            dateDisplay.innerText = toKanjiDate(entry.date);
+            // 日付表示を更新
+            dateOverlay.innerText = toKanjiDate(entry.date);
+            dateOverlay.style.opacity = "0.8";
+
+            // 新しいテキストエレメントを作成
+            const textEl = document.createElement('div');
+            textEl.className = 'flow-text';
+            textEl.innerText = entry.content;
+            container.appendChild(textEl);
+
+            // アニメーションの設定
+            const textHeight = textEl.offsetHeight;
+            const windowHeight = window.innerHeight;
             
-            // アニメーションのリセット
-            marqueeText.style.animation = 'none';
-            marqueeText.offsetHeight; // 強制リフロー
-            marqueeText.innerText = entry.content;
+            // 総移動距離：画面の下端から、テキスト全体が画面上端に消えるまで
+            const totalDistance = windowHeight + textHeight;
             
-            // 速度計算（文字数に応じて可変、最低15秒）
-            const duration = Math.max(15, entry.content.length * 0.5);
-            // 0% (開始時) の位置を 50svh (画面中央) に設定
-            marqueeText.style.animation = `vertical-flow ${duration}s linear infinite`;
+            // 移動にかかる時間（ミリ秒）。速度設定に基づく
+            const duration = totalDistance * parseInt(getComputedStyle(document.documentElement).getPropertyValue('--scroll-speed'));
+
+            // Web Animations API を使用
+            currentAnimation = textEl.animate([
+                // 開始：画面中央付近
+                { transform: `translateY(0px)` }, 
+                // 終了：画面上方に消える
+                { transform: `translateY(-${totalDistance}px)` }
+            ], {
+                duration: duration,
+                easing: 'linear',
+                // 開始を画面中央にするために、delayを負の値にする（トリッキーだが有効）
+                // これにより、アニメーションが途中の状態から始まる
+                delay: -(duration * (windowHeight / 2 / totalDistance)) 
+            });
+
+            // アニメーション終了時の処理（次のエントリへ）
+            currentAnimation.onfinish = () => {
+                // 古いテキストを削除
+                textEl.remove();
+                // インデックスを進める（過去へ遡る）
+                currentIndex++;
+                // 次のフローを開始
+                startFlow();
+            };
+            
+            // フェードイン用のタイマー
+            setTimeout(() => {
+                 dateOverlay.style.opacity = "0.3";
+            }, 3000);
         }
 
-        // --- ナビゲーション ---
-        document.getElementById('prev-btn').addEventListener('click', () => {
-            if (currentIndex > 0) {
-                currentIndex--;
-                renderEntry();
+        // 開始
+        initApp();
+
+        // 画面サイズ変更時にアニメーションをリセット
+        window.addEventListener('resize', () => {
+            if (currentAnimation) {
+                currentAnimation.cancel();
+                container.innerHTML = ""; // コンテナをクリア
+                startFlow(); // 現在のインデックスで再開
             }
         });
-
-        document.getElementById('next-btn').addEventListener('click', () => {
-            if (currentIndex < allEntries.length - 1) {
-                currentIndex++;
-                renderEntry();
-            }
-        });
-
-        // --- モード切替 ---
-        [document.getElementById('tap-zone'), dateDisplay].forEach(el => {
-            el.addEventListener('click', () => {
-                isFakeMode = !isFakeMode;
-                document.body.classList.toggle('fake-mode', isFakeMode);
-                loadEntries();
-            });
-        });
-
-        // 初回実行
-        loadEntries();
+        
     </script>
 </body>
 </html>
