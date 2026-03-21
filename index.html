@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#120808">
+    <meta name="theme-color" content="#271f2c">
 
     <title>誤字ロマの日記</title>
     <link rel="icon" href="diary-icon.png" type="image/png">
@@ -320,15 +320,8 @@
                 const metaThemeColor = document.querySelector('meta[name="theme-color"]');
                 if (!metaThemeColor) return;
 
-                if (isLight) {
-                    const hue = Math.floor(Math.random() * 60) + 200;
-                    const lightness = 95;
-                    metaThemeColor.setAttribute('content', `hsl(${hue}, 80%, ${lightness}%)`);
-                } else {
-                    const hue = Math.floor(Math.random() * 60) + 200;
-                    const lightness = 20;
-                    metaThemeColor.setAttribute('content', `hsl(${hue}, 70%, ${lightness}%)`);
-                }
+                const bgColor = isLight ? '#271f2c' : '#19100d';
+                metaThemeColor.setAttribute('content', bgColor);
             }
 
             static parseCSV(csv) {
