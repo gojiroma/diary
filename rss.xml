@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Mon, 23 Mar 2026 21:13:56 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 24 Mar 2026 16:54:02 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>三月二十四日（火）</title>
+      <link>https://nikki.poet.blue#20260324</link>
+      <pubDate>Tue, 24 Mar 2026 16:54:02 +0900</pubDate>
+      <description>コーヒーマシンの前で悲しい気持ちになったことが2回ある。1回目は、ある夏のお出かけのとき、コンビニでアイスコーヒーを求めて駆け込んだ日のこと。何も考えないで手に取ったのはホットコーヒーのカップで、それでアイスコーヒーのボタンを押したら、少量の濃いめのホットコーヒーだけが出てきた。ガーッと飲み干し、別のコンビニでスジャータのスムージーを買い直し、帰りのグリーン車でキリマンジャロを飲み直したのをよく覚えている。私がコンビニ店員だったら、アイスコーヒー容器に移し替えて出すと思う。そして、今日がその2回目だ。温泉の湯上りに、ミニアイスと一緒にホットを一杯飲もうとしていた。湯上り直後でぼーっとしていたせいか、カップを取らずに100円を入れ、すぐに「ホット」を押してしまった。取消の機能はなく、気づいたときにはドアがロックされていた。昨晩の投信急落のことを考えるとどうでもよくなり、「百円なんてくれてやれ！」と心の中でつぶやき、コップを入れ直して100円を投じた。△散髪成功！</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260324</guid>
+      <media:content url="https://nc.poet.blue/20260324" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>三月二十三日（月）</title>
       <link>https://nikki.poet.blue#20260323</link>
