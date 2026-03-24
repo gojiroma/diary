@@ -338,7 +338,6 @@
                 await document.fonts.ready;
                 document.body.style.opacity = 1;
 
-                this.setupWheelNavigation();
                 this.setupScrollNavigation();
                 this.setupNavButtons();
                 this.setupSearch();
@@ -630,16 +629,6 @@
                 }
             }
 
-            static triggerHapticFeedback(charCount) {
-                const minVibrate = 8;
-                const maxVibrate = 160;
-
-                const duration = Math.max(minVibrate, Math.min(maxVibrate, minVibrate + charCount));
-
-                if ('vibrate' in navigator) {
-                    navigator.vibrate(duration);
-                }
-            }
 
             static scrollToEntryFromHash() {
                 const hash = window.location.hash.substring(1);
@@ -674,7 +663,6 @@
                     const charCount = content.textContent.length;
                     const freq = Math.max(minFreq, Math.min(maxFreq, minFreq + charCount * 0.5));
                     this.playBeep(freq, 0.3);
-                    this.triggerHapticFeedback(charCount);
                 }
             }
 
