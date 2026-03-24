@@ -338,6 +338,7 @@
                 await document.fonts.ready;
                 document.body.style.opacity = 1;
 
+                this.setupWheelNavigation();
                 this.setupScrollNavigation();
                 this.setupNavButtons();
                 this.setupSearch();
@@ -800,6 +801,15 @@
                 });
             }
         }
+        // body クリックでハッシュを消して最新のエントリに飛ぶ
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.content') || e.target.closest('input')) {
+                return; // .content または input 内をクリックした場合は何もしない
+            }
+            window.location.hash = '';
+            DiaryApp.scrollToEntryFromHash();
+        });
+
         // カスタムカーソルの初期化
         function initCustomCursor() {
             const cursor = document.getElementById('customCursor');
@@ -894,14 +904,6 @@
 
         // 初期化
         initCustomCursor();
-        // body クリックでハッシュを消して最新のエントリに飛ぶ
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('.content') || e.target.closest('input')) {
-                return; // .content または input 内をクリックした場合は何もしない
-            }
-            window.location.hash = '';
-            DiaryApp.scrollToEntryFromHash();
-        });
 
         DiaryApp.init();
         document.addEventListener('keydown', function (event) {
