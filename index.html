@@ -39,6 +39,7 @@
         }
 
         body {
+            cursor: none;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -52,6 +53,30 @@
             transition: opacity var(--transition), background-color var(--transition);
             background-color: var(--bg-color);
             color: var(--text-color);
+        }
+
+        .custom-cursor {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            font-family: 'gojiromanus', serif;
+            font-size: 32px;
+            color: var(--text-color);
+            pointer-events: none;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-mode {
+            font-size: 12px;
+            position: absolute;
+            top: -20px;
+            text-align: center;
+            width: 100%;
         }
 
         body.fake-mode {
@@ -117,7 +142,6 @@
         }
 
         .date {
-            cursor: pointer;
             white-space: nowrap;
             position: relative;
             font-size: calc(1.3em + var(--wind-level) * .1em);
@@ -134,7 +158,6 @@
 
         .entry-stats:hover {
             opacity: 1;
-            cursor: pointer;
         }
 
         .content {
@@ -169,11 +192,14 @@
             align-items: center;
             font-size: 2rem;
             border-radius: 50%;
-            cursor: pointer;
             user-select: none;
             z-index: 1000;
             opacity: 0;
             transition: opacity 0.3s;
+        }
+
+        .search-input::placeholder {
+            color: rgb(83, 255, 212) !important;
         }
 
         .nav-button:hover,
@@ -202,7 +228,6 @@
             color: var(--text-color);
             font-size: 1.2rem;
             text-align: center;
-            opacity: .6;
             transition: opacity 0.3s, width 0.3s;
             z-index: 1000;
             outline: none;
@@ -211,7 +236,6 @@
 
         .search-input:focus,
         .search-input:hover {
-            opacity: 1;
             width: 20rem;
             border: 1px solid var(--border-color);
         }
@@ -231,6 +255,11 @@
 </head>
 
 <body>
+    <div class="custom-cursor" id="customCursor">
+        <span id="cursorLetter">D</span>
+        <div class="cursor-mode" id="cursorMode">Daily</div>
+    </div>
+
     <input type="text" id="searchInput" class="search-input" placeholder="検索" autocomplete="off">
 
     <div class="diary-container-wrapper">
@@ -305,15 +334,14 @@
                 this.preloadFakeEntries();
                 this.setupEventListeners();
                 this.updateThemeColor(!this.isFakeMode);
-                
+
                 await document.fonts.ready;
                 document.body.style.opacity = 1;
-                
-                this.setupWheelNavigation();
+
                 this.setupScrollNavigation();
                 this.setupNavButtons();
                 this.setupSearch();
-                this.setupCreepyParticles();
+                initCustomCursor();
             }
 
             static updateThemeColor(isLight) {
@@ -471,124 +499,6 @@
                 });
             }
 
-            static setupCreepyParticles() {
-                const canvas = document.createElement('canvas');
-                canvas.id = 'creepyCanvas';
-                Object.assign(canvas.style, {
-                    position: 'fixed',
-                    bottom: '0',
-                    left: '0',
-                    width: '100vw',
-                    height: '40px',
-                    pointerEvents: 'none',
-                    zIndex: '1',
-                    opacity: '0.4'
-                });
-                document.body.appendChild(canvas);
-
-                const ctx = canvas.getContext('2d');
-                let width, height;
-
-                const resize = () => {
-                    width = canvas.width = window.innerWidth;
-                    height = canvas.height = 40;
-                };
-                window.addEventListener('resize', resize);
-                resize();
-
-                const particles = [];
-                for(let i = 0; i < 60; i++) {
-                    particles.push({
-                        x: Math.random() * width,
-                        y: 0,
-                        vx: (Math.random() - 0.5) * 0.4,
-                        baseY: height - 5 - Math.random() * 20,
-                        phase: Math.random() * Math.PI * 2,
-                        phaseSpeed: 0.03 + Math.random() * 0.08,
-                        state: 'walk',
-                        timer: Math.random() * 200,
-                        size: 0.5 + Math.random() * 1.5
-                    });
-                }
-
-                const animate = () => {
-                    ctx.clearRect(0, 0, width, height);
-                    const colorStr = getComputedStyle(document.body).getPropertyValue('--text-color').trim() || '#ffffff';
-                    
-                    for(let i = 0; i < particles.length; i++) {
-                        let p = particles[i];
-                        p.timer--;
-                        if(p.timer <= 0) {
-                            if(p.state === 'walk') {
-                                p.state = 'pause';
-                                p.timer = 50 + Math.random() * 300;
-                            } else {
-                                p.state = 'walk';
-                                p.vx = (Math.random() > 0.5 ? 1 : -1) * (0.05 + Math.random() * 0.2);
-                                p.timer = 100 + Math.random() * 400;
-                            }
-                        }
-
-                        if(p.state === 'walk') {
-                            p.phase += p.phaseSpeed;
-                            p.x += p.vx;
-                            p.y = p.baseY - Math.abs(Math.sin(p.phase)) * 2.5; 
-                        } else {
-                            p.y = p.baseY - Math.abs(Math.sin(Date.now() * 0.001 + p.phase)) * 0.3; 
-                        }
-
-                        if (p.x < -30) p.x = width + 30;
-                        if (p.x > width + 30) p.x = -30;
-                    }
-
-                    ctx.strokeStyle = colorStr;
-                    ctx.lineWidth = 0.4;
-                    ctx.beginPath();
-                    for(let i = 0; i < particles.length; i++) {
-                        let p = particles[i];
-                        for(let j = i + 1; j < particles.length; j++) {
-                            let p2 = particles[j];
-                            let dx = p.x - p2.x;
-                            let dy = p.y - p2.y;
-                            if(dx * dx + dy * dy < 400) {
-                                ctx.moveTo(p.x, p.y);
-                                ctx.lineTo(p2.x, p2.y);
-                            }
-                        }
-                    }
-                    ctx.stroke();
-
-                    ctx.fillStyle = colorStr;
-                    ctx.beginPath();
-                    for(let i = 0; i < particles.length; i++) {
-                        let p = particles[i];
-                        ctx.moveTo(p.x, p.y);
-                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    }
-                    ctx.fill();
-
-                    requestAnimationFrame(animate);
-                };
-                animate();
-            }
-
-            static setupWheelNavigation() {
-                const container = document.getElementById('diaryContainer');
-                if (!container) return;
-
-                container.addEventListener('wheel', (e) => {
-                    e.preventDefault();
-                    const currentEntry = this.getCurrentEntry();
-                    if (!currentEntry) return;
-
-                    const direction = e.deltaY > 0 ? 1 : -1;
-                    const nextEntry = this.getAdjacentEntry(currentEntry, direction);
-                    if (nextEntry) {
-                        window.location.hash = nextEntry.id;
-                        this.scrollToEntryFromHash();
-                    }
-                }, { passive: false });
-            }
 
             static setupEventListeners() {
                 document.addEventListener('keydown', e => this.handleKeyDown(e));
@@ -625,7 +535,7 @@
                     const dateObj = DiaryUtils.formatJapaneseDate(yyyymmdd);
                     const contentLines = contentMatch[1].split('\n').map(line => line.replace(/^\s*\|?\s*/, '')).join('\n');
                     const dateForIcons = `${yyyymmdd.substring(0, 4)}/${yyyymmdd.substring(4, 6)}/${yyyymmdd.substring(6, 8)}`;
-                    
+
                     const charCount = contentLines.replace(/\s+/g, '').length;
                     const weather = this.weatherData ? this.weatherData.find(w => w.date === dateForIcons) : null;
                     const tempInfo = weather ? `${weather.avgTemp}度` : '-';
@@ -890,6 +800,108 @@
                 });
             }
         }
+        // カスタムカーソルの初期化
+        function initCustomCursor() {
+            const cursor = document.getElementById('customCursor');
+            const cursorLetter = document.getElementById('cursorLetter');
+            const cursorMode = document.getElementById('cursorMode');
+
+            let currentMode = 'daily'; // 'daily', 'weekly', 'monthly'
+
+            // マウスの動きを追跡
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = `${e.clientX}px`;
+                cursor.style.top = `${e.clientY}px`;
+            });
+
+            // 中央クリックでモードをトグル
+            document.addEventListener('mousedown', (e) => {
+                if (e.button === 1) { // 中央クリック
+                    e.preventDefault();
+                    toggleCursorMode();
+                }
+            });
+
+            // モードをトグルする関数
+            function toggleCursorMode() {
+                if (currentMode === 'daily') {
+                    currentMode = 'weekly';
+                    cursorLetter.textContent = 'W';
+                    cursorMode.textContent = 'Weekly';
+                } else if (currentMode === 'weekly') {
+                    currentMode = 'monthly';
+                    cursorLetter.textContent = 'M';
+                    cursorMode.textContent = 'Monthly';
+                } else {
+                    currentMode = 'daily';
+                    cursorLetter.textContent = 'D';
+                    cursorMode.textContent = 'Daily';
+                }
+            }
+
+            // 週単位で移動する関数
+            function getWeeklyAdjacentEntry(currentEntry, direction) {
+                const entries = Array.from(document.querySelectorAll('.diary-entry')).filter(e => e.style.display !== 'none');
+                const currentIndex = entries.indexOf(currentEntry);
+                if (currentIndex === -1) return null;
+
+                const nextIndex = currentIndex + (direction * 7);
+                if (nextIndex < 0 || nextIndex >= entries.length) return null;
+                return entries[nextIndex];
+            }
+
+            // 月単位で移動する関数
+            function getMonthlyAdjacentEntry(currentEntry, direction) {
+                const entries = Array.from(document.querySelectorAll('.diary-entry')).filter(e => e.style.display !== 'none');
+                const currentIndex = entries.indexOf(currentEntry);
+                if (currentIndex === -1) return null;
+
+                const currentDate = new Date(currentEntry.id.substring(0, 4), currentEntry.id.substring(4, 6) - 1, currentEntry.id.substring(6, 8));
+                let targetMonth = new Date(currentDate);
+                targetMonth.setMonth(currentDate.getMonth() + direction);
+
+                // 同じ月内の同じ日に移動
+                const targetDay = targetMonth.getDate() === currentDate.getDate() ? targetMonth.getDate() : 1;
+                const targetDateStr = `${targetMonth.getFullYear()}${String(targetMonth.getMonth() + 1).padStart(2, '0')}${String(targetDay).padStart(2, '0')}`;
+                const targetEntry = document.getElementById(targetDateStr);
+
+                return targetEntry && targetEntry.style.display !== 'none' ? targetEntry : null;
+            }
+
+            // ホイール操作で現在のモードに応じて移動
+            document.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const currentEntry = DiaryApp.getCurrentEntry();
+                if (!currentEntry) return;
+
+                const direction = e.deltaY > 0 ? 1 : -1;
+                let nextEntry = null;
+
+                if (currentMode === 'daily') {
+                    nextEntry = DiaryApp.getAdjacentEntry(currentEntry, direction);
+                } else if (currentMode === 'weekly') {
+                    nextEntry = getWeeklyAdjacentEntry(currentEntry, direction);
+                } else if (currentMode === 'monthly') {
+                    nextEntry = getMonthlyAdjacentEntry(currentEntry, direction);
+                }
+
+                if (nextEntry) {
+                    window.location.hash = nextEntry.id;
+                    DiaryApp.scrollToEntryFromHash();
+                }
+            }, { passive: false });
+        }
+
+        // 初期化
+        initCustomCursor();
+        // body クリックでハッシュを消して最新のエントリに飛ぶ
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.content') || e.target.closest('input')) {
+                return; // .content または input 内をクリックした場合は何もしない
+            }
+            window.location.hash = '';
+            DiaryApp.scrollToEntryFromHash();
+        });
 
         DiaryApp.init();
         document.addEventListener('keydown', function (event) {
