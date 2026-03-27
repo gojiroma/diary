@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON to CSV Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            line-height: 1.5;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .output {
+            margin-top: 20px;
+        }
+
+        .output textarea {
+            height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>JSON to CSV Converter</h1>
+        <p>左のテキストエリアにJSONデータを入力すると、右のテキストエリアに自動的にCSV形式が表示されます。</p>
+
+        <textarea id="jsonInput"
+            placeholder='例: { "activities-steps": [{"dateTime": "2026-03-01", "value": "9355"}, ...] }'></textarea>
+
+        <div class="output">
+            <textarea id="csvOutput" readonly placeholder="CSV形式のデータがここに表示されます"></textarea>
+        </div>
+    </div>
+
+    <script>
+        const jsonInput = document.getElementById('jsonInput');
+        const csvOutput = document.getElementById('csvOutput');
+
+        jsonInput.addEventListener('input', function () {
+            try {
+                const input = jsonInput.value.trim();
+                if (input) {
+                    const data = JSON.parse(input);
+                    if (data["activities-steps"]) {
+                        const lines = data["activities-steps"].map(item => `${item.dateTime},${item.value}`);
+                        csvOutput.value = lines.join('\n');
+                    } else {
+                        csvOutput.value = "有効なJSON形式ではありません。'activities-steps'配列が必要です。";
+                    }
+                } else {
+                    csvOutput.value = "";
+                }
+            } catch (e) {
+                csvOutput.value = "JSON形式が正しくありません。" + e.message;
+            }
+        });
+    </script>
+</body>
+
+</html>
