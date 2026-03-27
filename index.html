@@ -22,7 +22,6 @@
             --bg-color: #07111f;
             --bg-color-2: #0a1a2f;
             --panel-color: rgba(8, 19, 36, 0.82);
-            --panel-border: rgba(188, 224, 255, 0.38);
             --text-color: #f4f8ff;
             --muted-text: #c3d4eb;
             --accent-color: #9cd2ff;
@@ -104,14 +103,15 @@
             font-family: 'gojiromanus', serif;
             position: fixed;
             top: 18px;
+            width:30vh;
             right: 20px;
             z-index: 20;
             user-select: none;
             cursor: pointer;
-
+            outline: none;
+            border: none;
             padding: 10px 14px;
             border-radius: 999px;
-            border: 1px solid var(--panel-border);
             background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
             backdrop-filter: blur(10px);
             box-shadow: var(--shadow-soft);
@@ -167,7 +167,6 @@
             height: 100%;
             padding: 18px 12px;
             border-radius: 20px;
-            border: 1px solid transparent;
 
             background:
                 linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
@@ -191,7 +190,6 @@
             position: absolute;
             inset: 8px;
             border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
             pointer-events: none;
         }
 
@@ -287,7 +285,6 @@
             height: 100%;
             padding: 10px 14px 8px;
             border-radius: 999px;
-            border: 1px solid var(--panel-border);
             background:
                 linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)),
                 rgba(7, 17, 31, 0.45);
@@ -432,7 +429,6 @@
             border-radius: 10px;
             background: rgba(10, 20, 36, 0.88);
             color: var(--accent-strong);
-            border: 1px solid var(--panel-border);
             font-size: 14px;
             white-space: nowrap;
             opacity: 0;
@@ -606,7 +602,6 @@
             opacity: 0;
             transition: opacity 0.3s;
             backdrop-filter: blur(10px);
-            border: 1px solid var(--panel-border);
         }
 
         .nav-button:hover {
