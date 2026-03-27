@@ -20,16 +20,16 @@
 
         :root {
             --bg-color: #07111f;
-            --bg-color-2: #0d1b30;
-            --panel-color: rgba(10, 23, 41, 0.68);
-            --panel-border: rgba(163, 204, 255, 0.18);
-            --text-color: #e7edf8;
-            --muted-text: #a8b8cf;
-            --accent-color: #8ec5ff;
-            --accent-strong: #d4ecff;
-            --highlight-color: rgba(142, 197, 255, 0.16);
-            --timeline-line: rgba(180, 214, 255, 0.18);
-            --timeline-glow: 0 0 12px rgba(142, 197, 255, 0.22);
+            --bg-color-2: #0a1a2f;
+            --panel-color: rgba(8, 19, 36, 0.82);
+            --panel-border: rgba(188, 224, 255, 0.38);
+            --text-color: #f4f8ff;
+            --muted-text: #c3d4eb;
+            --accent-color: #9cd2ff;
+            --accent-strong: #e8f4ff;
+            --highlight-color: rgba(156, 210, 255, 0.28);
+            --timeline-line: rgba(202, 228, 255, 0.34);
+            --timeline-glow: 0 0 14px rgba(156, 210, 255, 0.34);
             --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.28);
             --shadow-panel: 0 20px 60px rgba(0, 0, 0, 0.35);
             --icon-size: 40px;
@@ -41,16 +41,16 @@
 
         body.fake-mode {
             --bg-color: #14080e;
-            --bg-color-2: #2a0f1b;
-            --panel-color: rgba(34, 10, 20, 0.66);
-            --panel-border: rgba(255, 168, 196, 0.18);
-            --text-color: #ffeef4;
-            --muted-text: #e5b9c8;
-            --accent-color: #ff8ab3;
-            --accent-strong: #ffd3e3;
-            --highlight-color: rgba(255, 138, 179, 0.16);
-            --timeline-line: rgba(255, 198, 220, 0.20);
-            --timeline-glow: 0 0 14px rgba(255, 138, 179, 0.24);
+            --bg-color-2: #240a15;
+            --panel-color: rgba(40, 9, 22, 0.82);
+            --panel-border: rgba(255, 193, 216, 0.38);
+            --text-color: #fff4f8;
+            --muted-text: #f0cfdb;
+            --accent-color: #ff9ec2;
+            --accent-strong: #ffe4ee;
+            --highlight-color: rgba(255, 158, 194, 0.28);
+            --timeline-line: rgba(255, 214, 229, 0.36);
+            --timeline-glow: 0 0 14px rgba(255, 158, 194, 0.34);
         }
 
         * {
@@ -196,7 +196,7 @@
         }
 
         .diary-entry:not(.active) {
-            opacity: 0.42;
+            opacity: 0.58;
             transform: scale(0.985);
         }
 
@@ -272,7 +272,7 @@
             position: fixed;
             left: 0;
             right: 0;
-            bottom: 8px;
+            bottom: calc(8px + env(safe-area-inset-bottom, 0px));
             height: 62px;
             padding: 0 8%;
             z-index: 15;
@@ -383,7 +383,7 @@
             position: absolute;
             left: 1px;
             right: 1px;
-            height: 2px;
+            height: 3px;
             border-radius: 999px;
             background:
                 linear-gradient(90deg, rgba(255, 226, 137, 0.6), rgba(255, 196, 84, 0.95), rgba(255, 226, 137, 0.6));
@@ -545,7 +545,7 @@
 
             .diary-container-wrapper {
                 max-width: 100%;
-                height: 76vh;
+                height: 74vh;
             }
 
             .diary-container {
@@ -565,7 +565,7 @@
             }
 
             .timeline-container {
-                height: 50px;
+                height: 56px;
                 padding: 0 4%;
             }
 
@@ -575,6 +575,13 @@
 
             .timeline-bar {
                 width: 6px;
+            }
+
+            .steps-bar {
+                height: 4px;
+                left: 0;
+                right: 0;
+                box-shadow: 0 0 12px rgba(255, 208, 92, 0.5);
             }
 
             .tooltip {
@@ -970,22 +977,48 @@
                 const navRight = document.getElementById("navRight");
 
                 if (navLeft && navRight) {
-                    const handleButtonClick = (direction) => {
-                        const currentEntry = this.getCurrentEntry();
-                        if (currentEntry) {
-                            const nextEntry = this.getAdjacentEntry(currentEntry, direction);
-                            if (nextEntry) {
-                                window.location.hash = nextEntry.id;
-                                this.scrollToEntryFromHash();
+                    const setupHoldNavigation = (button, direction) => {
+                        const initialDelayMs = 300;
+                        const repeatIntervalMs = 16;
+                        let repeatDelayTimer = null;
+                        let repeatIntervalTimer = null;
+
+                        const clearRepeat = () => {
+                            if (repeatDelayTimer) {
+                                clearTimeout(repeatDelayTimer);
+                                repeatDelayTimer = null;
                             }
-                        }
+                            if (repeatIntervalTimer) {
+                                clearInterval(repeatIntervalTimer);
+                                repeatIntervalTimer = null;
+                            }
+                            document.removeEventListener("pointerup", clearRepeat);
+                            document.removeEventListener("pointercancel", clearRepeat);
+                        };
+
+                        button.addEventListener("pointerdown", (e) => {
+                            if (!e.isPrimary) return;
+                            if (e.pointerType === "mouse" && e.button !== 0) return;
+                            e.preventDefault();
+
+                            clearRepeat();
+                            this.navigateByDirection(direction);
+
+                            repeatDelayTimer = setTimeout(() => {
+                                repeatIntervalTimer = setInterval(() => {
+                                    this.navigateByDirection(direction, true);
+                                }, repeatIntervalMs);
+                            }, initialDelayMs);
+
+                            document.addEventListener("pointerup", clearRepeat);
+                            document.addEventListener("pointercancel", clearRepeat);
+                        });
+
+                        button.addEventListener("pointerleave", clearRepeat);
                     };
 
-                    navLeft.addEventListener("click", () => handleButtonClick(-1));
-                    navRight.addEventListener("click", () => handleButtonClick(1));
-
-                    navLeft.addEventListener("touchstart", (e) => { e.preventDefault(); handleButtonClick(-1); });
-                    navRight.addEventListener("touchstart", (e) => { e.preventDefault(); handleButtonClick(1); });
+                    setupHoldNavigation(navLeft, -1);
+                    setupHoldNavigation(navRight, 1);
                 }
             }
             static handleWheelNavigation(e) {
@@ -993,6 +1026,27 @@
                 if (!currentEntry) return;
 
                 const direction = e.deltaY > 0 ? 1 : -1;
+                const nextEntry = this.getAdjacentEntry(currentEntry, direction);
+                if (nextEntry) {
+                    window.location.hash = nextEntry.id;
+                    this.scrollToEntryFromHash();
+                }
+            }
+            static navigateByDirection(direction, useKeyboardRepeatGate = false) {
+                const currentEntry = this.getCurrentEntry();
+                if (!currentEntry) return;
+
+                if (useKeyboardRepeatGate) {
+                    const content = currentEntry.querySelector(".content");
+                    const charCount = content?.textContent?.length ?? 0;
+
+                    const baseThreshold = 82;
+                    const maxThreshold = 370;
+                    const threshold = Math.min(baseThreshold + (charCount * 0.5), maxThreshold);
+                    if (this.lastKeyTime && Date.now() - this.lastKeyTime < threshold) return;
+                    this.lastKeyTime = Date.now();
+                }
+
                 const nextEntry = this.getAdjacentEntry(currentEntry, direction);
                 if (nextEntry) {
                     window.location.hash = nextEntry.id;
@@ -1190,7 +1244,8 @@
                     stepsBar.className = "steps-bar";
 
                     const stepsRatio = stepsEntry ? Math.min(1, stepsEntry.steps / maxSteps) : 0;
-                    stepsBar.style.bottom = `calc(${stepsRatio * 100}% + 2px)`;
+                    const stepsBottomPercent = Math.min(96, Math.max(4, stepsRatio * 100));
+                    stepsBar.style.bottom = `${stepsBottomPercent}%`;
                     if (stepsEntry && stepsEntry.steps >= 10000) {
                         stepsBar.style.background = "linear-gradient(90deg, rgba(148, 244, 182, 0.7), rgba(68, 214, 148, 0.98), rgba(148, 244, 182, 0.7))";
                         stepsBar.style.boxShadow = "0 0 12px rgba(68, 214, 148, 0.55)";
@@ -1371,25 +1426,8 @@
             static handleKeyDown(e) {
                 if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
                     e.preventDefault();
-
-                    const currentEntry = this.getCurrentEntry();
-                    if (!currentEntry) return;
-
-                    const content = currentEntry.querySelector(".content");
-                    const charCount = content.textContent.length;
-
-                    const baseThreshold = 82;
-                    const maxThreshold = 370;
-                    const threshold = Math.min(baseThreshold + (charCount * 0.5), maxThreshold);
-                    if (this.lastKeyTime && Date.now() - this.lastKeyTime < threshold) return;
-                    this.lastKeyTime = Date.now();
-
                     const direction = e.key === "ArrowLeft" ? -1 : 1;
-                    const nextEntry = this.getAdjacentEntry(currentEntry, direction);
-                    if (nextEntry) {
-                        window.location.hash = nextEntry.id;
-                        this.scrollToEntryFromHash();
-                    }
+                    this.navigateByDirection(direction, true);
                 } else if (e.key === "Escape" && window.location.hash) {
                     window.location.hash = "";
                 } else if (e.key === " ") {
