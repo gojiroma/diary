@@ -127,6 +127,15 @@
                 border-color var(--transition);
         }
 
+        .page-title:focus-visible {
+            outline: 2px solid color-mix(in srgb, var(--accent-color) 72%, white 28%);
+            outline-offset: 3px;
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.16),
+                0 0 24px color-mix(in srgb, var(--accent-color) 58%, white 42%),
+                var(--shadow-soft);
+        }
+
 
         .diary-container-wrapper {
             width: 100%;
@@ -227,6 +236,13 @@
             white-space: nowrap;
             color: var(--accent-strong);
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
+        }
+
+        .date:focus-visible {
+            outline: 2px solid color-mix(in srgb, var(--accent-color) 72%, white 28%);
+            outline-offset: 2px;
+            border-radius: 6px;
+            text-shadow: 0 0 14px rgba(255, 255, 255, 0.16);
         }
 
         .days-ago {
@@ -600,13 +616,29 @@
             user-select: none;
             z-index: 1000;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition:
+                opacity 0.25s ease,
+                transform 0.18s ease,
+                box-shadow 0.25s ease,
+                background-color 0.25s ease;
             backdrop-filter: blur(10px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
         }
 
         .nav-button:hover {
-            opacity: 0.8;
+            opacity: 0.84;
             transform: scale(1.05);
+            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+        }
+
+        .nav-button:active {
+            transform: scale(0.98);
+        }
+
+        .nav-button:focus-visible {
+            opacity: 0.92;
+            outline: 2px solid color-mix(in srgb, var(--accent-color) 68%, white 32%);
+            outline-offset: 3px;
         }
 
         .nav-left {
@@ -639,13 +671,28 @@
         input {
             outline: none;
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+                scroll-behavior: auto !important;
+            }
+
+            .date:hover,
+            .timeline-bar:hover .timeline-bar-inner,
+            .timeline-bar.selected .timeline-bar-inner {
+                animation: none !important;
+            }
+        }
     </style>
 </head>
 
 <body>
     <input type="text" id="pageTitleInput" class="page-title" autocomplete="off" placeholder="誤字ロマの日記">
-    <div class="nav-button nav-left" id="navLeft">＜</div>
-    <div class="nav-button nav-right" id="navRight">＞</div>
+    <div class="nav-button nav-left" id="navLeft" role="button" tabindex="0" aria-label="前の日記へ移動">＜</div>
+    <div class="nav-button nav-right" id="navRight" role="button" tabindex="0" aria-label="次の日記へ移動">＞</div>
 
     <div class="diary-container-wrapper">
         <div class="diary-container" id="diaryContainer"></div>
@@ -1010,6 +1057,12 @@
                         });
 
                         button.addEventListener("pointerleave", clearRepeat);
+                        button.addEventListener("keydown", (e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                this.navigateByDirection(direction);
+                            }
+                        });
                     };
 
                     setupHoldNavigation(navLeft, -1);
@@ -1128,7 +1181,7 @@
 
                     entryElement.innerHTML = `
                         <div class="date-container">
-                            <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
+                            <div class="date" data-yyyymmdd="${yyyymmdd}" tabindex="0" role="button" aria-label="${dateObj.short}の日記へ移動">${dateObj.short}</div>
                             <div class="days-ago">${DiaryUtils.calculateDaysAgo(yyyymmdd)}</div>
                             ${this.getIconsForDate(dateForIcons)}
                         </div>
@@ -1206,6 +1259,12 @@
                 document.querySelectorAll(".date").forEach(dateElement => {
                     dateElement.addEventListener("click", () => {
                         window.location.hash = dateElement.getAttribute("data-yyyymmdd");
+                    });
+                    dateElement.addEventListener("keydown", (e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            window.location.hash = dateElement.getAttribute("data-yyyymmdd");
+                        }
                     });
                 });
             }
