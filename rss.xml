@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 28 Mar 2026 07:47:45 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 28 Mar 2026 17:03:26 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>三月二十八日（土）</title>
+      <link>https://nikki.poet.blue#20260328</link>
+      <pubDate>Sat, 28 Mar 2026 17:03:26 +0900</pubDate>
+      <description>「松露」「鶯ボール」「つくば納豆」のような「手のひら全開サイズ」「渋いロゴ」「大手メーカーが作らないお菓子」が好きだ。といっても今挙げたくらいのものしか認知しておらず、最近新たな出会いがない。15〜20を超えたらZINEにしたい。△毎年桜を見に行っている公園に訪問。野良猫の数を確認。ダイドーの自販機で「いちご杏仁」を購入。一度飲めば十分かな。△久々に求人とか、就職支援機関のサイトを見たら気分が悪くなってしまった。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260328</guid>
+      <media:content url="https://nc.poet.blue/20260328" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>三月二十七日（金）</title>
       <link>https://nikki.poet.blue#20260327</link>
