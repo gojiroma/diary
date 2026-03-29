@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>誤字ロマの日記</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --accent-color: #6699cc;
+            --entry-width: 280px;
+            --transition: 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: "Hiragino Sans", "Meiryo", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .page-title {
+            font-family: "Hiragino Sans", "Meiryo", sans-serif;
+            position: fixed;
+            top: 12px;
+            right: 20px;
+            z-index: 10;
+            font-size: 18px;
+            color: var(--accent-color);
+            user-select: none;
+        }
+
+        .diary-container-wrapper {
+            width: 100%;
+            max-width: 100%;
+            height: 85vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .diary-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            gap: 16px;
+            padding: 0 20px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            touch-action: pan-y;
+        }
+
+        .diary-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .diary-entry {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            white-space: normal;
+
+            flex: 0 0 var(--entry-width);
+            height: 90%;
+            padding: 16px 12px;
+            scroll-snap-align: start;
+
+            background-color: var(--bg-color);
+            border: 1px solid #eeeeee;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .date-container {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .date {
+            font-size: 1.4em;
+            line-height: 1.6;
+            color: var(--accent-color);
+            cursor: pointer;
+        }
+
+        .content {
+            font-size: 1.1em;
+            line-height: 1.8;
+            letter-spacing: 0.08em;
+            white-space: pre-line;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            max-inline-size: 100%;
+            overflow: hidden;
+        }
+
+        .nav-button {
+            position: fixed;
+            bottom: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            border-radius: 50%;
+            user-select: none;
+            z-index: 100;
+            cursor: pointer;
+        }
+
+        .nav-button:hover {
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .nav-button:active {
+            transform: scale(0.95);
+        }
+
+        .nav-left {
+            left: 16px;
+        }
+
+        .nav-right {
+            right: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-title">誤字ロマの日記</div>
+    <div class="nav-button nav-left" id="navLeft">＜</div>
+    <div class="nav-button nav-right" id="navRight">＞</div>
+
+    <div class="diary-container-wrapper">
+        <div class="diary-container" id="diaryContainer"></div>
+    </div>
+
+    <script>
+        class DiaryUtils {
+            static toKanjiNumber(num) {
+                const kanjiNumbers = ["〇", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
+                return num.toString().split("").map(digit => kanjiNumbers[digit]).join("");
+            }
+
+            static toKanjiMonth(month) {
+                const kanjiMonths = [
+                    "一月", "二月", "三月", "四月", "五月", "六月",
+                    "七月", "八月", "九月", "十月", "十一月", "十二月"
+                ];
+                return kanjiMonths[month - 1];
+            }
+
+            static toKanjiDay(day) {
+                const days = [
+                    "", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十",
+                    "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九",
+                    "二十", "二十一", "二十二", "二十三", "二十四", "二十五",
+                    "二十六", "二十七", "二十八", "二十九", "三十", "三十一"
+                ];
+                return days[day];
+            }
+
+            static toJapaneseEra(year) {
+                const eras = [
+                    { name: "令和", start: 2019, offset: 2018 },
+                    { name: "平成", start: 1989, offset: 1988 },
+                    { name: "昭和", start: 1926, offset: 1925 },
+                    { name: "大正", start: 1912, offset: 1911 },
+                    { name: "明治", start: 1868, offset: 1867 }
+                ];
+                const era = eras.find(e => year >= e.start);
+                const eraYear = year - era.offset;
+                return `${era.name}${this.toKanjiNumber(eraYear)}年`;
+            }
+
+            static formatJapaneseDate(yyyymmdd) {
+                const year = parseInt(yyyymmdd.substring(0, 4), 10);
+                const month = parseInt(yyyymmdd.substring(4, 6), 10);
+                const day = parseInt(yyyymmdd.substring(6, 8), 10);
+                const date = new Date(year, month - 1, day);
+                const dayOfWeek = ["日", "月", "火", "水", "木", "金", "土"][date.getDay()] + "曜";
+
+                return {
+                    short: `${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日 ${dayOfWeek}`,
+                    long: `${this.toJapaneseEra(year)}${this.toKanjiMonth(month)}${this.toKanjiDay(day)}日（${dayOfWeek}）`
+                };
+            }
+        }
+
+        class DiaryApp {
+            static diaryEntries = [];
+
+            static async init() {
+                await this.loadDiaryEntries();
+                this.setupEventListeners();
+                this.setupNavButtons();
+            }
+
+            static async loadDiaryEntries() {
+                try {
+                    const response = await fetch("entry.md");
+                    if (!response.ok) {
+                        throw new Error(`Failed to load entry.md: ${response.status}`);
+                    }
+                    const text = await response.text();
+                    this.renderEntries(text);
+                } catch (error) {
+                    console.error("Error loading entry.md:", error);
+                }
+            }
+
+            static renderEntries(text) {
+                const container = document.getElementById("diaryContainer");
+                if (!container) {
+                    console.error("コンテナが見つかりません。");
+                    return;
+                }
+
+                container.innerHTML = "";
+                this.diaryEntries = [];
+
+                const entries = text.split("---").filter(entry => entry.trim());
+                entries.reverse().forEach(entry => {
+                    const dateMatch = entry.match(/date:\s*(.*)/);
+                    const contentMatch = entry.match(/content:\s*\|\s*\n([\s\S]*?)(?=\n---|\n$|$)/m);
+                    if (!dateMatch || !contentMatch) return;
+
+                    const yyyymmdd = dateMatch[1].trim();
+                    const dateObj = DiaryUtils.formatJapaneseDate(yyyymmdd);
+                    const contentLines = contentMatch[1]
+                        .split("\n")
+                        .map(line => line.replace(/^\s*\|?\s*/, ""))
+                        .join("\n");
+
+                    const entryElement = document.createElement("div");
+                    entryElement.className = "diary-entry";
+                    entryElement.id = yyyymmdd;
+
+                    entryElement.innerHTML = `
+                        <div class="date-container">
+                            <div class="date" data-yyyymmdd="${yyyymmdd}">${dateObj.short}</div>
+                        </div>
+                        <div class="content">${contentLines}</div>
+                    `;
+
+                    container.appendChild(entryElement);
+
+                    this.diaryEntries.push({
+                        yyyymmdd,
+                        content: contentLines.trim()
+                    });
+                });
+
+                this.scrollToEntryFromHash();
+            }
+
+            static scrollToEntryFromHash() {
+                const hash = window.location.hash.substring(1);
+                if (hash && /^\d{8}$/.test(hash)) {
+                    const entry = document.getElementById(hash);
+                    if (entry) {
+                        entry.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+                    }
+                } else if (this.diaryEntries.length > 0) {
+                    const latestEntry = document.querySelector(".diary-entry");
+                    if (latestEntry) {
+                        latestEntry.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+                    }
+                }
+            }
+
+            static setupNavButtons() {
+                const navLeft = document.getElementById("navLeft");
+                const navRight = document.getElementById("navRight");
+
+                if (navLeft && navRight) {
+                    navLeft.addEventListener("click", () => this.navigate(-1));
+                    navRight.addEventListener("click", () => this.navigate(1));
+                }
+            }
+
+            static navigate(direction) {
+                const container = document.getElementById("diaryContainer");
+                if (!container) return;
+
+                const currentScroll = container.scrollLeft;
+                const entryWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--entry-width'));
+                const gap = 16;
+                const newScroll = currentScroll + (entryWidth + gap) * direction;
+                container.scrollTo({ left: newScroll, behavior: "smooth" });
+            }
+
+            static setupEventListeners() {
+                const container = document.getElementById("diaryContainer");
+                if (container) {
+                    let touchStartX = 0;
+                    let touchStartScroll = 0;
+
+                    container.addEventListener("touchstart", (e) => {
+                        touchStartX = e.touches[0].clientX;
+                        touchStartScroll = container.scrollLeft;
+                    }, { passive: true });
+
+                    container.addEventListener("touchmove", (e) => {
+                        const touchX = e.touches[0].clientX;
+                        const diff = touchStartX - touchX;
+                        container.scrollLeft = touchStartScroll + diff;
+                    }, { passive: true });
+
+                    document.addEventListener("keydown", (e) => {
+                        if (e.key === "ArrowLeft") {
+                            e.preventDefault();
+                            this.navigate(-1);
+                        } else if (e.key === "ArrowRight") {
+                            e.preventDefault();
+                            this.navigate(1);
+                        }
+                    });
+                }
+            }
+        }
+
+        DiaryApp.init();
+    </script>
+</body>
+
+</html>
