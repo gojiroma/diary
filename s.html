@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>行ごとソート</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            font-size: 50px;
+            height: 1000px;
+            font-family: monospace;
+            padding: 10px;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            transition: height 0.2s ease-out;
+        }
+
+        .char-count {
+            font-size: 24px;
+            margin-top: 10px;
+            color: #666;
+        }
+
+        #popButton {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #popButton:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>行ごとに文字コード順に重複なしでソート</h1>
+    <p>テキストを入力すると、行ごとに文字コード順に重複なしでソートされます。</p>
+    <textarea id="sortTextarea" placeholder="テキストを入力してください..."></textarea>
+    <div class="char-count">文字数: <span id="charCount">0</span></div>
+
+    <button id="popButton">先頭文字をpopしてコピー</button>
+
+    <script>
+        const textarea = document.getElementById('sortTextarea');
+        const charCount = document.getElementById('charCount');
+        const popButton = document.getElementById('popButton');
+        let lastClipboardContent = '';
+
+        // Debounce関数
+        function debounce(func, delay) {
+            let timeoutId;
+            return function (...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+
+        // クリップボードにテキストを設定
+        async function setClipboardText(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                console.log('クリップボードにコピーしました:', text);
+            } catch (err) {
+                console.error('クリップボードへのコピーに失敗しました:', err);
+            }
+        }
+
+        // クリップボードからテキストを取得
+        async function getClipboardText() {
+            try {
+                return await navigator.clipboard.readText();
+            } catch (err) {
+                console.error('クリップボードの読み取りに失敗しました:', err);
+                return null;
+            }
+        }
+
+        // クリップボードの監視と追記
+        async function monitorClipboard() {
+            const clipboardText = await getClipboardText();
+            if (clipboardText && clipboardText !== lastClipboardContent) {
+                lastClipboardContent = clipboardText;
+                textarea.value += (textarea.value ? '\n' : '') + clipboardText;
+                sortText();
+                updateCharCount();
+                textarea.style.height = calculateHeight(textarea.value) + 'px';
+                localStorage.setItem('sortTextareaValue', textarea.value);
+            }
+        }
+
+        // ソート処理
+        function sortText() {
+            const lines = textarea.value.split('\n');
+            const sortedLines = lines.map(line => {
+                const chars = line.split('').filter(c => c !== ' ');
+                const uniqueChars = [...new Set(chars)];
+                uniqueChars.sort((a, b) => a.localeCompare(b, 'ja', { sensitivity: 'base' }));
+                return uniqueChars.join('');
+            });
+            textarea.value = sortedLines.join('\n');
+        }
+
+        // 文字数表示更新
+        function updateCharCount() {
+            charCount.textContent = textarea.value.length;
+        }
+
+        // localStorageから値を復元（なければ「魑魅魍魎」を設定）
+        const savedValue = localStorage.getItem('sortTextareaValue');
+        if (savedValue) {
+            textarea.value = savedValue;
+        } else {
+            textarea.value = "，、⁉．。「$9aACHimōPQRwァェがさシしすそッともゃャょれン阿飴尉井亥磯溢逸韻噂云叡映疫閲苑荻桶嘉禍過俄介廻懐灰凱涯核覚郭隔渇轄噛鴨侃寛憾竿艦貫関陥頑軌騎宜擬義菊砧窮亨怯琴緊躯喰窪慶罫蛍鶏傑嫌懸賢顕顧吾檎醐侯江洪溝絞綱肯衡貢郊濠魂斎朔鮭肢事柴赦紗愁淑塾俊竣駿准循醇叙償彰湘症礁祥衝訟醤剰情杖穣醸秦辛壬衰酔随瑞崇雛杉雀脆析接仙尖旋繊曾阻喪挿漕聡荘葬蒼霜揃妥袋逮大醍濯茸但辰胆鍛智痴筑秩着鋳帖弔挑蝶諜槌塚掴辻釣廷挺締艇訂邸釘纏島搭董督苫馴妊濡乃之覇馬培媒賠萩柏曝漠幡発閥藩煩頒挽磐扉披罷飛髭彦菱表評賓頻瓶斧譜沸弊碧篇輔縫萌邦紡撲朴堀幌翻摩麻膜摸儲也耶柳癒唯悠柚融遥羅裸李琉隆竜虜亮陵倫鱗鈴煉狼賄詫碗佛俯儚刮厦嗜囁學嵌彷彿忖憑應拮攪撼攣曰棍櫻淆滲澤炒爛瑕疵痒瞰穗絆罠翔聘肆胚腱舐莉藉藝褪謳贅跋躓逡遽扈隕颯饒顚魈α";
+        }
+        updateCharCount();
+
+        // タブがアクティブになったときにクリップボードを監視
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                setInterval(monitorClipboard, 1000); // 1秒ごとに監視
+            }
+        });
+
+        // Debounce付きのソート処理と文字数表示をinputイベントに登録
+        textarea.addEventListener('input', debounce(() => {
+            sortText();
+            updateCharCount();
+            localStorage.setItem('sortTextareaValue', textarea.value);
+        }, 300));
+
+        // ボタンクリック時の処理
+        popButton.addEventListener('click', async () => {
+            const lines = textarea.value.split('\n');
+            let copiedText = '';
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                if (line.length > 0) {
+                    const firstChar = line[0];
+                    copiedText += firstChar + (i < lines.length - 1 ? '\n' : '');
+                    lines[i] = line.slice(1);
+                }
+            }
+
+            textarea.value = lines.join('\n');
+            sortText();
+            updateCharCount();
+            localStorage.setItem('sortTextareaValue', textarea.value);
+
+            await setClipboardText(copiedText.trim());
+            alert('先頭文字をクリップボードにコピーしました！');
+        });
+    </script>
+</body>
+
+</html>
