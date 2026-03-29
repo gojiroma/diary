@@ -39,7 +39,7 @@ def find_unsupported_chars(font_path, file_paths, exclude_chars):
     return sorted(unsupported_chars)
 
 # 除外したい文字
-exclude_chars = '▫☃☻゙゚️🍕🍵🐏🐑🐱📞📮🗣🗺'
+exclude_chars = '▫☃☻゙゚️🍕🍵🐏🐑🐱📞'
 
 # ファイルパス
 font_path = 'gojiromanus.otf'
