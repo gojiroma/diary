@@ -485,62 +485,77 @@
                 return false;
             }
         }
+            dateDisplay.addEventListener('click', async () => {
+                const token = localStorage.getItem('githubToken');
+                if (!token) {
+                    tokenModal.style.display = 'block';
+                    return;
+                }
 
-        dateDisplay.addEventListener('click', async () => {
-            const token = localStorage.getItem('githubToken');
-            if (!token) {
-                tokenModal.style.display = 'block';
-                return;
-            }
+                try {
+                    let newEntryContent = cachedDiaryContent || '';
+                    let newFakeContent = cachedFakeContent || '';
 
-            try {
-                let newEntryContent = cachedDiaryContent || '';
-                let newFakeContent = cachedFakeContent || '';
+                    // 本日記の更新
+                    const entryRegexMd = new RegExp(`date:\\s*${currentDateKeyMd}[\\s\\S]*?(?=---|$)`);
+                    const entryRegexCsv = new RegExp(`date:\\s*${currentDateKeyCsv.replace(/\//g, '\\/')}[\\s\\S]*?(?=---|$)`);
 
-                const entryRegexMd = new RegExp(`date:\\s*${currentDateKeyMd}[\\s\\S]*?(?=---|$)`);
-                const entryRegexCsv = new RegExp(`date:\\s*${currentDateKeyCsv.replace(/\//g, '\\/')}[\\s\\S]*?(?=---|$)`);
+                    // 本日記の更新
+                    if (realDiary.value.trim()) {
+                        const existingEntryMd = newEntryContent.match(entryRegexMd);
+                        const existingEntryCsv = newEntryContent.match(entryRegexCsv);
+                        const newEntry = `date: ${currentDateKeyMd}\ncontent: |\n  ${realDiary.value.replace(/\n/g, '\n  ')}\n---`;
 
-                // 本日記の更新
-                if (realDiary.value.trim()) {
-                    if (entryRegexMd.test(newEntryContent)) {
-                        newEntryContent = newEntryContent.replace(entryRegexMd, `date: ${currentDateKeyMd}\ncontent: |\n  ${realDiary.value.replace(/\n/g, '\n  ')}\n---`);
-                    } else if (entryRegexCsv.test(newEntryContent)) {
-                        newEntryContent = newEntryContent.replace(entryRegexCsv, `date: ${currentDateKeyMd}\ncontent: |\n  ${realDiary.value.replace(/\n/g, '\n  ')}\n---`);
+                        if (existingEntryMd) {
+                            newEntryContent = newEntryContent.replace(existingEntryMd[0], newEntry);
+                        } else if (existingEntryCsv) {
+                            newEntryContent = newEntryContent.replace(existingEntryCsv[0], newEntry);
+                        } else {
+                            newEntryContent += (newEntryContent ? '\n' : '') + newEntry;
+                        }
                     } else {
-                        newEntryContent += `\n---\ndate: ${currentDateKeyMd}\ncontent: |\n  ${realDiary.value.replace(/\n/g, '\n  ')}\n---`;
+                        // 本日記が空の場合、該当エントリを削除
+                        newEntryContent = newEntryContent.replace(entryRegexMd, '');
+                        newEntryContent = newEntryContent.replace(entryRegexCsv, '');
+                        // 先頭や末尾の空行や---を整形
+                        newEntryContent = newEntryContent.replace(/^\s*---\s*|---\s*$/g, '').replace(/\n{3,}/g, '\n\n');
                     }
-                } else {
-                    // 本日記が空の場合、該当エントリを削除
-                    newEntryContent = newEntryContent.replace(entryRegexMd, '');
-                    newEntryContent = newEntryContent.replace(entryRegexCsv, '');
-                }
 
-                // 偽日記の更新
-                if (fakeDiary.value.trim()) {
-                    if (entryRegexMd.test(newFakeContent)) {
-                        newFakeContent = newFakeContent.replace(entryRegexMd, `date: ${currentDateKeyMd}\ncontent: |\n  ${fakeDiary.value.replace(/\n/g, '\n  ')}\n---`);
-                    } else if (entryRegexCsv.test(newFakeContent)) {
-                        newFakeContent = newFakeContent.replace(entryRegexCsv, `date: ${currentDateKeyMd}\ncontent: |\n  ${fakeDiary.value.replace(/\n/g, '\n  ')}\n---`);
+                    // 偽日記の更新
+                    if (fakeDiary.value.trim()) {
+                        const existingEntryMd = newFakeContent.match(entryRegexMd);
+                        const existingEntryCsv = newFakeContent.match(entryRegexCsv);
+                        const newEntry = `date: ${currentDateKeyMd}\ncontent: |\n  ${fakeDiary.value.replace(/\n/g, '\n  ')}\n---`;
+
+                        if (existingEntryMd) {
+                            newFakeContent = newFakeContent.replace(existingEntryMd[0], newEntry);
+                        } else if (existingEntryCsv) {
+                            newFakeContent = newFakeContent.replace(existingEntryCsv[0], newEntry);
+                        } else {
+                            newFakeContent += (newFakeContent ? '\n' : '') + newEntry;
+                        }
                     } else {
-                        newFakeContent += `\n---\ndate: ${currentDateKeyMd}\ncontent: |\n  ${fakeDiary.value.replace(/\n/g, '\n  ')}\n---`;
+                        // 偽日記が空の場合、該当エントリを削除
+                        newFakeContent = newFakeContent.replace(entryRegexMd, '');
+                        newFakeContent = newFakeContent.replace(entryRegexCsv, '');
+                        // 先頭や末尾の空行や---を整形
+                        newFakeContent = newFakeContent.replace(/^\s*---\s*|---\s*$/g, '').replace(/\n{3,}/g, '\n\n');
                     }
-                } else {
-                    // 偽日記が空の場合、該当エントリを削除
-                    newFakeContent = newFakeContent.replace(entryRegexMd, '');
-                    newFakeContent = newFakeContent.replace(entryRegexCsv, '');
-                }
 
-                const success = await updateMultipleFiles(token, currentDateKeyMd, currentDateKeyCsv, newEntryContent, newFakeContent);
-                if (success) {
-                    showToast('保存しました。');
-                    loadEntriesForDate(currentDate);
-                }
-            } catch (error) {
-                console.error('Error sending update:', error);
-                showToast('送信に失敗しました。', true);
-            }
-        });
+                    // 末尾の---を整形
+                    newEntryContent = newEntryContent.replace(/--+\s*$/g, '---');
+                    newFakeContent = newFakeContent.replace(/--+\s*$/g, '---');
 
+                    const success = await updateMultipleFiles(token, currentDateKeyMd, currentDateKeyCsv, newEntryContent, newFakeContent);
+                    if (success) {
+                        showToast('保存しました。');
+                        loadEntriesForDate(currentDate);
+                    }
+                } catch (error) {
+                    console.error('Error sending update:', error);
+                    showToast('送信に失敗しました。', true);
+                }
+            });
         // モーダル関連の処理
         saveTokenButton.addEventListener('click', () => {
             const token = tokenInput.value.trim();
