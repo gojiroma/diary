@@ -25,8 +25,8 @@
         }
 
         body {
-            background-color: #121212;
-            color: #ffe4da;
+            background-color: #f5f5f5;
+            color: #333;
             font-family: "gojiromanus", serif;
             font-weight: 400;
             font-style: normal;
@@ -66,9 +66,9 @@
 
         .diary-box textarea {
             flex: 1;
-            background-color: #1e1e1e;
-            color: #e0e0e0;
-            border: none;
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ddd;
             resize: none;
             font-size: 16px;
             line-height: 1.5;
@@ -83,6 +83,7 @@
 
         .diary-box textarea:focus {
             outline: none;
+            border-color: #aaa;
         }
 
         .date-display {
@@ -93,25 +94,42 @@
             text-orientation: upright;
             font-size: 1.2em;
             padding: 10px;
-            color: #aaa;
+            color: #666;
             cursor: pointer;
             position: relative;
+            transition: all 0.2s ease;
+            border-radius: 10px;
+        }
+
+        .date-display:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .date-display:active {
+            transform: scale(0.98);
+            background-color: rgba(0, 0, 0, 0.1);
         }
 
         .date-nav {
             cursor: pointer;
             font-size: 1.5em;
             margin: 0 10px;
-            color: #aaa;
+            color: #666;
+            transition: color 0.2s;
         }
 
         .date-nav:hover {
-            color: #ffe4da;
+            color: #333;
         }
 
         .date-text {
             writing-mode: vertical-rl;
             text-orientation: upright;
+            transition: color 0.2s;
+        }
+
+        .date-display:active .date-text {
+            color: #4CAF50;
         }
 
         .toast {
@@ -136,43 +154,76 @@
             opacity: 1;
         }
 
-        .link-container {
+        /* フローティングボタン */
+        .floating-token-btn {
             position: fixed;
             bottom: 20px;
             right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 50%;
             display: flex;
-            flex-direction: column;
-            gap: 5px;
-            z-index: 10;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            font-size: 24px;
+            transition: all 0.2s;
         }
 
-        .subtle-link {
-            font-size: 0.8em;
-            color: #aaa;
-            opacity: 0.5;
-            text-decoration: none;
-            transition: opacity 0.3s;
+        .floating-token-btn:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
         }
 
-        .subtle-link:hover {
-            opacity: 1;
-            color: #ffe4da;
-        }
-
-        .copy-button {
+        /* モーダルスタイル */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
             width: 100%;
-            padding: 8px;
-            background-color: #3d3d3d;
-            color: #e0e0e0;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .modal-content button {
+            background-color: #4CAF50;
+            color: white;
             border: none;
+            padding: 10px 20px;
+            margin: 10px 5px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 0.9em;
-            margin-top: 5px;
+            transition: background-color 0.2s;
         }
 
-        .copy-button:hover {
-            background-color: #4d4d4d;
+        .modal-content button:hover {
+            background-color: #45a049;
         }
 
         @media (max-width: 600px) {
@@ -201,11 +252,24 @@
 </head>
 
 <body>
+    <div id="tokenModal" class="modal">
+        <div class="modal-content">
+            <h2>GitHub Token を入力</h2>
+            <p>日記の保存・読み込みに GitHub Personal Access Token が必要です。</p>
+            <input type="password" id="tokenInput" placeholder="GitHub Personal Access Token">
+            <div>
+                <button id="saveToken">保存</button>
+                <button id="cancelToken">キャンセル</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="floatingTokenButton" class="floating-token-btn">🔑</div>
+
     <div class="diary-container">
         <div class="diary-boxes">
             <div class="diary-box">
                 <textarea id="fakeDiary" placeholder="偽日記を入力..."></textarea>
-                <button class="copy-button" data-target="fakeDiary">copy text</button>
             </div>
             <div class="date-display" id="dateDisplayContainer">
                 <span class="date-nav" id="prevDay">↑・</span>
@@ -214,14 +278,8 @@
             </div>
             <div class="diary-box">
                 <textarea id="realDiary" placeholder="本日記を入力..."></textarea>
-                <button class="copy-button" data-target="realDiary">copy text</button>
             </div>
         </div>
-    </div>
-    <div class="link-container">
-        <a href="https://github.com/gojiroma/diary" class="subtle-link" target="_blank"
-            rel="noopener noreferrer">日記のrepo</a>
-        <a href="https://nikki.poet.blue" class="subtle-link" target="_blank" rel="noopener noreferrer">日記prod</a>
     </div>
     <div id="toast" class="toast"></div>
     <script>
@@ -264,6 +322,11 @@
         const dateDisplay = document.getElementById('dateDisplay');
         const prevDayButton = document.getElementById('prevDay');
         const nextDayButton = document.getElementById('nextDay');
+        const tokenModal = document.getElementById('tokenModal');
+        const tokenInput = document.getElementById('tokenInput');
+        const saveTokenButton = document.getElementById('saveToken');
+        const cancelTokenButton = document.getElementById('cancelToken');
+        const floatingTokenButton = document.getElementById('floatingTokenButton');
 
         let currentDate = new Date();
         let currentDateKeyMd = formatDateKey(currentDate, true);
@@ -426,9 +489,8 @@
         dateDisplay.addEventListener('click', async () => {
             const token = localStorage.getItem('githubToken');
             if (!token) {
-                const userToken = prompt('GitHub Personal Access Tokenを入れてください:');
-                if (!userToken) return;
-                localStorage.setItem('githubToken', userToken);
+                tokenModal.style.display = 'block';
+                return;
             }
 
             try {
@@ -479,29 +541,36 @@
             }
         });
 
-        window.addEventListener('load', () => {
-            if (!localStorage.getItem('githubToken')) {
-                const userToken = prompt('GitHub Personal Access Tokenを入力してください:');
-                if (userToken) localStorage.setItem('githubToken', userToken);
-                else { showToast('GitHub Tokenが必要です。', true); return; }
+        // モーダル関連の処理
+        saveTokenButton.addEventListener('click', () => {
+            const token = tokenInput.value.trim();
+            if (token) {
+                localStorage.setItem('githubToken', token);
+                tokenModal.style.display = 'none';
+                tokenInput.value = '';
+                floatingTokenButton.style.display = 'none';
+                showToast('トークンを保存しました。');
+                loadEntriesForDate(currentDate);
+            } else {
+                showToast('トークンを入力してください。', true);
             }
-            restoreFromLocalStorage();
-            loadEntriesForDate(currentDate);
         });
 
-        // コピーボタンのクリックイベント
-        document.querySelectorAll('.copy-button').forEach(button => {
-            button.addEventListener('click', () => {
-                const targetId = button.getAttribute('data-target');
-                const textarea = document.getElementById(targetId);
-                if (textarea.value.trim()) {
-                    textarea.select();
-                    document.execCommand('copy');
-                    showToast('テキストをコピーしました。');
-                } else {
-                    showToast('コピーするテキストがありません。', true);
-                }
-            });
+        cancelTokenButton.addEventListener('click', () => {
+            tokenModal.style.display = 'none';
+            tokenInput.value = '';
+        });
+
+        floatingTokenButton.addEventListener('click', () => {
+            tokenModal.style.display = 'block';
+        });
+
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('githubToken')) {
+                floatingTokenButton.style.display = 'none';
+                restoreFromLocalStorage();
+                loadEntriesForDate(currentDate);
+            }
         });
     </script>
 </body>
