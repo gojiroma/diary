@@ -384,27 +384,58 @@
                 }
                 this.l(this.f ? 'fake.md' : 'entry.md');
             }
-
             static sz() {
                 if (!this.s) return;
-                const p = { x: null, y: null }, t = 50, r = 40;
+
+                const state = {
+                    startX: null,
+                    startY: null,
+                    accX: 0
+                };
+
+                const threshold = 5;
+                const gain = 1.5;
+
                 this.s.addEventListener('touchstart', e => {
-                    const a = e.touches[0];
-                    p.x = a.clientX;
-                    p.y = a.clientY;
+                    const t = e.touches[0];
+                    state.startX = t.clientX;
+                    state.startY = t.clientY;
+                    state.accX = 0;
                 }, { passive: true });
+
                 this.s.addEventListener('touchmove', e => {
-                    if (p.x === null || p.y === null) return;
-                    const a = e.touches[0], x = a.clientX - p.x;
-                    const h = Math.abs(x) > Math.abs(p.y) && Math.abs(x) > t;
-                    if (!h) return;
+                    if (state.startX === null || state.startY === null) return;
+
+                    const t = e.touches[0];
+
+                    const dx = (t.clientX - state.startX) * gain;
+                    const dy = t.clientY - state.startY;
+
+                    if (Math.abs(dx) <= Math.abs(dy)) return;
+
                     e.preventDefault();
-                    this.c.scrollLeft -= x;
-                    p.x = a.clientX;
+
+                    state.accX += dx;
+
+                    while (Math.abs(state.accX) > threshold) {
+                        if (state.accX > 0) {
+                            this.mv(1);
+                            state.accX -= threshold;
+                        } else {
+                            this.mv(-1);
+                            state.accX += threshold;
+                        }
+                    }
+
+                    state.startX = t.clientX;
+                    state.startY = t.clientY;
+
                 }, { passive: false });
+
                 this.s.addEventListener('touchend', () => {
-                    p.x = null;
-                    p.y = null;
+                    state.startX = null;
+                    state.startY = null;
+                    state.accX = 0;
                 }, { passive: true });
             }
         }
