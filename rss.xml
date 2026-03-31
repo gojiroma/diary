@@ -5,7 +5,7 @@
     <link>https://nikki.poet.blue</link>
     <description>誤字ロマの日記です。</description>
     <language>ja</language>
-    <lastBuildDate>Mon, 30 Mar 2026 16:01:37 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 31 Mar 2026 21:18:59 +0900</lastBuildDate>
     <itunes:image href="https://nikki.poet.blue/cover.png"/>
     <media:thumbnail url="https://nikki.poet.blue/cover.png"/>
     <image>
@@ -14,6 +14,14 @@
       <link>https://nikki.poet.blue</link>
     </image>
     <atom:link href="https://nikki.poet.blue/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>三月三十一日（火）</title>
+      <link>https://nikki.poet.blue#20260331</link>
+      <pubDate>Tue, 31 Mar 2026 21:18:59 +0900</pubDate>
+      <description>「君は壁に直面したとき、正面から突破することはなく、横に移動して抜け道を探す。」これは、私が小学生だったころ、土曜教室の先生に言われた言葉だ。それが生きる指針か、呪いなのかは分からない。今までを振り返ると、確かに困難に対して正面から向き合わず、環境を変えてばかりいたのかもしれない。「もっともらしいが、違和感がある」選択肢を選んで、調子が悪くなる体験を何度もしてしまった。望ましさに合わせようとして、うまくいったことはなかった気がする。「一見変だけど、納得できる」選択肢を見つけるのは困難だが、時間をかけて探すしかないと思う。△今日が最後の認定日だった。電車を使わずに自転車で行ったら、桜吹雪を体験できた。</description>
+      <guid isPermaLink="false">urn:nikki.poet.blue:20260331</guid>
+      <media:content url="https://nc.poet.blue/20260331" type="image/svg+xml" medium="image"/>
+    </item>
     <item>
       <title>三月三十日（月）</title>
       <link>https://nikki.poet.blue#20260330</link>
