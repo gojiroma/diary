@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>誤字ロマの日記</title>
+    <link rel="icon" href="diary-icon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'gojiromanus';
+            src: url('gojiromanus.otf') format('opentype');
+            font-display: block;
+        }
+
+        * {
+            font-family: 'gojiromanus', serif;
+            margin: 0;
+            font-weight: bold;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --b: #fbf9f5;
+            --t: #060029;
+            --f: #5c3357;
+        }
+
+        body {
+            cursor: default;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100svh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            background-color: var(--b);
+            color: var(--t);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        body.f {
+            --t: var(--f);
+        }
+
+        .w {
+            width: 100%;
+            max-width: 90%;
+            height: 85vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.5s;
+            outline: none;
+        }
+
+        .c {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: none;
+            outline: none;
+            user-select: text;
+        }
+
+        .c::-webkit-scrollbar {
+            display: none;
+        }
+
+        .e {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            line-height: 2.2;
+            letter-spacing: 0.15em;
+            width: auto;
+            white-space: normal;
+            overflow: visible;
+            scroll-margin-top: 50px;
+            padding: 0 25px;
+            flex-shrink: 0;
+            text-wrap: balance;
+            overflow-wrap: break-word;
+            background-color: transparent;
+            position: relative;
+        }
+
+        .dc {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .d {
+            white-space: nowrap;
+            position: relative;
+            font-size: 1.6em;
+            color: var(--t);
+            letter-spacing: 5px;
+            left: 10px;
+        }
+
+        .t {
+            font-size: 1.2em;
+            white-space: pre-line;
+            text-wrap: balance;
+            overflow-wrap: break-word;
+            position: relative;
+            color: var(--t);
+            line-height: 1.8;
+        }
+
+        #s {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 50px;
+            background-color: transparent;
+            z-index: 10;
+            touch-action: pan-y;
+        }
+
+        /* 筆記用エリア */
+        .today-input-area {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 600px;
+            z-index: 20;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .today-input-area textarea {
+            width: 100%;
+            height: 200px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            border: 1px solid #ddd;
+            resize: none;
+            font-size: 16px;
+            line-height: 1.5;
+            padding: 15px;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-family: inherit;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            margin-bottom: 10px;
+        }
+
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 10px;
+            padding: 16px;
+            position: fixed;
+            z-index: 101;
+            right: 30px;
+            top: 30px;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .modal-content button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .modal-content button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="tokenModal" class="modal">
+        <div class="modal-content">
+            <h2>GitHub Token を入力</h2>
+            <p>日記の保存・読み込みに GitHub Personal Access Token が必要です。</p>
+            <input type="password" id="tokenInput" placeholder="GitHub Personal Access Token">
+            <div>
+                <button id="saveToken">保存</button>
+                <button id="cancelToken">キャンセル</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="today-input-area" id="todayInputArea">
+        <textarea id="todayRealDiary" placeholder="今日の本日記を入力..."></textarea>
+        <textarea id="todayFakeDiary" placeholder="今日の偽日記を入力..."></textarea>
+    </div>
+
+    <div class="w">
+        <div class="c" id="c"></div>
+    </div>
+    <div id="s"></div>
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // 共通関数
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.backgroundColor = isError ? '#ff4444' : '#4CAF50';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        const formatDateKey = (date, forMd = true) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return forMd ? `${year}${month}${day}` : `${year}/${month}/${day}`;
+        };
+
+        const toKanjiNumber = (num) => ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'][num] || num;
+        const toKanjiMonth = (month) => ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'][month - 1];
+        const toKanjiDay = (day) => {
+            if (day === 10) return '十';
+            if (day === 20) return '二十';
+            if (day === 30) return '三十';
+            if (day < 10) return toKanjiNumber(day);
+            if (day < 20) return '十' + toKanjiNumber(day - 10);
+            if (day < 30) return '二十' + toKanjiNumber(day - 20);
+            return toKanjiNumber(day);
+        };
+        const formatJapaneseDate = (date) => {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+            return `令和${toKanjiNumber(year - 2018)}年${toKanjiMonth(month)}${toKanjiDay(day)}日（${dayOfWeek}）`;
+        };
+
+        // 本体クラス
+        class U {
+            static n = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+            static m = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+            static d = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十', '二十一', '二十二', '二十三', '二十四', '二十五', '二十六', '二十七', '二十八', '二十九', '三十', '三十一'];
+            static w = ['日', '月', '火', '水', '木', '金', '土'];
+            static e = [
+                { name: '令和', start: 2019, offset: 2018 },
+                { name: '平成', start: 1989, offset: 1988 },
+                { name: '昭和', start: 1926, offset: 1925 },
+                { name: '大正', start: 1912, offset: 1911 },
+                { name: '明治', start: 1868, offset: 1867 }
+            ];
+
+            static k(n) {
+                return String(n).split('').map(v => this.n[Number(v)] ?? v).join('');
+            }
+
+            static y(y) {
+                const e = this.e.find(({ start: s }) => y >= s);
+                if (!e) return `${y}年`;
+                const n = y - e.offset;
+                return `${e.name}${this.k(n)}年`;
+            }
+
+            static p(s) {
+                const y = Number(s.slice(0, 4)), m = Number(s.slice(4, 6)), d = Number(s.slice(6, 8));
+                return { y, m, d };
+            }
+
+            static f(s, x = false) {
+                const { y, m, d } = this.p(s);
+                const t = new Date(y, m - 1, d);
+                const w = this.w[t.getDay()];
+                const M = this.m[m - 1];
+                const D = this.d[d];
+                return {
+                    short: `${M}${D}日　${x ? '裏日記' : `${w}曜日`}`,
+                    long: `${this.y(y)}${M}${D}日（${x ? '裏' : w}）`
+                };
+            }
+        }
+
+        class A {
+            static f = false;
+            static x = null;
+            static e = [];
+            static p = false;
+            static t = null;
+            static dataLoaded = false;
+            static entryData = null;
+
+            static get c() { return document.getElementById('c'); }
+            static get s() { return document.getElementById('s'); }
+            static get h() { return location.hash.slice(1); }
+            static get v() { return [...document.querySelectorAll('.e')].filter(x => x.style.display !== 'none'); }
+
+            static async i() {
+                await this.l();
+                this.pf();
+                this.se();
+                this.sn();
+                this.sz();
+                await document.fonts.ready;
+                document.body.style.opacity = 1;
+            }
+
+            static async g(n) {
+                const r = await fetch(n);
+                if (!r.ok) throw new Error(`Failed to load ${n}: ${r.status}`);
+                return r.text();
+            }
+
+            static async l(n = 'entry.md') {
+                try {
+                    if (!this.dataLoaded) {
+                        this.entryData = await this.g(n);
+                        this.dataLoaded = true;
+                    }
+                    this.r(this.entryData);
+                } catch (e) {
+                    console.error(`Error loading ${n}:`, e);
+                }
+            }
+
+            static async pf() {
+                try {
+                    this.x = await this.g('fake.md');
+                } catch (e) {
+                    console.error('Error preloading fake entries:', e);
+                }
+            }
+
+            static q(t) {
+                return t.split('---').map(b => b.trim()).filter(Boolean).reverse().map(b => {
+                    const y = b.match(/date:\s*(.*)/)?.[1]?.trim();
+                    const r = b.match(/content:\s*\|\s*\n([\s\S]*?)(?=\n---|\n$|$)/m)?.[1];
+                    if (!y || !r) return null;
+                    const c = r.split('\n').map(l => l.replace(/^\s*\|?\s*/, '')).join('\n').trim();
+                    return { y, c };
+                }).filter(Boolean);
+            }
+
+            static ce({ y, c }) {
+                const { short: s } = U.f(y, this.f);
+                const e = document.createElement('div');
+                e.className = 'e';
+                e.id = y;
+                e.innerHTML = `<div class="dc">  <div class="d" data-y="${y}">${s}</div></div><div class="t"></div>`;
+                e.querySelector('.t').textContent = c;
+                e.querySelector('.d').addEventListener('click', v => v.stopPropagation());
+                return e;
+            }
+
+            static r(t) {
+                if (!this.c) return;
+                const e = this.q(t);
+                this.e = e;
+                this.c.innerHTML = '';
+                const f = document.createDocumentFragment();
+                e.forEach(e => f.appendChild(this.ce(e)));
+                this.c.appendChild(f);
+                this.u(e.length);
+                this.sh();
+            }
+
+            static u(n) {
+                document.title = `誤字ロマの${n}日間`;
+            }
+
+            static se() {
+                document.addEventListener('keydown', this.k.bind(this));
+                document.addEventListener('wheel', this.wh.bind(this), { passive: false });
+                document.addEventListener('click', this.cl.bind(this));
+                addEventListener('hashchange', () => this.sh());
+                addEventListener('load', () => this.sh());
+            }
+
+            static sn() {
+                if (!this.c) return;
+                this.c.addEventListener('scroll', () => {
+                    if (this.p) return;
+                    clearTimeout(this.t);
+                    this.t = setTimeout(() => this.us(), 150);
+                }, { passive: true });
+            }
+
+            static us() {
+                if (!this.c || this.v.length === 0) return;
+                const r = this.c.scrollLeft + this.c.clientWidth;
+                const e = this.v.reduce((a, e) => {
+                    const x = e.offsetLeft + e.clientWidth;
+                    const d = Math.abs(r - x);
+                    return !a || d < a.d ? { e, d } : a;
+                }, null)?.e;
+                if (e && location.hash !== `#${e.id}`) location.hash = e.id;
+            }
+
+            static gc() {
+                const e = /^\d{8}$/.test(this.h) ? document.getElementById(this.h) : null;
+                if (e && e.style.display !== 'none') return e;
+                return this.v[0] ?? null;
+            }
+
+            static ga(c, d) {
+                const e = this.v, i = e.indexOf(c);
+                if (i < 0) return e[0] ?? null;
+                return e[i + d] ?? null;
+            }
+
+            static mv(d) {
+                const c = this.gc();
+                if (!c) return;
+                const n = this.ga(c, d);
+                if (!n) return;
+                location.hash = n.id;
+                this.sh();
+            }
+
+            static sh() {
+                if (!this.c) return;
+                const e = this.gh() ?? this.v[0];
+                if (!e) return;
+                const p = e.offsetLeft + e.clientWidth - this.c.clientWidth;
+                this.st(p);
+            }
+
+            static gh() {
+                if (!/^\d{8}$/.test(this.h)) return null;
+                const e = document.getElementById(this.h);
+                if (!e || e.style.display === 'none') return null;
+                return e;
+            }
+
+            static st(p) {
+                if (!this.c) return;
+                this.p = true;
+                this.c.scrollLeft = p;
+                setTimeout(() => { this.p = false; }, 200);
+            }
+
+            static wh(e) {
+                e.preventDefault();
+                this.mv(e.deltaY > 0 ? 1 : -1);
+            }
+
+            static k(e) {
+                switch (e.key) {
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        this.mv(-1);
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        this.mv(1);
+                        break;
+                    case 'Escape':
+                        if (location.hash) location.hash = '';
+                        break;
+                    case ' ':
+                        e.preventDefault();
+                        this.tf();
+                        break;
+                }
+            }
+
+            static cl() {
+                const s = getSelection();
+                if (s && s.toString().length > 0) return;
+                this.tf();
+            }
+
+            static async tf() {
+                this.f = !this.f;
+                document.body.classList.toggle('f', this.f);
+                if (this.f && this.x) {
+                    this.r(this.x);
+                    return;
+                }
+                this.l(this.f ? 'fake.md' : 'entry.md');
+            }
+
+            static sz() {
+                if (!this.s) return;
+
+                const state = {
+                    startX: null,
+                    startY: null,
+                    accX: 0
+                };
+
+                const threshold = 3;
+                const gain = 1.5;
+
+                this.s.addEventListener('touchstart', e => {
+                    const t = e.touches[0];
+                    state.startX = t.clientX;
+                    state.startY = t.clientY;
+                    state.accX = 0;
+                }, { passive: true });
+
+                this.s.addEventListener('touchmove', e => {
+                    if (state.startX === null || state.startY === null) return;
+
+                    const t = e.touches[0];
+
+                    const dx = (t.clientX - state.startX) * gain;
+                    const dy = t.clientY - state.startY;
+
+                    if (Math.abs(dx) <= Math.abs(dy)) return;
+
+                    e.preventDefault();
+
+                    state.accX += dx;
+
+                    while (Math.abs(state.accX) > threshold) {
+                        if (state.accX > 0) {
+                            this.mv(1);
+                            state.accX -= threshold;
+                        } else {
+                            this.mv(-1);
+                            state.accX += threshold;
+                        }
+                    }
+
+                    state.startX = t.clientX;
+                    state.startY = t.clientY;
+
+                }, { passive: false });
+
+                this.s.addEventListener('touchend', () => {
+                    state.startX = null;
+                    state.startY = null;
+                    state.accX = 0;
+                }, { passive: true });
+            }
+        }
+
+        // 筆記用エリアクラス
+        class TodayInputArea {
+            static todayRealDiary = document.getElementById('todayRealDiary');
+            static todayFakeDiary = document.getElementById('todayFakeDiary');
+            static todayInputArea = document.getElementById('todayInputArea');
+            static tokenModal = document.getElementById('tokenModal');
+            static tokenInput = document.getElementById('tokenInput');
+            static saveTokenButton = document.getElementById('saveToken');
+            static cancelTokenButton = document.getElementById('cancelToken');
+
+            static currentDate = new Date();
+            static currentDateKeyMd = formatDateKey(this.currentDate, true);
+            static currentDateKeyCsv = formatDateKey(this.currentDate, false);
+            static cachedDiaryContent = null;
+            static cachedFakeContent = null;
+
+            static init() {
+                this.setupEventListeners();
+                this.restoreFromLocalStorage();
+            }
+
+            static setupEventListeners() {
+                this.todayRealDiary.addEventListener('keydown', (e) => {
+                    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                        e.preventDefault();
+                        this.saveEntries();
+                    }
+                });
+
+                this.todayFakeDiary.addEventListener('keydown', (e) => {
+                    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                        e.preventDefault();
+                        this.saveEntries();
+                    }
+                });
+
+                this.todayRealDiary.addEventListener('input', this.saveToLocalStorage);
+                this.todayFakeDiary.addEventListener('input', this.saveToLocalStorage);
+
+                this.saveTokenButton.addEventListener('click', () => {
+                    const token = this.tokenInput.value.trim();
+                    if (token) {
+                        localStorage.setItem('githubToken', token);
+                        this.tokenModal.style.display = 'none';
+                        this.tokenInput.value = '';
+                        showToast('トークンを保存しました。');
+                        this.loadEntriesForDate(this.currentDate);
+                    } else {
+                        showToast('トークンを入力してください。', true);
+                    }
+                });
+
+                this.cancelTokenButton.addEventListener('click', () => {
+                    this.tokenModal.style.display = 'none';
+                    this.tokenInput.value = '';
+                });
+            }
+
+            static restoreFromLocalStorage() {
+                const savedRealDiary = localStorage.getItem(`todayRealDiary_${this.currentDateKeyMd}`);
+                const savedFakeDiary = localStorage.getItem(`todayFakeDiary_${this.currentDateKeyMd}`);
+                this.todayRealDiary.value = savedRealDiary || '';
+                this.todayFakeDiary.value = savedFakeDiary || '';
+            }
+
+            static saveToLocalStorage() {
+                localStorage.setItem(`todayRealDiary_${this.currentDateKeyMd}`, this.todayRealDiary.value);
+                localStorage.setItem(`todayFakeDiary_${this.currentDateKeyMd}`, this.todayFakeDiary.value);
+            }
+
+            static async fetchGitHubFile(fileName, token) {
+                try {
+                    const apiUrl = `https://api.github.com/repos/gojiroma/diary/contents/${fileName}`;
+                    const response = await fetch(apiUrl, { headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } });
+                    if (!response.ok) throw new Error(`Failed to fetch ${fileName}`);
+                    const fileData = await response.json();
+                    return await (await fetch(fileData.download_url)).text();
+                } catch (error) {
+                    console.error(`Error fetching ${fileName}:`, error);
+                    return null;
+                }
+            }
+
+            static extractEntry(content, dateKeyMd, dateKeyCsv) {
+                if (!content) return null;
+                const datePattern = dateKeyMd + '|' + dateKeyCsv.replace(/\//g, '\\/');
+                const entryRegex = new RegExp(`date:\\s*(${datePattern})[\\s\\S]*?content:\\s*\\|([\\s\\S]*?)(?=---|\\n\\s*date:|$)`, 'i');
+                const match = content.match(entryRegex);
+                return match ? match[2].trim().replace(/^\s{2}/gm, '') : null;
+            }
+
+            static async loadEntriesForDate(date) {
+                const dateKeyMd = formatDateKey(date, true);
+                const dateKeyCsv = formatDateKey(date, false);
+                const token = localStorage.getItem('githubToken');
+                if (!token) return;
+
+                try {
+                    if (!this.cachedDiaryContent || !this.cachedFakeContent) {
+                        [this.cachedDiaryContent, this.cachedFakeContent] = await Promise.all([
+                            this.fetchGitHubFile('entry.md', token),
+                            this.fetchGitHubFile('fake.md', token)
+                        ]);
+                    }
+
+                    const savedRealDiary = localStorage.getItem(`todayRealDiary_${dateKeyMd}`);
+                    const savedFakeDiary = localStorage.getItem(`todayFakeDiary_${dateKeyMd}`);
+
+                    const diaryEntry = this.extractEntry(this.cachedDiaryContent, dateKeyMd, dateKeyCsv);
+                    const fakeEntry = this.extractEntry(this.cachedFakeContent, dateKeyMd, dateKeyCsv);
+
+                    this.todayRealDiary.value = savedRealDiary !== null ? savedRealDiary : (diaryEntry || '');
+                    this.todayFakeDiary.value = savedFakeDiary !== null ? savedFakeDiary : (fakeEntry || '');
+                } catch (error) {
+                    console.error('Error loading entries:', error);
+                    showToast('エントリの読み込みに失敗しました。', true);
+                }
+            }
+
+            static async saveEntries() {
+                const token = localStorage.getItem('githubToken');
+                if (!token) {
+                    this.tokenModal.style.display = 'block';
+                    return;
+                }
+
+                try {
+                    let newEntryContent = this.cachedDiaryContent || '';
+                    let newFakeContent = this.cachedFakeContent || '';
+
+                    const entryRegexMd = new RegExp(`date:\\s*${this.currentDateKeyMd}[\\s\\S]*?(?=---|$)`);
+                    const entryRegexCsv = new RegExp(`date:\\s*${this.currentDateKeyCsv.replace(/\//g, '\\/')}[\\s\\S]*?(?=---|$)`);
+
+                    if (this.todayRealDiary.value.trim()) {
+                        const existingEntryMd = newEntryContent.match(entryRegexMd);
+                        const existingEntryCsv = newEntryContent.match(entryRegexCsv);
+                        const newEntry = `date: ${this.currentDateKeyMd}\ncontent: |\n  ${this.todayRealDiary.value.replace(/\n/g, '\n  ')}\n---`;
+
+                        if (existingEntryMd) {
+                            newEntryContent = newEntryContent.replace(existingEntryMd[0], newEntry);
+                        } else if (existingEntryCsv) {
+                            newEntryContent = newEntryContent.replace(existingEntryCsv[0], newEntry);
+                        } else {
+                            newEntryContent += (newEntryContent ? '\n' : '') + newEntry;
+                        }
+                    } else {
+                        newEntryContent = newEntryContent.replace(entryRegexMd, '');
+                        newEntryContent = newEntryContent.replace(entryRegexCsv, '');
+                        newEntryContent = newEntryContent.replace(/^\s*---\s*|---\s*$/g, '').replace(/\n{3,}/g, '\n\n');
+                    }
+
+                    if (this.todayFakeDiary.value.trim()) {
+                        const existingEntryMd = newFakeContent.match(entryRegexMd);
+                        const existingEntryCsv = newFakeContent.match(entryRegexCsv);
+                        const newEntry = `date: ${this.currentDateKeyMd}\ncontent: |\n  ${this.todayFakeDiary.value.replace(/\n/g, '\n  ')}\n---`;
+
+                        if (existingEntryMd) {
+                            newFakeContent = newFakeContent.replace(existingEntryMd[0], newEntry);
+                        } else if (existingEntryCsv) {
+                            newFakeContent = newFakeContent.replace(existingEntryCsv[0], newEntry);
+                        } else {
+                            newFakeContent += (newFakeContent ? '\n' : '') + newEntry;
+                        }
+                    } else {
+                        newFakeContent = newFakeContent.replace(entryRegexMd, '');
+                        newFakeContent = newFakeContent.replace(entryRegexCsv, '');
+                        newFakeContent = newFakeContent.replace(/^\s*---\s*|---\s*$/g, '').replace(/\n{3,}/g, '\n\n');
+                    }
+
+                    newEntryContent = newEntryContent.replace(/--+\s*$/g, '---');
+                    newFakeContent = newFakeContent.replace(/--+\s*$/g, '---');
+
+                    const success = await this.updateMultipleFiles(token, this.currentDateKeyMd, this.currentDateKeyCsv, newEntryContent, newFakeContent);
+                    if (success) {
+                        showToast('保存しました。');
+                        this.loadEntriesForDate(this.currentDate);
+                    }
+                } catch (error) {
+                    console.error('Error sending update:', error);
+                    showToast('送信に失敗しました。', true);
+                }
+            }
+
+            static async updateMultipleFiles(token, dateKeyMd, dateKeyCsv, realContent, fakeContent) {
+                const repoOwner = 'gojiroma';
+                const repoName = 'diary';
+                const branch = 'main';
+                const baseUrl = `https://api.github.com/repos/${repoOwner}/${repoName}`;
+
+                try {
+                    const refResponse = await fetch(`${baseUrl}/git/refs/heads/${branch}`, { headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } });
+                    if (!refResponse.ok) throw new Error('Failed to get branch');
+                    const refData = await refResponse.json();
+                    const latestCommitSha = refData.object.sha;
+
+                    const commitResponse = await fetch(`${baseUrl}/git/commits/${latestCommitSha}`, { headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } });
+                    if (!commitResponse.ok) throw new Error('Failed to get commit');
+                    const commitData = await commitResponse.json();
+                    const latestTreeSha = commitData.tree.sha;
+
+                    const treeResponse = await fetch(`${baseUrl}/git/trees`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            base_tree: latestTreeSha,
+                            tree: [
+                                { path: 'entry.md', mode: '100644', type: 'blob', content: realContent },
+                                { path: 'fake.md', mode: '100644', type: 'blob', content: fakeContent }
+                            ]
+                        })
+                    });
+                    if (!treeResponse.ok) throw new Error('Failed to create tree');
+                    const treeData = await treeResponse.json();
+                    const newTreeSha = treeData.sha;
+
+                    const newCommitResponse = await fetch(`${baseUrl}/git/commits`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: `Update entries for ${dateKeyMd}`, tree: newTreeSha, parents: [latestCommitSha] })
+                    });
+                    if (!newCommitResponse.ok) throw new Error('Failed to create commit');
+                    const newCommitData = await newCommitResponse.json();
+                    const newCommitSha = newCommitData.sha;
+
+                    await fetch(`${baseUrl}/git/refs/heads/${branch}`, {
+                        method: 'PATCH',
+                        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sha: newCommitSha })
+                    });
+
+                    this.cachedDiaryContent = realContent;
+                    this.cachedFakeContent = fakeContent;
+
+                    return true;
+                } catch (error) {
+                    console.error('Error updating files:', error);
+                    showToast('更新に失敗しました。', true);
+                    return false;
+                }
+            }
+        }
+
+        // 初期化
+        A.i();
+        TodayInputArea.init();
+
+        // 閲覧画面に今日のtextareaを表示
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'e') {
+                e.preventDefault();
+                const todayInputArea = document.getElementById('todayInputArea');
+                todayInputArea.style.display = todayInputArea.style.display === 'none' ? 'flex' : 'none';
+                if (todayInputArea.style.display === 'flex') {
+                    TodayInputArea.todayRealDiary.focus();
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
