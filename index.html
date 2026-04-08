@@ -3,11 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <title>誤字ロマの...</title>
-    <link rel="icon" href="diary-icon.png" type="image/png">
-    <link rel="preload" href="gojiromanus.otf" as="font" type="font/otf" crossorigin>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="icon.png" type="image/png">
+
+    <title>echo</title>
     <style>
         @font-face {
             font-family: 'gojiromanus';
@@ -18,25 +17,18 @@
         * {
             font-family: 'gojiromanus', serif;
             margin: 0;
-            font-weight: bold;
             padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            cursor: default;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100svh;
-            margin: 0;
-            padding: 0;
-            position: relative;
-            color: #060029;
-            background: linear-gradient(-45deg, #fbf9f5, #fde2f3, #e6f3ff, #f0f8ff);
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
-            opacity: 1;
         }
 
         @keyframes gradientBG {
@@ -53,32 +45,180 @@
             }
         }
 
-        .message {
-            font-size: 3em;
+        #input-area {
+            letter-spacing: -1px;
+            width: 80%;
+            min-height: 200px;
+            font-weight: bold;
+            font-size: 1.5em;
+            outline: none;
+            border: none;
+            background-color: transparent;
+            resize: none;
+            margin: auto;
+            line-height: 1.6;
             text-align: center;
-            color: #5c3357;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
-
-            100% {
-                transform: translateY(0px);
-            }
+            border-radius: 10px;
+            height: auto;
+            overflow-y: hidden;
+            resize: none;
         }
     </style>
 </head>
 
 <body>
-    <div class="message">次は、何をしようかな。</div>
+    <textarea id="input-area" autofocus></textarea>
+    <script>
+        let textLog = [];
+        let isRecording = false;
+        let isReplaying = false;
+        let silenceTimer = null;
+
+        const inputArea = document.getElementById('input-area');
+
+        // ── 圧縮・展開 ──────────────────────────────────────────────
+
+        async function compress(log) {
+            const base = log[0].timestamp;
+            const compact = log.map(e => [Math.round(e.timestamp - base), e.text, e.selectionStart, e.selectionEnd]);
+            const json = JSON.stringify(compact);
+
+            const stream = new CompressionStream('gzip');
+            const writer = stream.writable.getWriter();
+            writer.write(new TextEncoder().encode(json));
+            writer.close();
+
+            const buf = await new Response(stream.readable).arrayBuffer();
+            const bytes = new Uint8Array(buf);
+            let binary = '';
+            for (let i = 0; i < bytes.length; i += 8192) {
+                binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
+            }
+            return btoa(binary);
+        }
+
+        async function decompress(b64) {
+            const binary = atob(b64);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+            const stream = new DecompressionStream('gzip');
+            const writer = stream.writable.getWriter();
+            writer.write(bytes);
+            writer.close();
+
+            const text = await new Response(stream.readable).text();
+            return JSON.parse(text);
+        }
+
+        // ── ダウンロード ─────────────────────────────────────────────
+
+        async function saveData() {
+            if (textLog.length === 0) return;
+            const b64 = await compress(textLog);
+            const blob = new Blob([b64], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'data.txt';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+
+
+        // ── 再生 ─────────────────────────────────────────────────────
+        function adjustTextareaHeight() {
+            const textarea = document.getElementById('input-area');
+            textarea.style.height = 'auto'; // 一旦高さをリセット
+            textarea.style.height = (textarea.scrollHeight) + 'px'; // スクロール高さに合わせて設定
+        }
+        function startReplayFromCompact(compact) {
+            if (compact.length === 0) return;
+            isReplaying = true;
+            let replayIndex = 0;
+            let startTime = null;
+            const replayLoop = (currentTime) => {
+                if (startTime === null) startTime = currentTime;
+                if (!isReplaying) return;
+
+                const elapsed = currentTime - startTime;
+
+                while (replayIndex < compact.length) {
+                    const [timeDelta, text, selectionStart, selectionEnd] = compact[replayIndex];
+                    if (elapsed >= timeDelta) {
+                        inputArea.value = text;
+                        inputArea.selectionStart = selectionStart;
+                        inputArea.selectionEnd = selectionEnd;
+                        adjustTextareaHeight(); // 高さを調整
+                        replayIndex++;
+                    } else {
+                        break;
+                    }
+                }
+
+                if (replayIndex < compact.length) {
+                    requestAnimationFrame(replayLoop);
+                } else {
+                    isReplaying = false;
+                }
+            };
+
+            requestAnimationFrame(replayLoop);
+        }
+
+        function startReplay() {
+            if (textLog.length === 0) return;
+            const base = textLog[0].timestamp;
+            const compact = textLog.map(e => [Math.round(e.timestamp - base), e.text, e.selectionStart, e.selectionEnd]);
+            startReplayFromCompact(compact);
+        }
+
+        // ── 沈黙タイマー ─────────────────────────────────────────────
+
+        const startSilenceTimer = () => {
+            clearTimeout(silenceTimer);
+            silenceTimer = setTimeout(async () => {
+                if (isRecording) {
+                    isRecording = false;
+                    await saveData();
+                    startReplay();
+                }
+            }, 5000);
+        };
+
+        // ── 入力イベント ─────────────────────────────────────────────
+
+        inputArea.addEventListener('input', () => {
+            if (!isRecording && !isReplaying) {
+                isRecording = true;
+                textLog = [];
+            }
+            if (isRecording) {
+                textLog.push({
+                    timestamp: performance.now(),
+                    text: inputArea.value,
+                    selectionStart: inputArea.selectionStart,
+                    selectionEnd: inputArea.selectionEnd
+                });
+                startSilenceTimer();
+            }
+            adjustTextareaHeight(); // 高さを調整
+        });
+        // ── ページ読み込み時に data.txt をフェッチして再生 ───────────
+
+        (async () => {
+            try {
+                const res = await fetch('./data.txt');
+                if (!res.ok) return;
+                const b64 = (await res.text()).trim();
+                if (!b64) return;
+                const compact = await decompress(b64);
+                startReplayFromCompact(compact);
+            } catch (e) {
+                // fetch 失敗（ローカルファイル等）は無視
+            }
+        })();
+    </script>
 </body>
 
 </html>
