@@ -23,426 +23,62 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --b: #fbf9f5;
-            --t: #060029;
-            --f: #5c3357;
-        }
-
         body {
             cursor: default;
-            overflow: hidden;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100svh;
             margin: 0;
             padding: 0;
             position: relative;
-            background-color: var(--b);
-            color: var(--t);
-            opacity: 0;
-            transition: opacity 0.5s;
+            color: #060029;
+            background: linear-gradient(-45deg, #fbf9f5, #fde2f3, #e6f3ff, #f0f8ff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            opacity: 1;
         }
 
-        body.f {
-            --t: var(--f);
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
-        .w {
-            width: 100%;
-            max-width: 90%;
-            height: 85vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0;
-            box-sizing: border-box;
-            transition: background-color 0.5s;
-            outline: none;
+        .message {
+            font-size: 3em;
+            text-align: center;
+            color: #5c3357;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: float 3s ease-in-out infinite;
         }
 
-        .c {
-            display: flex;
-            flex-direction: row;
-            gap: 20px;
-            width: 100%;
-            height: 100%;
-            padding: 0;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scrollbar-width: none;
-            outline: none;
-            user-select: text;
-        }
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
 
-        .c::-webkit-scrollbar {
-            display: none;
-        }
+            50% {
+                transform: translateY(-10px);
+            }
 
-        .e {
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            line-height: 2.2;
-            letter-spacing: 0.15em;
-            width: auto;
-            white-space: normal;
-            overflow: visible;
-            scroll-margin-top: 50px;
-            padding: 0 25px;
-            flex-shrink: 0;
-            text-wrap: balance;
-            overflow-wrap: break-word;
-            background-color: transparent;
-            position: relative;
-        }
-
-        .dc {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
-
-        .d {
-            white-space: nowrap;
-            position: relative;
-            font-size: 1.6em;
-            color: var(--t);
-            letter-spacing: 5px;
-            left: 10px;
-        }
-
-        .t {
-            font-size: 1.2em;
-            white-space: pre-line;
-            text-wrap: balance;
-            overflow-wrap: break-word;
-            position: relative;
-            color: var(--t);
-            line-height: 1.8;
-        }
-
-        #s {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100vw;
-            height: 50px;
-            background-color: transparent;
-            z-index: 10;
-            touch-action: pan-y;
+            100% {
+                transform: translateY(0px);
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="w">
-        <div class="c" id="c"></div>
-    </div>
-    <div id="s"></div>
-
-    <script>
-        class U {
-            static n = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
-            static m = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
-            static d = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十', '二十一', '二十二', '二十三', '二十四', '二十五', '二十六', '二十七', '二十八', '二十九', '三十', '三十一'];
-            static w = ['日', '月', '火', '水', '木', '金', '土'];
-            static e = [
-                { name: '令和', start: 2019, offset: 2018 },
-                { name: '平成', start: 1989, offset: 1988 },
-                { name: '昭和', start: 1926, offset: 1925 },
-                { name: '大正', start: 1912, offset: 1911 },
-                { name: '明治', start: 1868, offset: 1867 }
-            ];
-
-            static k(n) {
-                return String(n).split('').map(v => this.n[Number(v)] ?? v).join('');
-            }
-
-            static y(y) {
-                const e = this.e.find(({ start: s }) => y >= s);
-                if (!e) return `${y}年`;
-                const n = y - e.offset;
-                return `${e.name}${this.k(n)}年`;
-            }
-
-            static p(s) {
-                const y = Number(s.slice(0, 4)), m = Number(s.slice(4, 6)), d = Number(s.slice(6, 8));
-                return { y, m, d };
-            }
-
-            static f(s, x = false) {
-                const { y, m, d } = this.p(s);
-                const t = new Date(y, m - 1, d);
-                const w = this.w[t.getDay()];
-                const M = this.m[m - 1];
-                const D = this.d[d];
-                return {
-                    short: `${M}${D}日　${x ? '裏日記' : `${w}曜日`}`,
-                    long: `${this.y(y)}${M}${D}日（${x ? '裏' : w}）`
-                };
-            }
-        }
-
-        class A {
-            static f = false;
-            static x = null;
-            static e = [];
-            static p = false;
-            static t = null;
-            static dataLoaded = false;
-            static entryData = null;
-
-            static get c() { return document.getElementById('c'); }
-            static get s() { return document.getElementById('s'); }
-            static get h() { return location.hash.slice(1); }
-            static get v() { return [...document.querySelectorAll('.e')].filter(x => x.style.display !== 'none'); }
-
-            static async i() {
-                await this.l();
-                this.pf();
-                this.se();
-                this.sn();
-                this.sz();
-                await document.fonts.ready;
-                document.body.style.opacity = 1;
-            }
-
-            static async g(n) {
-                const r = await fetch(n);
-                if (!r.ok) throw new Error(`Failed to load ${n}: ${r.status}`);
-                return r.text();
-            }
-
-            static async l(n = 'entry.md') {
-                try {
-                    if (!this.dataLoaded) {
-                        this.entryData = await this.g(n);
-                        this.dataLoaded = true;
-                    }
-                    this.r(this.entryData);
-                } catch (e) {
-                    console.error(`Error loading ${n}:`, e);
-                }
-            }
-
-            static async pf() {
-                try {
-                    this.x = await this.g('fake.md');
-                } catch (e) {
-                    console.error('Error preloading fake entries:', e);
-                }
-            }
-
-            static q(t) {
-                return t.split('---').map(b => b.trim()).filter(Boolean).reverse().map(b => {
-                    const y = b.match(/date:\s*(.*)/)?.[1]?.trim();
-                    const r = b.match(/content:\s*\|\s*\n([\s\S]*?)(?=\n---|\n$|$)/m)?.[1];
-                    if (!y || !r) return null;
-                    const c = r.split('\n').map(l => l.replace(/^\s*\|?\s*/, '')).join('\n').trim();
-                    return { y, c };
-                }).filter(Boolean);
-            }
-
-            static ce({ y, c }) {
-                const { short: s } = U.f(y, this.f);
-                const e = document.createElement('div');
-                e.className = 'e';
-                e.id = y;
-                e.innerHTML = `<div class="dc">  <div class="d" data-y="${y}">${s}</div></div><div class="t"></div>`;
-                e.querySelector('.t').textContent = c;
-                e.querySelector('.d').addEventListener('click', v => v.stopPropagation());
-                return e;
-            }
-
-            static r(t) {
-                if (!this.c) return;
-                const e = this.q(t);
-                this.e = e;
-                this.c.innerHTML = '';
-                const f = document.createDocumentFragment();
-                e.forEach(e => f.appendChild(this.ce(e)));
-                this.c.appendChild(f);
-                this.u(e.length);
-                this.sh();
-            }
-
-            static u(n) {
-                document.title = `誤字ロマの${n}日間`;
-            }
-
-            static se() {
-                document.addEventListener('keydown', this.k.bind(this));
-                document.addEventListener('wheel', this.wh.bind(this), { passive: false });
-                document.addEventListener('click', this.cl.bind(this));
-                addEventListener('hashchange', () => this.sh());
-                addEventListener('load', () => this.sh());
-            }
-
-            static sn() {
-                if (!this.c) return;
-                this.c.addEventListener('scroll', () => {
-                    if (this.p) return;
-                    clearTimeout(this.t);
-                    this.t = setTimeout(() => this.us(), 150);
-                }, { passive: true });
-            }
-
-            static us() {
-                if (!this.c || this.v.length === 0) return;
-                const r = this.c.scrollLeft + this.c.clientWidth;
-                const e = this.v.reduce((a, e) => {
-                    const x = e.offsetLeft + e.clientWidth;
-                    const d = Math.abs(r - x);
-                    return !a || d < a.d ? { e, d } : a;
-                }, null)?.e;
-                if (e && location.hash !== `#${e.id}`) location.hash = e.id;
-            }
-
-            static gc() {
-                const e = /^\d{8}$/.test(this.h) ? document.getElementById(this.h) : null;
-                if (e && e.style.display !== 'none') return e;
-                return this.v[0] ?? null;
-            }
-
-            static ga(c, d) {
-                const e = this.v, i = e.indexOf(c);
-                if (i < 0) return e[0] ?? null;
-                return e[i + d] ?? null;
-            }
-
-            static mv(d) {
-                const c = this.gc();
-                if (!c) return;
-                const n = this.ga(c, d);
-                if (!n) return;
-                location.hash = n.id;
-                this.sh();
-            }
-
-            static sh() {
-                if (!this.c) return;
-                const e = this.gh() ?? this.v[0];
-                if (!e) return;
-                const p = e.offsetLeft + e.clientWidth - this.c.clientWidth;
-                this.st(p);
-            }
-
-            static gh() {
-                if (!/^\d{8}$/.test(this.h)) return null;
-                const e = document.getElementById(this.h);
-                if (!e || e.style.display === 'none') return null;
-                return e;
-            }
-
-            static st(p) {
-                if (!this.c) return;
-                this.p = true;
-                this.c.scrollLeft = p;
-                setTimeout(() => { this.p = false; }, 200);
-            }
-
-            static wh(e) {
-                e.preventDefault();
-                this.mv(e.deltaY > 0 ? 1 : -1);
-            }
-
-            static k(e) {
-                switch (e.key) {
-                    case 'ArrowLeft':
-                        e.preventDefault();
-                        this.mv(-1);
-                        break;
-                    case 'ArrowRight':
-                        e.preventDefault();
-                        this.mv(1);
-                        break;
-                    case 'Escape':
-                        if (location.hash) location.hash = '';
-                        break;
-                    case ' ':
-                        e.preventDefault();
-                        this.tf();
-                        break;
-                }
-            }
-
-            static cl() {
-                const s = getSelection();
-                if (s && s.toString().length > 0) return;
-                this.tf();
-            }
-
-            static async tf() {
-                this.f = !this.f;
-                document.body.classList.toggle('f', this.f);
-                if (this.f && this.x) {
-                    this.r(this.x);
-                    return;
-                }
-                this.l(this.f ? 'fake.md' : 'entry.md');
-            }
-            static sz() {
-                if (!this.s) return;
-
-                const state = {
-                    startX: null,
-                    startY: null,
-                    accX: 0
-                };
-
-                const threshold = 3;
-                const gain = 1.5;
-
-                this.s.addEventListener('touchstart', e => {
-                    const t = e.touches[0];
-                    state.startX = t.clientX;
-                    state.startY = t.clientY;
-                    state.accX = 0;
-                }, { passive: true });
-
-                this.s.addEventListener('touchmove', e => {
-                    if (state.startX === null || state.startY === null) return;
-
-                    const t = e.touches[0];
-
-                    const dx = (t.clientX - state.startX) * gain;
-                    const dy = t.clientY - state.startY;
-
-                    if (Math.abs(dx) <= Math.abs(dy)) return;
-
-                    e.preventDefault();
-
-                    state.accX += dx;
-
-                    while (Math.abs(state.accX) > threshold) {
-                        if (state.accX > 0) {
-                            this.mv(1);
-                            state.accX -= threshold;
-                        } else {
-                            this.mv(-1);
-                            state.accX += threshold;
-                        }
-                    }
-
-                    state.startX = t.clientX;
-                    state.startY = t.clientY;
-
-                }, { passive: false });
-
-                this.s.addEventListener('touchend', () => {
-                    state.startX = null;
-                    state.startY = null;
-                    state.accX = 0;
-                }, { passive: true });
-            }
-        }
-
-        A.i();
-    </script>
+    <div class="message">次は、何をしようかな。</div>
 </body>
 
 </html>
