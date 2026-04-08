@@ -22,30 +22,15 @@
         }
 
         body {
+            background-color: #fffbe7;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-        }
-
-        @keyframes gradientBG {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
         }
 
         #input-area {
+            color:blueviolet;
             letter-spacing: -1px;
             width: 80%;
             min-height: 200px;
@@ -63,6 +48,10 @@
             overflow-y: hidden;
             resize: none;
         }
+        ::selection {
+            background: rgba(255, 0, 255, 0.3);
+        }
+        
     </style>
 </head>
 
