@@ -30,7 +30,7 @@
         }
 
         #input-area {
-            color:blueviolet;
+            color: blueviolet;
             letter-spacing: -1px;
             width: 80%;
             min-height: 200px;
@@ -47,11 +47,12 @@
             height: auto;
             overflow-y: hidden;
             resize: none;
+            transition: opacity 1s ease-in-out;
         }
+
         ::selection {
             background: rgba(255, 0, 255, 0.3);
         }
-        
     </style>
 </head>
 
@@ -113,14 +114,21 @@
             URL.revokeObjectURL(a.href);
         }
 
-
-
         // ── 再生 ─────────────────────────────────────────────────────
         function adjustTextareaHeight() {
             const textarea = document.getElementById('input-area');
-            textarea.style.height = 'auto'; // 一旦高さをリセット
-            textarea.style.height = (textarea.scrollHeight) + 'px'; // スクロール高さに合わせて設定
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
         }
+
+        function fadeOutAndRestart() {
+            inputArea.style.opacity = '0';
+            setTimeout(() => {
+                inputArea.style.opacity = '1';
+                startReplayFromCompact(compact);
+            }, 1000);
+        }
+
         function startReplayFromCompact(compact) {
             if (compact.length === 0) return;
             isReplaying = true;
@@ -138,7 +146,7 @@
                         inputArea.value = text;
                         inputArea.selectionStart = selectionStart;
                         inputArea.selectionEnd = selectionEnd;
-                        adjustTextareaHeight(); // 高さを調整
+                        adjustTextareaHeight();
                         replayIndex++;
                     } else {
                         break;
@@ -148,7 +156,7 @@
                 if (replayIndex < compact.length) {
                     requestAnimationFrame(replayLoop);
                 } else {
-                    isReplaying = false;
+                    fadeOutAndRestart();
                 }
             };
 
@@ -191,8 +199,9 @@
                 });
                 startSilenceTimer();
             }
-            adjustTextareaHeight(); // 高さを調整
+            adjustTextareaHeight();
         });
+
         // ── ページ読み込み時に data.txt をフェッチして再生 ───────────
 
         (async () => {
