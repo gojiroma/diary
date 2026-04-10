@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -5,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="icon.png" type="image/png">
-
     <title>echo</title>
     <style>
         @font-face {
@@ -27,6 +27,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            position: relative;
         }
 
         #input-area {
@@ -53,11 +54,26 @@
         ::selection {
             background: rgba(255, 0, 255, 0.3);
         }
+
+        .diary-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 0.9em;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .diary-link:hover {
+            color: #333;
+        }
     </style>
 </head>
 
 <body>
     <textarea id="input-area" autofocus></textarea>
+    <a href="https://tools.poet.blue/diary-show.html" class="diary-link" target="_blank">書いていた日記はコチラ</a>
+
     <script>
         let textLog = [];
         let isRecording = false;
@@ -66,8 +82,7 @@
 
         const inputArea = document.getElementById('input-area');
 
-        // ── 圧縮・展開 ──────────────────────────────────────────────
-
+        // ── 圧縮・展開 ────────────────────────────────────────────────────
         async function compress(log) {
             const base = log[0].timestamp;
             const compact = log.map(e => [Math.round(e.timestamp - base), e.text, e.selectionStart, e.selectionEnd]);
@@ -101,8 +116,7 @@
             return JSON.parse(text);
         }
 
-        // ── ダウンロード ─────────────────────────────────────────────
-
+        // ── ダウンロード ────────────────────────────────────────────────────
         async function saveData() {
             if (textLog.length === 0) return;
             const b64 = await compress(textLog);
@@ -114,7 +128,7 @@
             URL.revokeObjectURL(a.href);
         }
 
-        // ── 再生 ─────────────────────────────────────────────────────
+        // ── 再生 ───────────────────────────────────────────────────────────
         function adjustTextareaHeight() {
             const textarea = document.getElementById('input-area');
             textarea.style.height = 'auto';
@@ -170,8 +184,7 @@
             startReplayFromCompact(compact);
         }
 
-        // ── 沈黙タイマー ─────────────────────────────────────────────
-
+        // ── 沈黙タイマー ────────────────────────────────────────────────────
         const startSilenceTimer = () => {
             clearTimeout(silenceTimer);
             silenceTimer = setTimeout(async () => {
@@ -183,8 +196,7 @@
             }, 5000);
         };
 
-        // ── 入力イベント ─────────────────────────────────────────────
-
+        // ── 入力イベント ────────────────────────────────────────────────────
         inputArea.addEventListener('input', () => {
             if (!isRecording && !isReplaying) {
                 isRecording = true;
@@ -202,8 +214,7 @@
             adjustTextareaHeight();
         });
 
-        // ── ページ読み込み時に data.txt をフェッチして再生 ───────────
-
+        // ── ページ読み込み時に data.txt をフェッチして再生 ───────────────────────────
         (async () => {
             try {
                 const res = await fetch('./data.txt');
@@ -218,5 +229,4 @@
         })();
     </script>
 </body>
-
 </html>
